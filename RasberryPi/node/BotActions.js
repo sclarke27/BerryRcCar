@@ -12,6 +12,7 @@ class BotActions {
         this._currentIntent = null;
         this._currTiltValue = 90;
         this._currPanValue = 90;
+		this._tickCount = 0;
     }
 	
 	map(x, in_min, in_max, out_min, out_max) {
@@ -75,8 +76,13 @@ class BotActions {
         this.changeIntent(BotIntents.idle);
     }
 
-    handleTick() {
+    handleTick(sensors) {
 		// update current active intent
+		this._tickCount++
+		if(this._tickCount > 1000) {
+			sensors.refreshSystemInfo()
+			this._tickCount = 0;
+		}
         if(this._currentIntent && this._currentIntent.rules && this._currentIntent.rules.update) {
             this._currentIntent.rules.update(this._sensors, this);
         }

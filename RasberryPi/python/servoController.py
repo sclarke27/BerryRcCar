@@ -7,7 +7,7 @@ import multiprocessing
 import pprint
 from pymongo import MongoClient
 
-throttleChannel = 2
+throttleChannel = 4
 steeringChannel = 0
 panChannel = 1
 tiltChannel = 2
@@ -18,7 +18,7 @@ currThrottleValue = 0;
 jobs = []
 showDebug = False
 psc0 = PSC.ParallaxServoController('/dev/ttyUSB0')
-psc1 = PSC.ParallaxServoController('/dev/ttyUSB1')
+#psc1 = PSC.ParallaxServoController('/dev/ttyUSB1')
 mongoClient = MongoClient()
 db = mongoClient['otherbarry']
 
@@ -74,7 +74,7 @@ def handleSteeringData(newValue):
 
 def handleThrottleData(newValue):
     try:
-        psc1.setServoPos(throttleChannel, newValue)
+        psc0.setServoPos(throttleChannel, newValue)
     except:
         e = sys.exc_info()[0]
         if showDebug:
