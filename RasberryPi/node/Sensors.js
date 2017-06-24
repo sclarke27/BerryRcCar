@@ -178,7 +178,7 @@ class Sensors {
 
 	  cpuTemp: {
         min: 0,
-        max: 100,
+        max: 200,
         default: 0,
         current: 0
       },

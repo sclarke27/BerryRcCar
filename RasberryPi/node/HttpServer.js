@@ -129,6 +129,24 @@ class HttpServer {
   }
 
   /**
+   * route to handle dashboard page user sees in browser
+   */
+  createDashRoute() {
+    this._webApp.get('/dash', (request, response) => {
+      const sensorData = this._sensors.getSensorDataSet();
+      const botStatus = this._botActions.getBotStatus();
+      const sensorKeys = this._sensors.getSensorKeys();
+
+      response.render('dash', {
+        data: sensorData,
+        status: botStatus,
+        sensors: this._sensors.getSensorDataSet(),
+        intents: BotIntents
+      })
+    })
+  }
+
+  /**
    * route to handle phone page user sees in browser
    */
   createPhoneRoute() {
@@ -182,6 +200,7 @@ class HttpServer {
     this.createIntentRoute();
     this.createResetSensorRoute();
 	this.createPhoneRoute();
+	this.createDashRoute();
 
     this._webApp.listen(this._port, this.onServerStarted.bind(this));
 
