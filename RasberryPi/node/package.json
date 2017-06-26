@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "eslint": "^4.7.2",
     "express": "^4.15.4",
     "express-handlebars": "^3.0.0",
     "handlebars": "^4.0.10",
