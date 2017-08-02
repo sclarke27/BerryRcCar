@@ -1,4 +1,5 @@
 #include <HM55B_Compass.h>
+#include <Servo.h>
 
 HM55B_Compass compass(8, 9, 10);
 
