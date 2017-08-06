@@ -3,6 +3,7 @@ var keypress = require("keypress");
 var temporal = require("temporal");
 var board = new five.Board();
 var net = require('net');
+var Receiver = require('j5-rc-receiver')(five);
 
 var steeringPort = 2001;
 var throttlePort = 2002;
@@ -101,11 +102,15 @@ ProximityHandler.prototype.startListeners = function() {
   });    
 }
 
-
-sendTiltPan("testTiltPan");
+//sendTiltPan("testTiltPan");
 
 board.on("ready", function() {
-
+  
+  var _receiver = new Receiver();
+  _receiver.on("change", function() {
+    console.log(this.x, this.y)
+  });
+/*
   var _proximityHandler = new ProximityHandler()
   var statusLed = new five.Led(13);
 
@@ -117,14 +122,13 @@ board.on("ready", function() {
   process.stdin.setRawMode(true);
   process.stdin.resume();  
 
-  this.loop(500, function () {
+  this.loop(1000, function () {
     var rightDist = _proximityHandler.getDistance("right");
     var leftDist = _proximityHandler.getDistance("left");
-    console.log(`right prox= ${rightDist.inches}in ${rightDist.cm}cm | left prox= ${leftDist.inches}in ${leftDist.cm}cm`);
   });
 
   statusLed.blink();
-  
+  */
 });
 
 function handleDriving() {

@@ -4,8 +4,9 @@ import sys
 sys.path.append('modules')
 import ParallaxServoController as PSC
 import socket
+import multiprocessing
 
-servo = PSC.ParallaxServoController('/dev/ttyUSB1')
+servo = PSC.ParallaxServoController('/dev/ttyUSB3')
 
 def testSteering():
   print "test steering"
@@ -17,7 +18,7 @@ def testSteering():
   servo.setServoPos(0, 90)
   
 def testTiltPan():
-  print "test steering"
+  print "test tiltpan"
   servo.setServoPos(1, 0)
   servo.setServoPos(1, 180)
   servo.setServoPos(1, 90)
@@ -29,34 +30,52 @@ def testTiltPan():
   servo.setServoPos(1, 90)
   servo.setServoPos(2, 45)
   
+def setSteering(pos):
+  servo.setServoPos(0, pos)
 
-testSteering()
-testTiltPan()
+def setTilt(pos):
+  servo.setServoPos(2, pos)
+
+def setPan(pos):
+  servo.setServoPos(1, pos)
+
+
+#testSteering()
+#testTiltPan()
 print('start steering socket')
 s = socket.socket()
 host = "localhost"
 port = 2001
 s.bind((host, port))
-
 s.listen(5)
-while True:
-  c, addr = s.accept()
-  print('connection from',addr)
-  c.send('thanks')
-  msg = c.recv(1024)
+
+def handleMessage(msg):
+  print msg
   if msg == "left":
     servo.setServoPos(0, 0)
   elif msg == "right":
     servo.setServoPos(0, 180)
-  elif msg == "test":
+  elif msg == "center":
+    servo.setServoPos(0, 90)
+  elif msg == "testSteering":
     testSteering()
   elif msg == "testTiltPan":
-    testSteering()
+    testTiltPan()
   else:
     servo.setServoPos(0, 90)
     
-  print msg
+  
+jobs = []
+
+while True:
+  c, addr = s.accept()
+  print('connection from',addr)
+  msg = c.recv(1024)
   c.close()
+
+  process = multiprocessing.Process(target=handleMessage, args=(msg,))
+  jobs.append(process)
+  process.start()
   
   
     
