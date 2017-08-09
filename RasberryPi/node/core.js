@@ -1,109 +1,71 @@
-var net = require('net');
-var SerialPort = require('serialport');
-var Readline = SerialPort.parsers.Readline;
-var port = new SerialPort('/dev/ttyACM0', {
-  baudRate: 115200
-});
-var parser = new Readline();
-port.pipe(parser);
+'use strict';
 
-port.on('open', function(err) {
-  console.log('opened');
-});
+const ArduinoPort = require('./ArduinoPort');
+const Sensors = require('./Sensors');
+const Servos = require('./Servos');
 
-port.on('error', function(err) {
-  console.log('err:', err.message);
-});
+class BotCore {
+  constructor() {
+    this._steeringPort = 2001;
+    this._throttlePort = 2002;
+    this._arduinoBaud = 11520;
+    this._arduino = null;
+    this._sensors = null;
+    this._servos = null;
+    this._movementStatus = null;
+    this._steeringStatus = null;
+    this._mainLoop = null;
+  }
 
-parser.on('data', function(data) {
-  handleSensorData(data);
-  
-});
+  start() {
+    this._sensors = new Sensors();
+    this._servos = new Servos(this._steeringPort, this._throttlePort);
+    this._arduino = new ArduinoPort();
 
-var SensorData = {
-  dist1: 0,
-  dist2: 0,
-  rc1: 0,
-  rc2: 0,
-  compass:0
-}
+    this._arduino.startPort(this._arduinoBaud);
+    this._arduino.setDataHandler(this._sensors.setSensorDataSet);
+    this._mainLoop = setInterval(this.main.bind(this), 10);
+  }
 
-function handleSensorData(sensorData) {
+  main() {
+    console.log(this._sensors);
+    const sensorData = this._sensors.getSensorDataSet();
 
-  var dataArray = sensorData.split(',');
-  if(dataArray) {
-    for(var i = 0; i < dataArray.length; i++) {
-      var dataCommand = dataArray[i];
-      //console.log(dataCommand);
-      var cmdArr = dataCommand.split(':');
-      if(cmdArr && cmdArr.length == 2) {
-	//cmdArr[1] = cmdArr[1].replace('\r','');
-	if(SensorData.hasOwnProperty(cmdArr[0])) {
-	  SensorData[cmdArr[0]] = cmdArr[1];
-	}
+    if(sensorData.rc1 <= -100) {
+      if(this._movementStatus != 'forward') {
+        this._servos.sendThrottleMsg('forward');
+        this._movementStatus = 'forward';
+      }
+    } else if(sensorData.rc1 >= 100) {
+      if(this._movementStatus != 'reverse') {
+        this._servos.sendThrottleMsg('reverse');
+        this._movementStatus = 'reverse';
+      }
+    } else {
+      if(this._movementStatus != 'stop') {
+        this._servos.sendThrottleMsg('stop');
+        this._movementStatus = 'stop';
+      }
+    }
+
+    if(sensorData.rc2 <= -100) {
+      if(this._steeringStatus != 'left') {
+        this._servos.sendSteeringMsg('left');
+        this._steeringStatus = 'left';
+      }
+    } else if(sensorData.rc2 >= 100) {
+      if(this._steeringStatus != 'right') {
+        this._servos.sendSteeringMsg('right');
+        this._steeringStatus = 'right';
+      }
+    } else {
+      if(this._steeringStatus != 'center') {
+        this._servos.sendSteeringMsg('center');
+        this._steeringStatus = 'center';
       }
     }
   }
-  
 }
 
-var steeringPort = 2001;
-var throttlePort = 2002;
-var movementStatus = '';
-var steeringStatus = ''
-var steeringSocket = new net.Socket({
-  allowHalfOpen: false
-});
-var throttleSocket = new net.Socket({
-  allowHalfOpen: false
-});
-function sendSteeringMsg(msg) {
-  steeringSocket.connect(steeringPort, function () {
-    console.log('steering msg', msg);
-    steeringSocket.end(msg);
-  });
-}
-
-function sendThrottleMsg(msg) {
-  throttleSocket.connect(throttlePort, function () {
-    console.log('throttle msg', msg);
-    throttleSocket.end(msg);
-  });
-}
-
-setInterval( () => {
-  //console.log(SensorData);
-  if(SensorData.rc1 <= -100) {
-    if(movementStatus != 'forward') {
-      sendThrottleMsg('forward');
-      movementStatus = 'forward';
-    }
-  } else if(SensorData.rc1 >= 100) {
-    if(movementStatus != 'reverse') {
-      sendThrottleMsg('reverse');
-      movementStatus = 'reverse';
-    }
-  } else {
-    if(movementStatus != 'stop') {
-      sendThrottleMsg('stop');
-      movementStatus = 'stop';
-    }
-  }
-  
-  if(SensorData.rc2 <= -100) {
-    if(steeringStatus != 'left') {
-      sendSteeringMsg('left');
-      steeringStatus = 'left';
-    }
-  } else if(SensorData.rc2 >= 100) {
-    if(steeringStatus != 'right') {
-      sendSteeringMsg('right');
-      steeringStatus = 'right';
-    }
-  } else {
-    if(steeringStatus != 'center') {
-      sendSteeringMsg('center');
-      steeringStatus = 'center';
-    }
-  }
-}, 10);
+const otherBarry = new BotCore();
+otherBarry.start();
