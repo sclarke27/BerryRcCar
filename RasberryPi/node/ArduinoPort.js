@@ -3,27 +3,32 @@
  * @type {[type]}
  */
 class ArduinoPort {
-  constructor() {
-    this._serialPort = require('serialport');
-    this._readline = SerialPort.parsers.Readline;
+  constructor(softwareDebugEnabled = false) {
+    this._softwareDebug = softwareDebugEnabled;
     this._port = null;
-    this._parser = new Readline();
     this._dataHandler = null;
+    if(!this._softwareDebug) {
+      this._serialPort = require('serialport');
+      this._readline = SerialPort.parsers.Readline;
+      this._parser = new Readline();
+    }
   }
 
   startPort(baud = 11520) {
-    try {
-      this._port = new SerialPort('/dev/ttyACM0', {
-        baudRate: baud
-      });
-      this._port.pipe(this._parser);
+    if (!this._softwareDebug) {
+      try {
+        this._port = new SerialPort('/dev/ttyACM0', {
+          baudRate: baud
+        });
+        this._port.pipe(this._parser);
 
-      this._port.on('open', this.onConnectionOpened);
-      this._port.on('error', this.onError);
-      parser.on('data', this.onData);
-    }
-    catch(err) {
-      console.log(err);
+        this._port.on('open', this.onConnectionOpened);
+        this._port.on('error', this.onError);
+        parser.on('data', this.onData);
+      }
+      catch(err) {
+        console.log(err);
+      }
     }
   }
 
