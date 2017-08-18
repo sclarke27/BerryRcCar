@@ -17,6 +17,7 @@ class Sensors {
   setDataValue(key, value) {
     if(this._sensorData.hasOwnProperty(key)) {
       this._sensorData[key] = value;
+      console.log(`Sensors: set ${key} to ${value}`);
     } else {
       console.log(`Sensors error: can't set ${key} to ${value}`);
     }

@@ -26,18 +26,60 @@ class HttpServer {
     this._webApp.set('views', path.join(__dirname, 'views'));
   }
 
-  createGetRoutes() {
-    this._webApp.get('/', (request, response) => {
+  createSensorsRoute() {
+    this._webApp.route('/sensor/:channel-:newValue')
+    .get((request, response) => {
+      const reqParams = request.params;
+      const channel = reqParams.channel;
       const sensorData = this._sensors.getSensorDataSet();
-      response.render('home', {
-        testData: 'derp',
-        data: sensorData
+      response.json({
+        name: channel,
+        value: sensorData[channel],
+      });
+    })
+    .post((request, response) => {
+      const reqParams = request.params;
+      const channel = reqParams.channel;
+      const newValue = reqParams.newValue;
+      this._sensors.setDataValue(channel, newValue);
+      const sensorData = this._sensors.getSensorDataSet();
+      const botStatus = this._botActions.getBotStatus();
+      response.json({
+        data: sensorData,
+        status: botStatus,
       })
     })
   }
 
-  createPostRoutes() {
+  createStatusRoute() {
+    this._webApp.route('/status')
+    .get((request, response) => {
+      const sensorData = this._sensors.getSensorDataSet();
+      const botStatus = this._botActions.getBotStatus();
+      response.json({
+        data: sensorData,
+        status: botStatus,
+      })
+    })
+    .post((request, response) => {
+      const sensorData = this._sensors.getSensorDataSet();
+      const botStatus = this._botActions.getBotStatus();
+      response.json({
+        data: sensorData,
+        status: botStatus,
+      })
+    })
+  }
 
+  createHomeRoute() {
+    this._webApp.get('/', (request, response) => {
+      const sensorData = this._sensors.getSensorDataSet();
+      const botStatus = this._botActions.getBotStatus();
+      response.render('home', {
+        data: sensorData,
+        status: botStatus,
+      })
+    })
   }
 
   onServerStarted(err) {
@@ -49,8 +91,9 @@ class HttpServer {
 
   startHttpServer() {
     this.setUpEngine();
-    this.createGetRoutes();
-    this.createPostRoutes();
+    this.createHomeRoute();
+    this.createStatusRoute();
+    this.createSensorsRoute();
 
     this._webApp.listen(this._port, this.onServerStarted.bind(this));
 

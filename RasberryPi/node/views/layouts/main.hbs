@@ -1,10 +1,112 @@
-Sensor Data:<br>
-<code>
-{
-  dist1: {{data.dist1}},
-  dist2: {{data.dist2}},
-  rc1: {{data.rc1}},
-  rc2: {{data.rc2}},
-  compass:{{data.compass}}
-}
-</code>
+<html>
+<head>
+  <title>Berry Rc Car</title>
+
+</head>
+<body>
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+    }
+    body {
+      background-color: black;
+      color: white;
+      font-family: monospace;
+      font-size: 1.3rem;
+      display: flex;
+      flex-direction: column;
+    }
+    div {
+      width: 300px;
+      padding: 20px;
+    }
+    input, select {
+      color: white;
+      background-color: #0C0C0C;
+      border: 0px;
+      padding: 5px;
+      margin: 10px;
+      width: 100%;
+      font-size: 1.3rem;
+    }
+  </style>
+
+  <div>
+    <form method="get" onsubmit="return setSensorValue(this);">
+      <select name="channel">
+        <option value="dist1">Dist 1</option>
+        <option value="dist2">Dist 2</option>
+        <option value="rc1">RC 1</option>
+        <option value="rc2">RC 2</option>
+        <option value="compass">Compass</option>
+      </select>
+      <input type="text" name="newValue" id="newValueField">
+      <input type="submit" value="Set">
+      <input type="button" value="Refresh" onclick="getStatus()">
+    </form>
+  </div>
+  <div>
+    <div id="botData">
+      Sensor Data:{
+        dist1: {{data.dist1}},
+        dist2: {{data.dist2}},
+        rc1: {{data.rc1}},
+        rc2: {{data.rc2}},
+        compass:{{data.compass}}
+      }
+      Status: {
+        movement: {{status.movement}},
+        steering: {{status.steering}}
+      }
+    </div>
+  </div>
+  <script>
+    let _botActions = null;
+    function setSensorValue(formObj) {
+
+      const channel = formObj['channel'].options[formObj['channel'].selectedIndex].value;
+      const newValue = Number(formObj['newValue'].value);
+      if(!channel || !newValue || newValue === NaN) {
+        return false;
+      }
+      var opts = {
+        method: 'POST',
+        body: 'json',
+        headers: {}
+      };
+      fetch(`/sensor/${channel}-${newValue}`, opts)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (body) {
+        console.error('result', body);
+        document.getElementById('botData').innerText = JSON.stringify(body);
+        return;
+      });
+
+      return false;
+    }
+    function getStatus() {
+      var opts = {
+        method: 'POST',
+        body: 'json',
+        headers: {}
+      };
+      fetch(`/status`, opts)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (body) {
+        console.error('result', body);
+        document.getElementById('botData').innerText = JSON.stringify(body);
+        return;
+      });
+
+    }
+    document.getElementById('newValueField').focus();
+    setInterval(getStatus, 500);
+  </script>
+
+</body>
+</html>

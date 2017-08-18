@@ -18,6 +18,13 @@ class BotActions {
     this._steeringStatus = 'center';
   }
 
+  getBotStatus() {
+    return {
+      movement: this._movementStatus,
+      steering: this._steeringStatus
+    }
+  }
+
   handleRawData() {
     const sensorData = this._sensors.getSensorDataSet();
     if(sensorData.rc1 <= -100) {
