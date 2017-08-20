@@ -16,7 +16,7 @@ def testSteering():
 
   print "stop"
   servo.setServoPos(0, 90)
-  
+
 def testTiltPan():
   print "test tiltpan"
   servo.setServoPos(1, 0)
@@ -29,7 +29,7 @@ def testTiltPan():
   print "stop"
   servo.setServoPos(1, 90)
   servo.setServoPos(2, 45)
-  
+
 def setSteering(pos):
   servo.setServoPos(0, pos)
 
@@ -63,8 +63,8 @@ def handleMessage(msg):
     testTiltPan()
   else:
     servo.setServoPos(0, 90)
-    
-  
+
+
 jobs = []
 
 while True:
@@ -76,6 +76,3 @@ while True:
   process = multiprocessing.Process(target=handleMessage, args=(msg,))
   jobs.append(process)
   process.start()
-  
-  
-    

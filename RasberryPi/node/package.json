@@ -12,6 +12,7 @@
     "express": "^4.15.4",
     "express-handlebars": "^3.0.0",
     "handlebars": "^4.0.10",
+    "moment": "^2.18.1",
     "serialport": "^5.0.0"
   }
 }

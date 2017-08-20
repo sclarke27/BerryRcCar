@@ -5,6 +5,15 @@ const Sensors = require('./Sensors');
 const Servos = require('./Servos');
 const BotActions = require('./BotActions');
 const HttpServer = require('./HttpServer');
+const EventEmitter = require('events');
+
+class MyEmitter extends EventEmitter {}
+
+const myEmitter = new MyEmitter();
+myEmitter.on('event', () => {
+  console.log('an event occurred!');
+});
+
 
 class BotCore {
   constructor() {
@@ -21,25 +30,34 @@ class BotCore {
     this._httpServer = null;
   }
 
-  startMain() {
+  startBot() {
     this._sensors = new Sensors();
     this._servos = new Servos(this._steeringPort, this._throttlePort, this._softwareDebug);
     this._arduino = new ArduinoPort(this._softwareDebug);
     this._botActions = new BotActions(this._servos, this._sensors);
-    this._httpServer = new HttpServer(this._httpPort, this._botActions, this._sensors);
     if(!this._softwareDebug) {
       this._arduino.startPort(this._arduinoBaud);
     }
     this._arduino.setDataHandler(this._sensors.setSensorDataSet);
-    this._httpServer.startHttpServer();
     this._botActions.wakeUp();
-    this._mainLoop = setInterval(this.main.bind(this), 10);
+    setInterval(() => {
+      otherBarry.main();
+    },10);
+  }
+
+  startHttp() {
+    this._httpServer = new HttpServer(this._httpPort, this._botActions, this._sensors);
+    this._httpServer.startHttpServer();
   }
 
   main() {
-    this._botActions.handleRawData();
+    if(this._botActions) {
+      this._botActions.handleTick();
+    }
+    //this._botActions.handleRawData();
   }
 }
 
 const otherBarry = new BotCore();
-otherBarry.startMain();
+otherBarry.startBot();
+otherBarry.startHttp();

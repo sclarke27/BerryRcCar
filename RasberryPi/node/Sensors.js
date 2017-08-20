@@ -5,18 +5,67 @@
 class Sensors {
   constructor() {
     this._sensorData = {
-      dist1: 0,
-      dist2: 0,
-      rc1: 0,
-      rc2: 0,
-      compass:0
+      leftDistance: {
+        min: 0,
+        max: 20000,
+        default: 0,
+        current: 0
+      },
+      rightDistance: {
+        min: 0,
+        max: 20000,
+        default: 0,
+        current: 0
+      },
+      centerDistance: {
+        min: 0,
+        max: 20000,
+        default: 0,
+        current: 0
+      },
+      groundDistance: {
+        min: 0,
+        max: 20000,
+        default: 0,
+        current: 0
+      },
+
+      throttleRadio: {
+        min: -1000,
+        max: 1000,
+        default: 0,
+        current: 0
+      },
+      steeringRadio: {
+        min: -1000,
+        max: 1000,
+        default: 0,
+        current: 0
+      },
+
+      compass1: {
+        min: 0,
+        max: 360,
+        default: 0,
+        current: 0
+      }
     }
 
   }
 
+  getSensorKeys() {
+    return Object.keys(this._sensorData)
+  }
+
   setDataValue(key, value) {
     if(this._sensorData.hasOwnProperty(key)) {
-      this._sensorData[key] = value;
+      if(key.indexOf('compass') >= 0 && value !== 0) {
+        value = (value < 0) ? (Number(value) + 360) : value;
+      }
+      const sensor = this._sensorData[key];
+      if(value > sensor.max) value = sensor.max;
+      if(value < sensor.min) value = sensor.min;
+      sensor.current = value;
       console.log(`Sensors: set ${key} to ${value}`);
     } else {
       console.log(`Sensors error: can't set ${key} to ${value}`);
@@ -31,18 +80,24 @@ class Sensors {
         //console.log(dataCommand);
         var cmdArr = dataCommand.split(':');
         if(cmdArr && cmdArr.length == 2) {
-        	this.setDataValue[cmdArr[0]] = cmdArr[1];
+        	this.setDataValue[cmdArr[0]].current = cmdArr[1];
         }
       }
     }
   }
 
   getSensorDataValue(sensorKey) {
-    return (this._sensorData.hasOwnProperty(sensorKey)) ? this._sensorData[sensorKey] : 0;
+    return (this._sensorData.hasOwnProperty(sensorKey)) ? this._sensorData[sensorKey].current : 0;
   }
 
   getSensorDataSet() {
     return this._sensorData;
+  }
+
+  resetSensorValues() {
+    for(const sensor in this._sensorData) {
+      this._sensorData[sensor].current = this._sensorData[sensor].default;
+    }
   }
 }
 
