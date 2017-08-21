@@ -1,3 +1,4 @@
+//const Readline = require('readline');
 /**
  * [baud description]
  * @type {[type]}
@@ -9,22 +10,22 @@ class ArduinoPort {
     this._dataHandler = null;
     if(!this._softwareDebug) {
       this._serialPort = require('serialport');
-      this._readline = SerialPort.parsers.Readline;
-      this._parser = new Readline();
+      this._readline = this._serialPort.parsers.Readline;
+      this._parser = new this._readline();
     }
   }
 
   startPort(baud = 11520) {
     if (!this._softwareDebug) {
       try {
-        this._port = new SerialPort('/dev/ttyACM0', {
+        this._port = new this._serialPort('/dev/ttyACM0', {
           baudRate: baud
         });
         this._port.pipe(this._parser);
 
-        this._port.on('open', this.onConnectionOpened);
-        this._port.on('error', this.onError);
-        parser.on('data', this.onData);
+        this._port.on('open', this.onConnectionOpened.bind(this));
+        this._port.on('error', this.onError.bind(this));
+        this._parser.on('data', this.onData.bind(this));
       }
       catch(err) {
         console.log(err);
@@ -37,7 +38,7 @@ class ArduinoPort {
   }
 
   onData(data) {
-    if(typeof this.onData === 'function') {
+    if(typeof this._dataHandler === 'function') {
       this._dataHandler(data);
     }
   }

@@ -19,7 +19,7 @@ class BotCore {
   constructor() {
     this._steeringPort = 2001;
     this._throttlePort = 2002;
-    this._arduinoBaud = 11520;
+    this._arduinoBaud = 115200;
     this._httpPort = 8080;
     this._arduino = null;
     this._sensors = null;
@@ -33,12 +33,12 @@ class BotCore {
   startBot() {
     this._sensors = new Sensors();
     this._servos = new Servos(this._steeringPort, this._throttlePort, this._softwareDebug);
-    this._arduino = new ArduinoPort(this._softwareDebug);
+    this._arduino = new ArduinoPort(false);
     this._botActions = new BotActions(this._servos, this._sensors);
-    if(!this._softwareDebug) {
+    //if(!this._softwareDebug) {
       this._arduino.startPort(this._arduinoBaud);
-    }
-    this._arduino.setDataHandler(this._sensors.setSensorDataSet);
+    //}
+    this._arduino.setDataHandler(this._sensors.setSensorDataSet.bind(this._sensors));
     this._botActions.wakeUp();
     setInterval(() => {
       otherBarry.main();
