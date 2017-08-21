@@ -33,7 +33,7 @@ class BotCore {
   startBot() {
     this._sensors = new Sensors();
     this._servos = new Servos(this._steeringPort, this._throttlePort, this._softwareDebug);
-    this._arduino = new ArduinoPort(false);
+    this._arduino = new ArduinoPort(true);
     this._botActions = new BotActions(this._servos, this._sensors);
     //if(!this._softwareDebug) {
       this._arduino.startPort(this._arduinoBaud);

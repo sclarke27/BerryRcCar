@@ -43,12 +43,75 @@ class Sensors {
         current: 0
       },
 
+      camTiltRadio: {
+        min: -600,
+        max: 600,
+        default: 0,
+        current: 0
+      },
+      camPanRadio: {
+        min: -600,
+        max: 600,
+        default: 0,
+        current: 0
+      },
+
       compass1: {
+        min: -180,
+        max: 180,
+        default: 0,
+        current: 0
+      },
+
+      compass2: {
+        min: -180,
+        max: 180,
+        default: 0,
+        current: 0
+      },
+
+      gyroX: {
+        min: -180,
+        max: 180,
+        default: 0,
+        current: 0
+      },
+
+      gyroY: {
+        min: -180,
+        max: 180,
+        default: 0,
+        current: 0
+      },
+
+      gyroZ: {
+        min: -180,
+        max: 180,
+        default: 0,
+        current: 0
+      },
+
+      tempurature: {
         min: 0,
-        max: 360,
+        max: 65,
+        default: 0,
+        current: 0
+      },
+
+      pressure: {
+        min: 300,
+        max: 1100,
+        default: 300,
+        current: 300
+      },
+
+      altitude: {
+        min: 0,
+        max: 10000,
         default: 0,
         current: 0
       }
+
     }
 
   }
