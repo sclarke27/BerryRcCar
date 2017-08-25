@@ -13,6 +13,8 @@ class BotActions {
     this._sensors = sensors;
     this._startupTime = null;
     this._currentIntent = null;
+    this._currTiltValue = 0;
+    this._currPanValue = 0;
   }
 
   wakeUp() {
@@ -70,9 +72,22 @@ class BotActions {
       this._currentIntent.rules.update(this._sensors, this);
     }
   }
+  
+  handleTiltPan(sensorData) {
+	  console.error(this._servos);
+	  if (sensorData.tiltRadio.current !== this._currTiltValue) {
+		  this._currTiltValue = sensorData.tiltRadio.current;
+		  this._servos.sendSteeringMsg(`pos:1:${this._currTiltValue}`);
+	  }
+	  if (sensorData.panRadio.current !== this._currPanValue) {
+		  this._currPanValue = sensorData.panRadio.current;
+		  this._servos.sendSteeringMsg(`pos:0:${this._currPanValue}`);
+	  }
+  }
 
   handleDriveFromRC() {
     const sensorData = this._sensors.getSensorDataSet();
+    this.handleTiltPan(sensorData);
     if(sensorData.throttleRadio.current <= -100) {
       if(this._movementStatus != 'forward') {
         this._servos.sendThrottleMsg('forward');

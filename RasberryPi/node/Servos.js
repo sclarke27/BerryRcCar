@@ -7,20 +7,30 @@ class Servos {
     this._throttleStatus = null;
     this._steeringStatus = null;
     this._softwareDebug = softwareDebugEnabled;
-
-    if(!this._softwareDebug) {
-      this._steeringSocket = new net.Socket({
-        allowHalfOpen: false
-      });
-      this._throttleSocket = new net.Socket({
-        allowHalfOpen: false
-      });
-    }
+	this._steeringSocket = null;
+	this._throttleSocket = null;
   }
 
+  startSockets() {
+	if(!this._softwareDebug) {
+		const port1 = this._steeringPort;
+		const port2 = this._throttlePort;
+
+		this._steeringSocket = new net.Socket();
+		this._throttleSocket = new net.Socket();
+
+		this._steeringSocket.connect(port1, function () {
+			console.log(`steering socket connected on port ${port1}`);
+		});
+		this._throttleSocket.connect(port2, function () {
+			console.log(`throttle socket connected on port ${port2}`);
+		});
+	}      
+  }
+  
   sendSteeringMsg(msg) {
     if(!this._softwareDebug) {
-      this._steeringSocket.connect(this._steeringPort, function () {
+      this._steeringSocket.connect(this._steeringPort, () => {
         this._steeringSocket.end(msg);
       });
     } else {
@@ -30,7 +40,7 @@ class Servos {
 
   sendThrottleMsg(msg) {
     if(!this._softwareDebug) {
-      this._throttleSocket.connect(this._throttlePort, function () {
+      this._throttleSocket.connect(this._throttlePort, () => {
         this._throttleSocket.end(msg);
       });
     } else {

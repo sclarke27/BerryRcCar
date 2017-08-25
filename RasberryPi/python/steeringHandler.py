@@ -6,7 +6,7 @@ import ParallaxServoController as PSC
 import socket
 import multiprocessing
 
-servo = PSC.ParallaxServoController('/dev/ttyUSB3')
+servo = PSC.ParallaxServoController('/dev/ttyUSB0')
 
 def testSteering():
   print "test steering"
@@ -44,8 +44,8 @@ def setPan(pos):
 #testTiltPan()
 print('start steering socket')
 s = socket.socket()
-host = "localhost"
-port = 2001
+host = ""
+port = 8186
 s.bind((host, port))
 s.listen(5)
 
@@ -61,6 +61,11 @@ def handleMessage(msg):
     testSteering()
   elif msg == "testTiltPan":
     testTiltPan()
+  elif msg.find("pos:") >= 0:
+	commandArr = msg.split(":")
+	if commandArr.length == 3:
+		servo.setServoPos(commandArr[1], commandArr[2])
+		
   else:
     servo.setServoPos(0, 90)
 

@@ -16,6 +16,13 @@ allStop = 90
 index = 0;
 throttlePin = 2
 
+print('start throttle socket')
+s = socket.socket()
+host = ""
+port = 8185
+s.bind((host, port))
+s.listen(5)
+
 def testThrottle():
   index = 0
   for x in range(0, 2):
@@ -51,15 +58,13 @@ def handleMessage(msg):
     servo.setServoPos(throttlePin, maxSpeed + 1.5)
   elif msg == "testThrottle":
     testThrottle()
+  elif msg.find("speed:") >= 0:
+	commandArr = msg.split(":")
+	if commandArr.length == 2:
+		servo.setServoPos(throttlePin, commandArr[1])
   else:
     servo.setServoPos(throttlePin, allStop)
   
-print('start throttle socket')
-s = socket.socket()
-host = "localhost"
-port = 2002
-s.bind((host, port))
-s.listen(5)
 
 jobs = []
 

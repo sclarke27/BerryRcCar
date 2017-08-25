@@ -7,13 +7,13 @@ class Sensors {
     this._sensorData = {
       leftDistance: {
         min: 0,
-        max: 20000,
+        max: 10000,
         default: 0,
         current: 0
       },
       rightDistance: {
         min: 0,
-        max: 20000,
+        max: 10000,
         default: 0,
         current: 0
       },
@@ -31,27 +31,26 @@ class Sensors {
       },
 
       throttleRadio: {
-        min: -600,
-        max: 600,
+        min: -100,
+        max: 100,
         default: 0,
         current: 0
       },
       steeringRadio: {
-        min: -600,
-        max: 600,
+        min: -100,
+        max: 100,
         default: 0,
         current: 0
       },
-
-      camTiltRadio: {
-        min: -600,
-        max: 600,
+      tiltRadio: {
+        min: -100,
+        max: 100,
         default: 0,
         current: 0
       },
-      camPanRadio: {
-        min: -600,
-        max: 600,
+      panRadio: {
+        min: -100,
+        max: 100,
         default: 0,
         current: 0
       },
@@ -93,7 +92,7 @@ class Sensors {
 
       tempurature: {
         min: 0,
-        max: 65,
+        max: 135,
         default: 0,
         current: 0
       },
