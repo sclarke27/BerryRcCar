@@ -63,12 +63,9 @@ def handleMessage(msg):
     testTiltPan()
   elif msg.find("pos:") >= 0:
 	commandArr = msg.split(":")
-	if commandArr.length == 3:
-		servo.setServoPos(commandArr[1], commandArr[2])
+	if len(commandArr) == 3:
+		servo.setServoPos(int(commandArr[1]), int(commandArr[2]))
 		
-  else:
-    servo.setServoPos(0, 90)
-
 
 jobs = []
 
@@ -76,7 +73,7 @@ while True:
   c, addr = s.accept()
   print('connection from',addr)
   msg = c.recv(1024)
-  c.close()
+  #c.close()
 
   process = multiprocessing.Process(target=handleMessage, args=(msg,))
   jobs.append(process)

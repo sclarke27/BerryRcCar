@@ -41,11 +41,16 @@ class BotCore {
 		this._arduino.startPort(this._arduinoBaud);
     }
     this._arduino.setDataHandler(this._sensors.setSensorDataSet.bind(this._sensors));
-    //this._botActions.wakeUp();
-    setInterval(() => {
-      otherBarry.main();
-    },10);
-    setTimeout(this._servos.startSockets.bind(this), 500);
+    
+    setTimeout(() => {
+		this._botActions.wakeUp();    
+		
+		setInterval(() => {
+		  otherBarry.main();
+		},10);
+	}, 500)
+    //setTimeout(this._servos.startSockets.bind(this), 500);
+    
   }
 
   startHttp() {

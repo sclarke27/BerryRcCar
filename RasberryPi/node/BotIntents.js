@@ -21,6 +21,9 @@ const BotIntents = {
         botActions.allStop();
         console.log('Bot entered idle state');
       },
+      update: (sensorData, botActions) => {
+        botActions.handleTiltPan(sensorData);
+      },
       end: (sensorData, botActions) => {
         console.log(`Leave idle state`);
       }
@@ -33,7 +36,8 @@ const BotIntents = {
         console.log('Begin driving forward state');
       },
       update: (sensorData, botActions) => {
-        botActions.handleDriveFromRC();
+        botActions.handleDriveFromRC(sensorData);
+        botActions.handleTiltPan(sensorData);
       },
       end: (sensorData, botActions) => {
         console.log(`Drive complete`);

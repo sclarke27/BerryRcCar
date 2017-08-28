@@ -241,21 +241,20 @@
       const currValue = sensorData.steeringRadio.current;
       const currMax = sensorData.steeringRadio.max;
 
-      const currPercent = currMax/(currMax-currValue);
-      const turnValue = 35 * currValue * ((currValue < 0) ? -1 : 1);
+      const currPercent = (currValue * ((currValue < 0) ? -1 : 1)) / 100;
+      const turnValue = 42 * currPercent * ((currValue < 0) ? -1 : 1);
       
-      console.error(currValue, currMax, currPercent, turnValue);
-      if(lastPercent !== currPercent) {
+     if(lastPercent !== currPercent) {
         document.getElementById('leftFrontWheel').style.transform = `rotate(${turnValue}deg)`;
         document.getElementById('rightFrontWheel').style.transform = `rotate(${turnValue}deg)`;
         lastPercent = currPercent;
       }
 
-      if(sensorData.throttleRadio.current < -150 || sensorData.throttleRadio.current > 150) {
-        document.getElementById('leftFrontWheel').style.borderColor = (sensorData.throttleRadio.current <= -150) ? 'green' : 'orange';
-        document.getElementById('rightFrontWheel').style.borderColor = (sensorData.throttleRadio.current <= -150) ? 'green' : 'orange';
-        document.getElementById('leftBackWheel').style.borderColor = (sensorData.throttleRadio.current <= -150) ? 'green' : 'orange';
-        document.getElementById('rightBackWheel').style.borderColor = (sensorData.throttleRadio.current <= -150) ? 'green' : 'orange';
+      if(sensorData.throttleRadio.current < -5 || sensorData.throttleRadio.current > 5) {
+        document.getElementById('leftFrontWheel').style.borderColor = (sensorData.throttleRadio.current >= 5) ? 'green' : 'orange';
+        document.getElementById('rightFrontWheel').style.borderColor = (sensorData.throttleRadio.current >= 5) ? 'green' : 'orange';
+        document.getElementById('leftBackWheel').style.borderColor = (sensorData.throttleRadio.current >= 5) ? 'green' : 'orange';
+        document.getElementById('rightBackWheel').style.borderColor = (sensorData.throttleRadio.current >= 5) ? 'green' : 'orange';
       } else {
         document.getElementById('leftFrontWheel').style.borderColor = 'red';
         document.getElementById('rightFrontWheel').style.borderColor = 'red';

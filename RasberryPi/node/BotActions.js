@@ -13,14 +13,15 @@ class BotActions {
     this._sensors = sensors;
     this._startupTime = null;
     this._currentIntent = null;
-    this._currTiltValue = 0;
-    this._currPanValue = 0;
+    this._currTiltValue = 90;
+    this._currPanValue = 90;
   }
 
   wakeUp() {
-    this.allStop();
     this._startupTime = new moment();
-    this.changeIntent(BotIntents.idle);
+    this._servos.startSockets();
+    //this.allStop();
+    //this.changeIntent(BotIntents.idle);
   }
 
   allStop() {
@@ -69,12 +70,12 @@ class BotActions {
 
   handleTick() {
     if(this._currentIntent && this._currentIntent.rules && this._currentIntent.rules.update) {
-      this._currentIntent.rules.update(this._sensors, this);
+      this._currentIntent.rules.update(this._sensors.getSensorDataSet(), this);
     }
   }
   
   handleTiltPan(sensorData) {
-	  console.error(this._servos);
+	  //console.error(this._servos);
 	  if (sensorData.tiltRadio.current !== this._currTiltValue) {
 		  this._currTiltValue = sensorData.tiltRadio.current;
 		  this._servos.sendSteeringMsg(`pos:1:${this._currTiltValue}`);
@@ -85,15 +86,15 @@ class BotActions {
 	  }
   }
 
-  handleDriveFromRC() {
-    const sensorData = this._sensors.getSensorDataSet();
-    this.handleTiltPan(sensorData);
-    if(sensorData.throttleRadio.current <= -100) {
+  handleDriveFromRC(sensorData) {
+    //const sensorData = this._sensors.getSensorDataSet();
+    //this.handleTiltPan(sensorData);
+    if(sensorData.throttleRadio.current <= -4) {
       if(this._movementStatus != 'forward') {
         this._servos.sendThrottleMsg('forward');
         this._movementStatus = 'forward';
       }
-    } else if(sensorData.throttleRadio.current >= 100) {
+    } else if(sensorData.throttleRadio.current >= 4) {
       if(this._movementStatus != 'reverse') {
         this._servos.sendThrottleMsg('reverse');
         this._movementStatus = 'reverse';
@@ -105,12 +106,12 @@ class BotActions {
       }
     }
 
-    if(sensorData.steeringRadio.current <= -100) {
+    if(sensorData.steeringRadio.current <= 85) {
       if(this._steeringStatus != 'left') {
         this._servos.sendSteeringMsg('left');
         this._steeringStatus = 'left';
       }
-    } else if(sensorData.steeringRadio.current >= 100) {
+    } else if(sensorData.steeringRadio.current >= 95) {
       if(this._steeringStatus != 'right') {
         this._servos.sendSteeringMsg('right');
         this._steeringStatus = 'right';

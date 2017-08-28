@@ -13,6 +13,7 @@
     "express-handlebars": "^3.0.0",
     "handlebars": "^4.0.10",
     "moment": "^2.18.1",
+    "mongodb": "^2.2.31",
     "serialport": "^5.0.0"
   }
 }

@@ -37,22 +37,22 @@ class Sensors {
         current: 0
       },
       steeringRadio: {
-        min: -100,
-        max: 100,
-        default: 0,
-        current: 0
+        min: 0,
+        max: 180,
+        default: 90,
+        current: 90
       },
       tiltRadio: {
-        min: -100,
-        max: 100,
-        default: 0,
-        current: 0
+        min: 0,
+        max: 180,
+        default: 90,
+        current: 90
       },
       panRadio: {
-        min: -100,
-        max: 100,
-        default: 0,
-        current: 0
+        min: 0,
+        max: 180,
+        default: 90,
+        current: 90
       },
 
       compass1: {

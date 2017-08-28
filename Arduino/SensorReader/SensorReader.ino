@@ -5,17 +5,17 @@
 #include <Wire.h>
 
 // Hadrware values
-int rcChannel1Pin = 4;
-int rcChannel2Pin = 5;
-int rcChannel3Pin = 2;
-int rcChannel4Pin = 3;
+int rcChannel1Pin = 2;
+int rcChannel2Pin = 3;
+int rcChannel3Pin = 4;
+int rcChannel4Pin = 5;
 int pingPin1 = 6;
 int pingPin2 = 7;
-int pingPin3 = 11;
-int pingPin4 = 12;
-int compassClockPin = 8;
-int compassEnablePin = 9;
-int compassIOPin = 10;
+int pingPin3 = 8;
+int pingPin4 = 9;
+int compassClockPin = 10;
+int compassEnablePin = 11;
+int compassIOPin = 12;
 
 //Data Values
 int rcChannel1Value = 0;
@@ -35,7 +35,14 @@ int ping1ValueNew = 0;
 int ping2ValueNew = 0;
 int ping3ValueNew = 0;
 int ping4ValueNew = 0;
+int rcChannel1ValueNew = 0;
+int rcChannel2ValueNew = 0;
+int rcChannel3ValueNew = 0;
+int rcChannel4ValueNew = 0;
 int compass1ValueNew = 0;
+double tempuratureValueNew = 0.0;
+double pressureValueNew = 0.0;
+double altitudeValueNew = 0.0;
 
 #define ALTITUDE 105.0/3.28084 //elevation of cataldi park
 
@@ -46,20 +53,30 @@ int normalizeRadioInput(int inputValue) {
   return map(inputValue, 1050, 1950, -100, 100);
 }
 
+int normalizeRadioInputForServo(int inputValue) {
+  return map(inputValue, 1050, 1950, 0, 180);
+}
+
 void readRcRadio(String channel, int pin) {
   int channelPulse = pulseIn(pin, HIGH, 35000);
-  channelPulse = normalizeRadioInput(channelPulse);
+  if(channelPulse != 0) {
+    if(pin == rcChannel2Pin) {
+      channelPulse = normalizeRadioInput(channelPulse);
+    } else {
+      channelPulse = normalizeRadioInputForServo(channelPulse);
+    }
+  }
   if (pin == rcChannel1Pin) {
-    rcChannel1Value = channelPulse;
+    rcChannel1ValueNew = channelPulse;
   }
   if (pin == rcChannel2Pin) {
-    rcChannel2Value =  channelPulse;
+    rcChannel2ValueNew =  channelPulse;
   }
   if (pin == rcChannel3Pin) {
-    rcChannel3Value =  channelPulse;
+    rcChannel3ValueNew =  channelPulse;
   }
   if (pin == rcChannel4Pin) {
-    rcChannel4Value =  channelPulse;
+    rcChannel4ValueNew =  channelPulse;
   }
   
 }
@@ -73,13 +90,13 @@ void readTempAndPressure() {
 
     sensorStatus = pressure.getTemperature(T);
     if(sensorStatus != 0) {
-      tempuratureValue = ((9.0/5.0)*T+32.0);
+      tempuratureValueNew = ((9.0/5.0)*T+32.0);
 
       sensorStatus = pressure.getPressure(P,T);
       if(sensorStatus != 0) {
         p0 = pressure.sealevel(P,ALTITUDE);
-        pressureValue = P;//P*0.0295333727;
-        altitudeValue = pressure.altitude(P,p0)*3.28084;
+        pressureValueNew = P;//P*0.0295333727;
+        altitudeValueNew = pressure.altitude(P,p0)*3.28084;
       }
     }
   }
@@ -176,47 +193,67 @@ void loop()
   String returnString = "{active:true";
 
 
-  returnString += ",tempurature:";
-  returnString += tempuratureValue;
-  returnString += ",pressure:";
-  returnString += pressureValue;
-  returnString += ",altitude:";
-  returnString += altitudeValue;
-  returnString += ",steeringRadio:";
-  returnString += rcChannel1Value;
-  returnString += ",throttleRadio:";
-  returnString += rcChannel2Value;
-  returnString += ",tiltRadio:";
-  returnString += rcChannel3Value;
-  returnString += ",panRadio:";
-  returnString += rcChannel4Value;
-  
+  if(tempuratureValue != tempuratureValueNew) {
+    tempuratureValue = tempuratureValueNew;
+    returnString += ",tempurature:";
+    returnString += tempuratureValue;
+  }
+  if(pressureValue != pressureValueNew) {
+    pressureValue = pressureValueNew;
+    returnString += ",pressure:";
+    returnString += pressureValue;
+  }
+  if(altitudeValue != altitudeValueNew) {
+    altitudeValue = altitudeValueNew;
+    returnString += ",altitude:";
+    returnString += altitudeValue;
+  }
+  if(rcChannel1Value != rcChannel1ValueNew) {
+    rcChannel1Value = rcChannel1ValueNew;
+    returnString += ",steeringRadio:";
+    returnString += rcChannel1Value;
+  }
+  if(rcChannel2Value != rcChannel2ValueNew) {
+    rcChannel2Value = rcChannel2ValueNew;
+    returnString += ",throttleRadio:";
+    returnString += rcChannel2Value;
+  }
+  if(rcChannel3Value != rcChannel3ValueNew) {
+    rcChannel3Value = rcChannel3ValueNew;
+    returnString += ",tiltRadio:";
+    returnString += rcChannel3Value;
+  }
+  if(rcChannel4Value != rcChannel4ValueNew) {
+    rcChannel4Value = rcChannel4ValueNew;
+    returnString += ",panRadio:";
+    returnString += rcChannel4Value;
+  }  
 
-  //if(ping1Value != ping1ValueNew) {
+  if(ping1Value != ping1ValueNew) {
     ping1Value = ping1ValueNew;
     returnString += ",groundDistance:";
     returnString += ping1Value;
-  //}
-  //if(ping2Value != ping2ValueNew) {
+  }
+  if(ping2Value != ping2ValueNew) {
     ping2Value = ping2ValueNew;
     returnString += ",centerDistance:";
     returnString += ping2Value;
-  //}
-  //if(ping3Value != ping3ValueNew) {
+  }
+  if(ping3Value != ping3ValueNew) {
     ping3Value = ping3ValueNew;
     returnString += ",rightDistance:";
     returnString += ping3Value;
-  //}
-  //if(ping4Value != ping4ValueNew) {
+  }
+  if(ping4Value != ping4ValueNew) {
     ping4Value = ping4ValueNew;
     returnString += ",leftDistance:";
     returnString += ping4Value;
-  //}
-  //if(compass1Value != compass1ValueNew) {
+  }
+  if(compass1Value != compass1ValueNew) {
     compass1Value = compass1ValueNew;
     returnString += ",compass1:";
     returnString += compass1Value;
-  //}
+  }
   
   if(returnString != "{active:true") {
     Serial.println(returnString + ",end:true}");
