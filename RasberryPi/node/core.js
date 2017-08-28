@@ -1,5 +1,5 @@
 'use strict';
-
+const mongojs = require('mongojs');
 const ArduinoPort = require('./ArduinoPort');
 const Sensors = require('./Sensors');
 const Servos = require('./Servos');
@@ -28,11 +28,26 @@ class BotCore {
     this._softwareDebug = false;
     this._botActions = null;
     this._httpServer = null;
+	this._databaseUrl = "otherbarry";
+	this._collections = ["botData", "botStatus"]
+	this._db = null;
+  }
+  
+  startDBConnection() {
+	this._db = mongojs(this._databaseUrl, this._collections);
+	this._db.on('error', function (err) {
+		console.log('database error', err)
+	})
+	 
+	this._db.on('connect', function () {
+		console.log('database connected')
+	})	
+	  
   }
 
   startBot() {
-    this._sensors = new Sensors();
-    this._servos = new Servos(this._steeringPort, this._throttlePort, this._softwareDebug);
+    this._sensors = new Sensors(this._db);
+    this._servos = new Servos(this._steeringPort, this._throttlePort, true);
     this._servos.startSockets
     this._arduino = new ArduinoPort(this._softwareDebug);
     this._botActions = new BotActions(this._servos, this._sensors);
@@ -67,5 +82,6 @@ class BotCore {
 }
 
 const otherBarry = new BotCore();
+otherBarry.startDBConnection() ;
 otherBarry.startBot();
 otherBarry.startHttp();

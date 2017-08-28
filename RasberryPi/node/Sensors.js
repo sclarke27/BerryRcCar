@@ -3,7 +3,7 @@
  * @type {Object}
  */
 class Sensors {
-  constructor() {
+  constructor(db) {
     this._sensorData = {
       leftDistance: {
         min: 0,
@@ -112,7 +112,7 @@ class Sensors {
       }
 
     }
-
+    this._db = db;
   }
 
   getSensorKeys() {
@@ -128,6 +128,16 @@ class Sensors {
       if(value > sensor.max) value = sensor.max;
       if(value < sensor.min) value = sensor.min;
       sensor.current = value;
+      let findObj = {
+		  name: key
+	  }
+      this._db.botData.findAndModify({
+			query: { name: key },
+			update: { $set: { value: value } },
+			new: true,
+			upsert: true
+		}, (err, doc, lastErrorObject) => {
+		})
       //console.log(`Sensors: set ${key} to ${value}`);
     } else {
       //console.log(`Sensors error: can't set ${key} to ${value}`);
@@ -143,6 +153,7 @@ class Sensors {
         var cmdArr = dataCommand.split(':');
         if(cmdArr && cmdArr.length == 2) {
 			this.setDataValue(cmdArr[0], cmdArr[1]);
+			
         }
       }
     }
