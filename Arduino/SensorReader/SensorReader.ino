@@ -50,7 +50,7 @@ HM55B_Compass compass(compassClockPin, compassEnablePin, compassIOPin);
 SFE_BMP180 pressure;
 
 int normalizeRadioInput(int inputValue) {
-  return map(inputValue, 1050, 1950, -100, 100);
+  return map(inputValue, 1050, 1950, 75, 105);
 }
 
 int normalizeRadioInputForServo(int inputValue) {

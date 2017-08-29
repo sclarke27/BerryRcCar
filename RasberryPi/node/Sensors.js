@@ -31,10 +31,10 @@ class Sensors {
       },
 
       throttleRadio: {
-        min: -100,
-        max: 100,
-        default: 0,
-        current: 0
+        min: 75,
+        max: 105,
+        default: 90,
+        current: 90
       },
       steeringRadio: {
         min: 0,

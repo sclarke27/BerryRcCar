@@ -106,12 +106,12 @@ class BotActions {
       }
     }
 
-    if(sensorData.steeringRadio.current <= 85) {
+    if(sensorData.steeringRadio.current <= 88) {
       if(this._steeringStatus != 'left') {
         this._servos.sendSteeringMsg('left');
         this._steeringStatus = 'left';
       }
-    } else if(sensorData.steeringRadio.current >= 95) {
+    } else if(sensorData.steeringRadio.current >= 92) {
       if(this._steeringStatus != 'right') {
         this._servos.sendSteeringMsg('right');
         this._steeringStatus = 'right';
