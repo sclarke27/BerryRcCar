@@ -7,28 +7,30 @@ class Sensors {
     this._sensorData = {
       leftDistance: {
         min: 0,
-        max: 10000,
+        max: 40000,
         default: 0,
         current: 0
       },
       rightDistance: {
         min: 0,
-        max: 10000,
+        max: 40000,
         default: 0,
         current: 0
       },
       centerDistance: {
         min: 0,
-        max: 10000,
+        max: 40000,
         default: 0,
         current: 0
       },
+      /*
       groundDistance: {
         min: 0,
-        max: 10000,
+        max: 40000,
         default: 0,
         current: 0
       },
+      */
 
       throttleRadio: {
         min: 75,
@@ -61,7 +63,7 @@ class Sensors {
         default: 0,
         current: 0
       },
-
+    /*
       compass2: {
         min: -180,
         max: 180,
@@ -89,7 +91,7 @@ class Sensors {
         default: 0,
         current: 0
       },
-
+    */
       tempurature: {
         min: 0,
         max: 135,
@@ -106,7 +108,7 @@ class Sensors {
 
       altitude: {
         min: 0,
-        max: 10000,
+        max: 15000,
         default: 0,
         current: 0
       }
@@ -129,15 +131,15 @@ class Sensors {
       if(value < sensor.min) value = sensor.min;
       sensor.current = value;
       let findObj = {
-		  name: key
-	  }
+          name: key
+      }
       this._db.botData.findAndModify({
-			query: { name: key },
-			update: { $set: { value: value } },
-			new: true,
-			upsert: true
-		}, (err, doc, lastErrorObject) => {
-		})
+            query: { name: key },
+            update: { $set: { value: value } },
+            new: true,
+            upsert: true
+        }, (err, doc, lastErrorObject) => {
+        })
       //console.log(`Sensors: set ${key} to ${value}`);
     } else {
       //console.log(`Sensors error: can't set ${key} to ${value}`);
@@ -152,8 +154,8 @@ class Sensors {
         //console.log(dataCommand);
         var cmdArr = dataCommand.split(':');
         if(cmdArr && cmdArr.length == 2) {
-			this.setDataValue(cmdArr[0], cmdArr[1]);
-			
+            this.setDataValue(cmdArr[0], cmdArr[1]);
+
         }
       }
     }

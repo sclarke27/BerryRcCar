@@ -243,7 +243,7 @@
 
       const currPercent = (currValue * ((currValue < 0) ? -1 : 1)) / 100;
       const turnValue = 42 * currPercent * ((currValue < 0) ? -1 : 1);
-      
+
      if(lastPercent !== currPercent) {
         document.getElementById('leftFrontWheel').style.transform = `rotate(${turnValue}deg)`;
         document.getElementById('rightFrontWheel').style.transform = `rotate(${turnValue}deg)`;
@@ -283,7 +283,11 @@
         updateCarWheels(sensorData);
         let newDivStr = '<h3>Sensors</h3>';
         for (const key of sensorKeys) {
-          newDivStr += `<span><i>${key}</i>: ${sensorData[key].current}</span><br>`
+            if(key.indexOf('Dist') >= 0) {
+                newDivStr += `<span style="color:${(((sensorData[key].current * 0.0133 / 2).toPrecision(4) < 8) ? 'red' : 'green')}"><i>${key}</i>: ${(sensorData[key].current * 0.0133 / 2).toPrecision(4)} in.</span><br>`
+            } else {
+                newDivStr += `<span><i>${key}</i>: ${sensorData[key].current}</span><br>`
+            }
           document.getElementById(`${key}Range`).value = sensorData[key].current;
         }
         newDivStr += '<h3>Status</h3>';
@@ -295,7 +299,7 @@
       });
 
     }
-    setInterval(getStatus, 100);
+    setInterval(getStatus, 20);
   </script>
 
 </body>

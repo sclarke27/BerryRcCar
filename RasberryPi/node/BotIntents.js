@@ -6,9 +6,6 @@ const BotIntents = {
         console.log('Bot entered startup state');
         botActions.wakeUp();
       },
-      update: (sensorData, botActions) => {
-        botActions.changeIntent(BotIntents.idle);
-      },
       end: (sensorData, botActions) => {
         console.log(`Startup complete`);
       }

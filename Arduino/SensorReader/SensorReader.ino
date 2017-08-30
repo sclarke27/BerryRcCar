@@ -111,13 +111,13 @@ void readPingSensor(String channel, int pin) {
   digitalWrite(pin, HIGH);
   delayMicroseconds(5);
   digitalWrite(pin, LOW);
-  int maxDist = 10000;
+  int pingTimeout = 17000;
 
   pinMode(pin, INPUT);
-  int duration = pulseIn(pin, HIGH, maxDist);
+  int duration = pulseIn(pin, HIGH, pingTimeout);
 
   if(duration == 0) {
-    duration = 10000;
+    duration = 40000;
   }
 
   if(pin == pingPin1) {
@@ -170,16 +170,15 @@ void setup() {
     Serial.println("bmp180 failed");
   }
 }
-TimedAction ping1Read = TimedAction(5, readPing1);
-TimedAction ping2Read = TimedAction(5, readPing2);
-TimedAction ping3Read = TimedAction(5, readPing3);
-TimedAction ping4Read = TimedAction(5, readPing4);
-TimedAction compass1Read = TimedAction(50, readCompass1);
-TimedAction temperatureRead = TimedAction(500, readTempAndPressure);
+TimedAction ping1Read = TimedAction(1, readPing1);
+TimedAction ping2Read = TimedAction(1, readPing2);
+TimedAction ping3Read = TimedAction(1, readPing3);
+TimedAction ping4Read = TimedAction(1, readPing4);
+TimedAction compass1Read = TimedAction(1, readCompass1);
+TimedAction temperatureRead = TimedAction(1, readTempAndPressure);
 
 void loop()
 {
-  delay(10);
   ping1Read.check();
   ping2Read.check();
   ping3Read.check();
