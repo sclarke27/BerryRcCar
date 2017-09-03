@@ -63,36 +63,79 @@ class Sensors {
         default: 0,
         current: 0
       },
-    /*
-      compass2: {
-        min: -180,
-        max: 180,
-        default: 0,
-        current: 0
-      },
-
+	  
       gyroX: {
-        min: -180,
-        max: 180,
+        min: -200,
+        max: 200,
         default: 0,
         current: 0
       },
 
       gyroY: {
-        min: -180,
-        max: 180,
+        min: -200,
+        max: 200,
         default: 0,
         current: 0
       },
 
       gyroZ: {
-        min: -180,
-        max: 180,
+        min: -200,
+        max: 200,
         default: 0,
         current: 0
       },
-    */
+
+      accelX: {
+        min: -3000,
+        max: 3000,
+        default: 0,
+        current: 0
+      },
+
+      accelY: {
+        min: -3000,
+        max: 3000,
+        default: 0,
+        current: 0
+      },
+
+      accelZ: {
+        min: -3000,
+        max: 3000,
+        default: 0,
+        current: 0
+      },
+	  
+
+      magX: {
+        min: -300,
+        max: 300,
+        default: 0,
+        current: 0
+      },
+
+      magY: {
+        min: -300,
+        max: 300,
+        default: 0,
+        current: 0
+      },
+
+      magZ: {
+        min: -300,
+        max: 300,
+        default: 0,
+        current: 0
+      },	  
+
       tempurature: {
+        min: 0,
+        max: 135,
+        default: 0,
+        current: 0
+      },
+
+      tempurature2: {
         min: 0,
         max: 135,
         default: 0,
