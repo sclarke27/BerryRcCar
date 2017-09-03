@@ -3,6 +3,8 @@ const mongojs = require('mongojs');
 const ArduinoPort = require('./ArduinoPort');
 const Sensors = require('./Sensors');
 const BotActions = require('./BotActions');
+const BotState = require('./BotState');
+const BotIntents = require('./BotIntents');
 const HttpServer = require('./HttpServer');
 const EventEmitter = require('events');
 
@@ -26,9 +28,10 @@ class BotCore {
     this._mainLoop = null;
     this._softwareDebug = false;
     this._botActions = null;
+    this._botState = null;
     this._httpServer = null;
     this._databaseUrl = "otherbarry";
-    this._collections = ["botData", "botStatus"]
+    this._collections = ["botData", "botState"]
     this._db = null;
   }
 
@@ -45,23 +48,19 @@ class BotCore {
   }
 
   startBot() {
-    this._sensors = new Sensors(this._db);
     this._arduino = new ArduinoPort(this._softwareDebug);
-    this._botActions = new BotActions(this._sensors);
+    this._botState = new BotState(this._db);
+    this._sensors = new Sensors(this._db, this._botState);
+    this._botActions = new BotActions(this._sensors, this._botState);
     if(!this._softwareDebug) {
 
         this._arduino.startPort(this._arduinoBaud);
     }
     this._arduino.setDataHandler(this._sensors.setSensorDataSet.bind(this._sensors));
 
-    setTimeout(() => {
-        this._botActions.wakeUp();
-
-        setInterval(() => {
-          otherBarry.main();
-        },3);
-    }, 500)
-    //setTimeout(this._servos.startSockets.bind(this), 500);
+    setInterval(() => {
+      otherBarry.main();
+    },3);
 
   }
 
@@ -74,13 +73,13 @@ class BotCore {
     this.startDBConnection() ;
     this.startBot();
     this.startHttp();
+    this._botActions.changeIntent(BotIntents.startUp);
   }
 
   main() {
     if(this._botActions) {
       this._botActions.handleTick();
     }
-    //this._botActions.handleRawData();
   }
 }
 

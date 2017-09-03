@@ -23,15 +23,15 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=0
-FILE_NAME_0=137;Javascript;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fnode%2FSensors.js;0;4
-FILE_NAME_1=2583;Javascript;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fnode%2FBotActions.js;0;4
-FILE_NAME_2=361;Javascript;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fnode%2FServos.js;0;4
-FILE_NAME_3=370;Python;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fpython%2FsteeringHandler.py;0;4
-FILE_NAME_4=364;Python;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fpython%2FthrottleHandler.py;0;4
-FILE_NAME_5=1066;Javascript;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fnode%2Fcore.js;0;4
-FILE_NAME_6=1696;Python;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fpython%2FservoController.py;0;4
-FILE_NAME_7=7930;HTML;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fnode%2Fviews%2Flayouts%2Fmain.hbs;0;4
+current_page=1
+FILE_NAME_0=2312;Javascript;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fnode%2FSensors.js;0;4
+FILE_NAME_1=1565;Javascript;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fnode%2FBotActions.js;0;4
+FILE_NAME_2=217;Javascript;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fnode%2FBotState.js;0;4
+FILE_NAME_3=664;Javascript;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fnode%2FBotIntents.js;0;4
+FILE_NAME_4=1434;Javascript;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fnode%2Fcore.js;0;4
+FILE_NAME_5=9301;HTML;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fnode%2Fviews%2Flayouts%2Fmain.hbs;0;4
+FILE_NAME_6=297;Javascript;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fnode%2FHttpServer.js;0;4
+FILE_NAME_7=0;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2FBerryRcCar%2FRasberryPi%2Fpython%2FservoController.py;0;4
 
 [VTE]
 last_dir=/home/pi

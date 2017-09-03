@@ -2,11 +2,11 @@ const BotIntents = {
   startUp: {
     name: 'Start Up',
     rules: {
-      start: (sensorData, botActions) => {
+      start: (sensors, botActions) => {
         console.log('Bot entered startup state');
-        botActions.wakeUp();
+        botActions.handleStartUp();
       },
-      end: (sensorData, botActions) => {
+      end: (sensors, botActions) => {
         console.log(`Startup complete`);
       }
     }
@@ -14,14 +14,15 @@ const BotIntents = {
   idle: {
     name: 'Idle',
     rules: {
-      start: (sensorData, botActions) => {
-        botActions.allStop();
+      start: (sensors, botActions) => {
+        botActions.handleGoIdle();
         console.log('Bot entered idle state');
       },
-      update: (sensorData, botActions) => {
-        botActions.handleTiltPan(sensorData);
+      update: (sensors, botActions) => {
+        botActions.handlePingSensors(sensors);
       },
       end: (sensorData, botActions) => {
+        console.log('End idle state');
         console.log(`Leave idle state`);
       }
     }
@@ -29,15 +30,21 @@ const BotIntents = {
   driveForward: {
     name: 'Drive Forward',
     rules: {
-      start: (sensorData, botActions) => {
+      start: (sensors, botActions) => {
         console.log('Begin driving forward state');
+        botActions.setCanDrive('forward', true);
+        botActions.setCanDrive('backward', true);
       },
-      update: (sensorData, botActions) => {
-        botActions.handleDriveFromRC(sensorData);
-        botActions.handleTiltPan(sensorData);
+      update: (sensors, botActions) => {
+        botActions.handlePingSensors(sensors)
+        botActions.handleDriveForard(sensors);
       },
-      end: (sensorData, botActions) => {
-        console.log(`Drive complete`);
+      end: (sensors, botActions) => {
+        console.log('End driving forward state');
+        console.log('Drive complete');
+        botActions.setCanDrive('forward', false);
+        botActions.setCanDrive('backward', false);
+        botActions.setIsDriving(false);
       }
     }
   },

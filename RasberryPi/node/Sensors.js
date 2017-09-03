@@ -3,7 +3,7 @@
  * @type {Object}
  */
 class Sensors {
-  constructor(db) {
+  constructor(db, botState) {
     this._sensorData = {
       leftDistance: {
         min: 0,
@@ -33,8 +33,8 @@ class Sensors {
       */
 
       throttleRadio: {
-        min: 75,
-        max: 105,
+        min: 0,
+        max: 180,
         default: 90,
         current: 90
       },
@@ -115,6 +115,7 @@ class Sensors {
 
     }
     this._db = db;
+    this._botState = botState;
   }
 
   getSensorKeys() {
@@ -122,14 +123,19 @@ class Sensors {
   }
 
   setDataValue(key, value) {
+    const currState = this._botState.getFullState();
     if(this._sensorData.hasOwnProperty(key)) {
       if(key.indexOf('compass') >= 0 && value !== 0) {
         //value = (value < 0) ? (Number(value) + 360) : value;
       }
-      const sensor = this._sensorData[key];
-      if(value > sensor.max) value = sensor.max;
-      if(value < sensor.min) value = sensor.min;
-      sensor.current = value;
+      if(key.indexOf('Radio') >= 0 && !currState.main.listenToRc) {
+          sensor.current = 90;
+      } else {
+          const sensor = this._sensorData[key];
+          if(value > sensor.max) value = sensor.max;
+          if(value < sensor.min) value = sensor.min;
+          sensor.current = value;
+      }
       let findObj = {
           name: key
       }

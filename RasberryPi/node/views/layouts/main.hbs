@@ -1,7 +1,7 @@
 <html>
 <head>
   <title>Berry Rc Car</title>
-
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 </head>
 <body>
   <style>
@@ -284,7 +284,7 @@
         let newDivStr = '<h3>Sensors</h3>';
         for (const key of sensorKeys) {
             if(key.indexOf('Dist') >= 0) {
-                newDivStr += `<span style="color:${(((sensorData[key].current * 0.0133 / 2).toPrecision(4) < 8) ? 'red' : 'green')}"><i>${key}</i>: ${(sensorData[key].current * 0.0133 / 2).toPrecision(4)} in.</span><br>`
+                newDivStr += `<span style="color:${(((sensorData[key].current * 0.0133 / 2).toPrecision(4) < 12) ? 'red' : 'green')}"><i>${key}</i>: ${(sensorData[key].current)} in.</span><br>`
             } else {
                 newDivStr += `<span><i>${key}</i>: ${sensorData[key].current}</span><br>`
             }
@@ -292,14 +292,24 @@
         }
         newDivStr += '<h3>Status</h3>';
         for (const key of statusKeys) {
-          newDivStr += `<span><i>${key}</i>: ${statusData[key]}</span><br>`
+            const currDataset = statusData[key];
+            newDivStr += `<span><b>${key}</b><br>`
+            for(const subkey of Object.keys(currDataset)) {
+                if(subkey.indexOf('Time') >= 0) {
+                    const uptime = moment(currDataset[subkey]).fromNow(true)
+                    newDivStr += `<span><i>${subkey}</i>: ${uptime}</span><br>`
+                } else {
+                    newDivStr += `<span><i>${subkey}</i>: ${currDataset[subkey]}</span><br>`
+                }
+            }
+            newDivStr += `</span><br>`
         }
         dataDiv.innerHTML = newDivStr;
         return;
       });
 
     }
-    setInterval(getStatus, 20);
+    setInterval(getStatus, 50);
   </script>
 
 </body>
