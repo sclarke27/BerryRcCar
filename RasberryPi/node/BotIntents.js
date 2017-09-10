@@ -36,8 +36,9 @@ const BotIntents = {
         botActions.setCanDrive('backward', true);
       },
       update: (sensors, botActions) => {
-        botActions.handlePingSensors(sensors)
-        botActions.handleDriveForard(sensors);
+        botActions.handlePingSensors(sensors, botActions);
+        botActions.handleDriveForard(sensors, botActions);
+		botActions.handleHeadsUpMovement(sensors, botActions)
       },
       end: (sensors, botActions) => {
         console.log('End driving forward state');

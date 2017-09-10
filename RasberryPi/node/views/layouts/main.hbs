@@ -1,316 +1,132 @@
 <html>
 <head>
-  <title>Berry Rc Car</title>
+	<title>Berry Rc Car</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+	<style>
+		* {
+		  padding: 0px;
+		  margin: 0px;
+		}
+		body {
+		  background-color: black;
+		  color: white;
+		  font-family: arial;
+		  font-size: 1.3rem;
+		  display: flex;
+		  flex-direction: row;
+		  flex-wrap: wrap;
+		}
+		h3 {
+		  background-color: rgba(50, 50, 200, 0.5);
+		  margin-top: 10px;
+		}
+		.wrapper {
+		  width: 420px;
+
+		  padding: 20px;
+		  flex-shrink: 0;
+		}
+		input, select {
+		  color: white;
+		  background-color: #0C0C0C;
+		  border: 0px;
+		  padding: 5px;
+		  margin: 10px;
+		  width: 100%;
+		  font-size: 1.3rem;
+		  box-shadow: 0px 0px 5px rgba(100, 100, 255, .5);
+		}
+		td input {
+		  border-radius: 50%;
+		  width: 50px;
+		  height: 50px;
+		  line-height: 30px;
+		  font-size: 32px;
+		}
+		input[type=range] {
+		  margin: 0px 0px 5px 0px;
+		  box-shadow: none;
+		}
+		#compass {
+		  width: 200px;
+		  height: 200px;
+		  padding: 0px;
+		  margin-top: 30px;
+		}
+		#compassCircle {
+		  width: 100%;
+		  height: 100%;
+		  border-radius: 50%;
+		  border: 2px solid red;
+		  color: red;
+		  text-align: center;
+		  padding: 0px;
+		  transition: all 0.1s linear;
+		  font-size: 62px;
+		  box-shadow: 0px 0px 20px rgba(255,50,50,0.7);
+		  background-color: #0e0e0e;
+		}
+		.carOverhead {
+		  position: relative;
+		  width: 170px;
+		  height: 270px;
+		  margin: 0px auto;
+		}
+		.carWheels {
+		  border: solid 1px;
+		  border-color: red;
+		  width: 25px;
+		  height: 55px;
+		  position: absolute;
+		  transition: all 0.1s linear;
+		}
+		.carFrame {
+		  border: solid 1px blue;
+		}
+		#frontAxle, #backAxle {
+		  position: absolute;
+		  width: 122px;
+		  height: 10px;
+		  left: 22px;
+		}
+		#frontAxle {
+		  top: 32px;
+		}
+		#backAxle {
+		  top: 222px;
+		}
+		#centerAxle {
+		  position: absolute;
+		  width: 10px;
+		  height: 200px;
+		  left: 77px;
+		  top: 32px;
+		}
+		#leftFrontWheel {
+		  top: 10px;
+		  left: 10px;
+		}
+		#rightFrontWheel {
+		  top: 10px;
+		  right: 10px;
+		}
+		#leftBackWheel {
+		  bottom: 10px;
+		  left: 10px;
+		}
+		#rightBackWheel {
+		  right: 10px;
+		  bottom: 10px;
+		}
+	</style>	
+
 </head>
 <body>
-  <style>
-    * {
-      padding: 0px;
-      margin: 0px;
-    }
-    body {
-      background-color: black;
-      color: white;
-      font-family: arial;
-      font-size: 1.3rem;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
-    h3 {
-      background-color: rgba(50, 50, 200, 0.5);
-      margin-top: 10px;
-    }
-    .wrapper {
-      width: 220px;
-
-      padding: 20px;
-      flex-shrink: 0;
-    }
-    input, select {
-      color: white;
-      background-color: #0C0C0C;
-      border: 0px;
-      padding: 5px;
-      margin: 10px;
-      width: 100%;
-      font-size: 1.3rem;
-      box-shadow: 0px 0px 5px rgba(100, 100, 255, .5);
-    }
-    td input {
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      line-height: 30px;
-      font-size: 32px;
-    }
-    input[type=range] {
-      margin: 0px 0px 5px 0px;
-      box-shadow: none;
-    }
-    #compass {
-      width: 200px;
-      height: 200px;
-      padding: 0px;
-      margin-top: 30px;
-    }
-    #compassCircle {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 2px solid red;
-      color: red;
-      text-align: center;
-      padding: 0px;
-      transition: all 0.1s linear;
-      font-size: 62px;
-      box-shadow: 0px 0px 20px rgba(255,50,50,0.7);
-      background-color: #0e0e0e;
-    }
-    .carOverhead {
-      position: relative;
-      width: 170px;
-      height: 270px;
-      margin: 0px auto;
-    }
-    .carWheels {
-      border: solid 1px;
-      border-color: red;
-      width: 25px;
-      height: 55px;
-      position: absolute;
-      transition: all 0.1s linear;
-    }
-    .carFrame {
-      border: solid 1px blue;
-    }
-    #frontAxle, #backAxle {
-      position: absolute;
-      width: 122px;
-      height: 10px;
-      left: 22px;
-    }
-    #frontAxle {
-      top: 32px;
-    }
-    #backAxle {
-      top: 222px;
-    }
-    #centerAxle {
-      position: absolute;
-      width: 10px;
-      height: 200px;
-      left: 77px;
-      top: 32px;
-    }
-    #leftFrontWheel {
-      top: 10px;
-      left: 10px;
-    }
-    #rightFrontWheel {
-      top: 10px;
-      right: 10px;
-    }
-    #leftBackWheel {
-      bottom: 10px;
-      left: 10px;
-    }
-    #rightBackWheel {
-      right: 10px;
-      bottom: 10px;
-    }
-  </style>
-
-  <div class="wrapper">
-    <table>
-      <tr>
-        <td><input type='button' value="^" onclick="setMovementState(-200, -200)" style="transform: rotate(-45deg)"></td>
-        <td><input type='button' value="^" onclick="setMovementState(-200, 0)"></td>
-        <td><input type='button' value="^" onclick="setMovementState(-200, 200)" style="transform: rotate(45deg)"></td>
-      </tr>
-      <tr>
-        <td><input type='button' value="<" onclick="setMovementState(0, -200)"></td>
-        <td><input type='button' value="o" onclick="setMovementState(0, 0)"></td>
-        <td><input type='button' value=">" onclick="setMovementState(0, 200)"></td>
-      </tr>
-      <tr>
-        <td><input type='button' value="^" onclick="setMovementState(200, -200)" style="transform: rotate(-125deg)"></td>
-        <td><input type='button' value="^" onclick="setMovementState(200, 0)" style="transform: rotateX(180deg);"></td>
-        <td><input type='button' value="^" onclick="setMovementState(200, 200)" style="transform: rotate(125deg)"></td>
-      </tr>
-    </table>
-    <input type="button" value="All Stop" onclick="setIntent('idle')">
-    {{#each intents}}
-      <input type="button" value="{{this.name}}" onclick="setIntent('{{@key}}')">
-    {{/each}}
-  </div>
-  <div class="wrapper">
-    <h3>Sensor Input</h3>
-    <form method="get" onsubmit="return false">
-      {{#each sensors as |value key|}}
-        <label>{{key}}</lable>
-        <input type="range" id="{{key}}Range" value="{{value.current}}" min="{{value.min}}" max="{{value.max}}" name="{{key}}" oninput="handleSlider(this.name, this.value)">
-      {{/each}}
-      <input type="button" value="Zero Sensors" onclick="resetSensors()">
-    </form>
-  </div>
-  <div class="wrapper">
-    <span id="botData"></span>
-  </div>
-  <div id="compass" class="wrapper">
-    <div id="compassCircle">^</div>
-    <div class="carOverhead">
-      <div class="carWheels" id="leftFrontWheel"></div>
-      <div class="carWheels" id="rightFrontWheel"></div>
-      <div class="carWheels" id="leftBackWheel"></div>
-      <div class="carWheels" id="rightBackWheel"></div>
-      <div class="carFrame" id="frontAxle"></div>
-      <div class="carFrame" id="backAxle"></div>
-      <div class="carFrame" id="centerAxle"></div>
-    </div>
-  </div>
 
 
-  <script>
-    let _botActions = null;
 
-    function handleSlider(channel, value) {
-      setSensorValue(channel, value);
-    }
+ {{{body}}}
 
-    function updateIntent(formObj) {
-      setIntent(formObj['intent'].options[formObj['intent'].selectedIndex].value);
-      return false;
-    }
-    function setIntent(newIntentString) {
-      console.error(newIntentString)
-      var opts = {
-        method: 'POST',
-        body: 'json',
-        headers: {}
-      };
-      fetch(`/intent/${newIntentString}`, opts)
-      .then(function (response) {
-        return response.json();
-      })
-
-    }
-    function resetSensors() {
-      var opts = {
-        method: 'POST',
-        body: 'json',
-        headers: {}
-      };
-      fetch(`/resetSensors`, opts)
-      .then(function (response) {
-        return response.json();
-      })
-
-    }
-    function setMovementState(throttle, steering) {
-      setSensorValue('throttleRadio', throttle);
-      setSensorValue('steeringRadio', steering);
-    }
-    function updateCompass(deg) {
-      document.getElementById('compassCircle').style.transform = `rotate(${deg}deg)`;
-    }
-    function senSensorValueFromForm(formObj) {
-      const channel = formObj['channel'].options[formObj['channel'].selectedIndex].value;
-      const newValue = Number(formObj['newValue'].value);
-      setSensorValue(channel, newValue);
-    }
-    function setSensorValue(channel, newValue) {
-      var opts = {
-        method: 'POST',
-        body: 'json',
-        headers: {}
-      };
-      fetch(`/sensor/${channel}-${newValue}`, opts)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (body) {
-        return;
-      });
-
-      return false;
-    }
-    let lastPercent = 0;
-    function updateCarWheels(sensorData) {
-      const currValue = sensorData.steeringRadio.current;
-      const currMax = sensorData.steeringRadio.max;
-
-      const currPercent = (currValue * ((currValue < 0) ? -1 : 1)) / 100;
-      const turnValue = 42 * currPercent * ((currValue < 0) ? -1 : 1);
-
-     if(lastPercent !== currPercent) {
-        document.getElementById('leftFrontWheel').style.transform = `rotate(${turnValue}deg)`;
-        document.getElementById('rightFrontWheel').style.transform = `rotate(${turnValue}deg)`;
-        lastPercent = currPercent;
-      }
-
-      if(sensorData.throttleRadio.current < -5 || sensorData.throttleRadio.current > 5) {
-        document.getElementById('leftFrontWheel').style.borderColor = (sensorData.throttleRadio.current >= 5) ? 'green' : 'orange';
-        document.getElementById('rightFrontWheel').style.borderColor = (sensorData.throttleRadio.current >= 5) ? 'green' : 'orange';
-        document.getElementById('leftBackWheel').style.borderColor = (sensorData.throttleRadio.current >= 5) ? 'green' : 'orange';
-        document.getElementById('rightBackWheel').style.borderColor = (sensorData.throttleRadio.current >= 5) ? 'green' : 'orange';
-      } else {
-        document.getElementById('leftFrontWheel').style.borderColor = 'red';
-        document.getElementById('rightFrontWheel').style.borderColor = 'red';
-        document.getElementById('leftBackWheel').style.borderColor = 'red';
-        document.getElementById('rightBackWheel').style.borderColor = 'red';
-      }
-    }
-    function getStatus() {
-      var opts = {
-        method: 'POST',
-        body: 'json',
-        headers: {}
-      };
-      fetch(`/status`, opts)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (returnData) {
-        const dataDiv = document.getElementById('botData');
-        const sensorData = returnData.data;
-        const sensorKeys = Object.keys(sensorData);
-        const statusData = returnData.status;
-        const statusKeys = Object.keys(statusData);
-
-        updateCompass(sensorData.compass1.current);
-        updateCarWheels(sensorData);
-        let newDivStr = '<h3>Sensors</h3>';
-        for (const key of sensorKeys) {
-            if(key.indexOf('Dist') >= 0) {
-                newDivStr += `<span style="color:${(((sensorData[key].current * 0.0133 / 2).toPrecision(4) < 12) ? 'red' : 'green')}"><i>${key}</i>: ${(sensorData[key].current)} in.</span><br>`
-            } else {
-                newDivStr += `<span><i>${key}</i>: ${sensorData[key].current}</span><br>`
-            }
-          document.getElementById(`${key}Range`).value = sensorData[key].current;
-        }
-        newDivStr += '<h3>Status</h3>';
-        for (const key of statusKeys) {
-            const currDataset = statusData[key];
-            newDivStr += `<span><b>${key}</b><br>`
-            for(const subkey of Object.keys(currDataset)) {
-                if(subkey.indexOf('Time') >= 0) {
-                    const uptime = moment(currDataset[subkey]).fromNow(true)
-                    newDivStr += `<span><i>${subkey}</i>: ${uptime}</span><br>`
-                } else {
-                    newDivStr += `<span><i>${subkey}</i>: ${currDataset[subkey]}</span><br>`
-                }
-            }
-            newDivStr += `</span><br>`
-        }
-        dataDiv.innerHTML = newDivStr;
-        return;
-      });
-
-    }
-    setInterval(getStatus, 50);
-  </script>
 
 </body>
 </html>

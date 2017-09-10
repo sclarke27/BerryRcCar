@@ -13,6 +13,10 @@ class BotActions {
         this._currTiltValue = 90;
         this._currPanValue = 90;
     }
+	
+	map(x, in_min, in_max, out_min, out_max) {
+		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	}
 
     resetSensors() {
         this._sensors.resetSensorValues();
@@ -108,6 +112,18 @@ class BotActions {
         this.setIsDriving(false);
 
     }
+	
+	handleHeadsUpMovement(sensors, botActions) {
+		const sensorData = sensors.getSensorDataSet();
+		const tiltValue = sensorData.phoneMagX.current - 25;
+		if(tiltValue > 14 && tiltValue < 175) {
+			sensors.setDataValue('tiltRadio', tiltValue);
+		}
+		if(sensorData.phoneMagY.current >= 90 && sensorData.phoneMagY.current <= 270) {
+			let panValue = this.map(sensorData.phoneMagY.current, 90, 270, 0, 180);
+			sensors.setDataValue('panRadio', panValue);
+		}
+	}
 
     handleDriveForard(sensors, botActions) {
 		const sensorData = sensors.getSensorDataSet();

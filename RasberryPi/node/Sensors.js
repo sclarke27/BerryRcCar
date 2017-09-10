@@ -7,30 +7,29 @@ class Sensors {
     this._sensorData = {
       leftDistance: {
         min: 0,
-        max: 40000,
+        max: 5000,
         default: 0,
         current: 0
       },
       rightDistance: {
         min: 0,
-        max: 40000,
+        max: 5000,
         default: 0,
         current: 0
       },
       centerDistance: {
         min: 0,
-        max: 40000,
+        max: 5000,
         default: 0,
         current: 0
       },
-      /*
-      groundDistance: {
+
+      rearDistance: {
         min: 0,
-        max: 40000,
+        max: 5000,
         default: 0,
         current: 0
       },
-      */
 
       throttleRadio: {
         min: 0,
@@ -105,25 +104,24 @@ class Sensors {
         default: 0,
         current: 0
       },
-	  
 
       magX: {
-        min: -300,
-        max: 300,
+        min: -500,
+        max: 500,
         default: 0,
         current: 0
       },
 
       magY: {
-        min: -300,
-        max: 300,
+        min: -500,
+        max: 500,
         default: 0,
         current: 0
       },
 
       magZ: {
-        min: -300,
-        max: 300,
+        min: -500,
+        max: 500,
         default: 0,
         current: 0
       },	  
@@ -154,7 +152,50 @@ class Sensors {
         max: 15000,
         default: 0,
         current: 0
-      }
+      },
+	  
+      phoneMagX: {
+        min: 0,
+        max: 180,
+        default: 0,
+        current: 0
+      },
+
+      phoneMagY: {
+        min: 0,
+        max: 360,
+        default: 0,
+        current: 0
+      },
+
+      phoneMagZ: {
+        min: 0,
+        max: 360,
+        default: 0,
+        current: 0
+      },	  
+/*
+      phoneAccelX: {
+        min: -11,
+        max: 11,
+        default: 0,
+        current: 0
+      },
+
+      phoneAccelY: {
+        min: -11,
+        max: 11,
+        default: 0,
+        current: 0
+      },
+
+      phoneAccelZ: {
+        min: -11,
+        max: 11,
+        default: 0,
+        current: 0
+      },	  
+*/
 
     }
     this._db = db;

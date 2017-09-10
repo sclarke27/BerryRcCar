@@ -118,7 +118,7 @@ void readTempAndPressure() {
     bmp.getTemperature(&temp);
     tempuratureValueNew = ((9.0/5.0)*temp+32.0);
     float seaLevelPressure = SENSORS_PRESSURE_SEALEVELHPA;
-    altitudeValueNew = bmp.pressureToAltitude(seaLevelPressure, event.pressure) * 3; 
+    altitudeValueNew = bmp.pressureToAltitude(seaLevelPressure, event.pressure); 
     
   }
 
@@ -324,13 +324,13 @@ void setup() {
     Serial.println(myIMU.magCalibration[2], 2);
   }
 }
-TimedAction ping1Read = TimedAction(0.5, readPing1);
-TimedAction ping2Read = TimedAction(0.6, readPing2);
-TimedAction ping3Read = TimedAction(0.7, readPing3);
-TimedAction ping4Read = TimedAction(0.8, readPing4);
+TimedAction ping1Read = TimedAction(0.4, readPing1);
+TimedAction ping2Read = TimedAction(0.3, readPing2);
+TimedAction ping3Read = TimedAction(0.2, readPing3);
+TimedAction ping4Read = TimedAction(0.1, readPing4);
 TimedAction compass1Read = TimedAction(1, readCompass1);
 TimedAction temperatureRead = TimedAction(5, readTempAndPressure);
-TimedAction gyroRead = TimedAction(10, readGyro);
+TimedAction gyroRead = TimedAction(1, readGyro);
 
 void loop()
 {
@@ -391,7 +391,7 @@ void loop()
 
   if(ping1Value != ping1ValueNew) {
     ping1Value = ping1ValueNew;
-    returnString += ",groundDistance:";
+    returnString += ",rearDistance:";
     returnString += ping1Value;
   }
   if(ping2Value != ping2ValueNew) {

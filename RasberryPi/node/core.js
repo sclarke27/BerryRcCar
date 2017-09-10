@@ -60,7 +60,7 @@ class BotCore {
 
     setInterval(() => {
       otherBarry.main();
-    },3);
+    },1);
 
   }
 

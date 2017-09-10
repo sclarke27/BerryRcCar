@@ -129,6 +129,41 @@ class HttpServer {
   }
 
   /**
+   * route to handle phone page user sees in browser
+   */
+  createPhoneRoute() {
+    this._webApp.get('/phone', (request, response) => {
+      const sensorData = this._sensors.getSensorDataSet();
+      const botStatus = this._botActions.getBotStatus();
+      const sensorKeys = this._sensors.getSensorKeys();
+
+      response.render('phone', {
+        data: sensorData,
+        status: botStatus,
+        sensors: this._sensors.getSensorDataSet(),
+        intents: BotIntents
+      })
+    })
+    this._webApp.route('/phone/:channel-:newValueX-:newValueY-:newValueZ')
+    .post((request, response) => {
+      const phoneSensorChannel = request.params.channel;
+	  const sensorValueX = request.params.newValueX;
+	  const sensorValueY = request.params.newValueY;
+	  const sensorValueZ = request.params.newValueZ;
+      this._sensors.setDataValue(`phone${phoneSensorChannel}X`, sensorValueX);
+      this._sensors.setDataValue(`phone${phoneSensorChannel}Y`, sensorValueY);
+      this._sensors.setDataValue(`phone${phoneSensorChannel}Z`, sensorValueZ);
+      const sensorData = this._sensors.getSensorDataSet();
+      const botStatus = this._botActions.getBotStatus();
+      response.json({
+        data: sensorData,
+        status: botStatus,
+      })
+    })
+  }
+  
+
+  /**
    * server error handler
    * @param  {[Object]} err [message object]
    */
@@ -145,7 +180,8 @@ class HttpServer {
     this.createStatusRoute();
     this.createSensorsRoute();
     this.createIntentRoute();
-    this.createResetSensorRoute()
+    this.createResetSensorRoute();
+	this.createPhoneRoute();
 
     this._webApp.listen(this._port, this.onServerStarted.bind(this));
 
