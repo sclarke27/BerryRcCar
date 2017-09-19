@@ -10,22 +10,8 @@
 		body {
 		  background-color: black;
 		  color: white;
-		  font-family: arial;
-		  font-size: 1.3rem;
-		  display: block;
-		}
-		.vrWrapper {
-			width: 100%;
-			height: 100%;
-			display: flex;
-			flex-direction: row;
-		}
-		
-		.leftEye, .rightEye {
-			width: 50%;
-			height: 100%;
-			text-align: center;
-			padding-top: 120px;
+		  width: 100vw;
+		  height: 100vh;
 		}
 	</style>
 
@@ -93,9 +79,9 @@
 					document.getElementById("magnetometerXR").innerHTML = magnetometerX;
 					document.getElementById("magnetometerYR").innerHTML = magnetometerY;
 					document.getElementById("magnetometerZR").innerHTML = magnetometerZ;
-					document.getElementById("magnetometerXL").innerHTML = newXValue;
-					document.getElementById("magnetometerYL").innerHTML = newYValue;
-					document.getElementById("magnetometerZL").innerHTML = newZValue;
+					document.getElementById("magnetometerXL").innerHTML = magnetometerX;
+					document.getElementById("magnetometerYL").innerHTML = magnetometerY;
+					document.getElementById("magnetometerZL").innerHTML = magnetometerZ;
 					setSensorValue('Mag', magnetometerX, magnetometerY, magnetometerZ);
 				}
 			}
@@ -123,19 +109,53 @@
 			}
 		}
 	</script>
-	
+	<style>
+		.vrWrapper {
+			width: 917px;
+			height: 100%;
+			display: flex;
+			flex-direction: row;
+			padding: 0px;
+			margin: 0px 0px;
+		}
+		
+		.leftEye, .rightEye {
+			height: 100%;
+			background-position: top center;
+			background-repeat: no-repeat;
+			background-size: contain;
+			position: relative;
+			flex: 1 1 50%;
+		}	
+		.coords {
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			font-size: 10px;
+			margin: 5px;
+			color: rgba(255, 255, 255, 0.2);
+			
+		}
+		.coords div {
+			padding: 0px 5px 0px 2px;
+			color: rgba(255, 255, 255, 0.6);
+		}
+	</style>
 	<div class="vrWrapper">
-		<div class="leftEye">
-			magnetometer raw<br>
-			<div id="magnetometerXL"></div>
-			<div id="magnetometerYL"></div>
-			<div id="magnetometerZL"></div>
+		<div class="leftEye" style="background-image: url(http://192.168.0.4:8181/)">
+			
+			<div class="coords">
+				X:<div id="magnetometerXL"></div>
+				Y:<div id="magnetometerYL"></div>
+				Z:<div id="magnetometerZL"></div>
+			</div>
 		</div>
-		<div class="rightEye">
-			magnetometer processed<br>
-			<div id="magnetometerXR"></div>
-			<div id="magnetometerYR"></div>
-			<div id="magnetometerZR"></div>
+		<div class="rightEye"  style="background-image: url(http://192.168.0.4:8182/)">
+			<div class="coords">
+				X:<div id="magnetometerXR"></div>
+				Y:<div id="magnetometerYR"></div>
+				Z:<div id="magnetometerZR"></div>
+			</div>
 		</div>
 	</div>
 	
