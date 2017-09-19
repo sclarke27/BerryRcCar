@@ -78,7 +78,7 @@ class BotCore {
 
   main() {
     if(this._botActions) {
-      this._botActions.handleTick();
+      this._botActions.handleTick(this._sensors);
     }
   }
 }

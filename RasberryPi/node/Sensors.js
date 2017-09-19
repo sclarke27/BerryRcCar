@@ -1,3 +1,4 @@
+const sysInfo = require('systeminformation');
 /**
  * [_sensorData description]
  * @type {Object}
@@ -174,28 +175,34 @@ class Sensors {
         default: 0,
         current: 0
       },	  
-/*
-      phoneAccelX: {
-        min: -11,
-        max: 11,
+
+	  cpuTemp: {
+        min: 0,
+        max: 100,
         default: 0,
         current: 0
       },
 
-      phoneAccelY: {
-        min: -11,
-        max: 11,
+      memoryUsage: {
+        min: 0,
+        max: 773050368,
         default: 0,
         current: 0
       },
-
-      phoneAccelZ: {
-        min: -11,
-        max: 11,
+	  
+	  sysAvgLoad: {
+        min: 0,
+        max: 100,
         default: 0,
         current: 0
-      },	  
-*/
+	  },
+
+	  sysCurrLoad: {
+        min: 0,
+        max: 100,
+        default: 0,
+        current: 0
+	  }
 
     }
     this._db = db;
@@ -249,6 +256,19 @@ class Sensors {
         }
       }
     }
+  }
+  
+  refreshSystemInfo() {
+	  sysInfo.cpuTemperature((data) => {
+		  this.setDataValue('cpuTemp', data.main);
+	  })
+	  sysInfo.mem((data) => {
+		  this.setDataValue('memoryUsage', data.free);
+	  })
+	  sysInfo.currentLoad((data) => {
+		  this.setDataValue('sysAvgLoad', data.avgload);
+		  this.setDataValue('sysCurrLoad', data.currentload);
+	  })
   }
 
   getSensorDataValue(sensorKey) {
