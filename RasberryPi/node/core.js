@@ -38,11 +38,11 @@ class BotCore {
   startDBConnection() {
     this._db = mongojs(this._databaseUrl, this._collections);
     this._db.on('error', function (err) {
-        console.log('database error', err)
+      console.log('database error', err)
     })
 
     this._db.on('connect', function () {
-        console.log('database connected')
+      console.log('database connected')
     })
 
   }
@@ -52,15 +52,14 @@ class BotCore {
     this._botState = new BotState(this._db);
     this._sensors = new Sensors(this._db, this._botState);
     this._botActions = new BotActions(this._sensors, this._botState);
-    if(!this._softwareDebug) {
-
-        this._arduino.startPort(this._arduinoBaud);
+    if (!this._softwareDebug) {
+      this._arduino.startPort(this._arduinoBaud);
     }
     this._arduino.setDataHandler(this._sensors.setSensorDataSet.bind(this._sensors));
 
     setInterval(() => {
       otherBarry.main();
-    },1);
+    }, 1);
 
   }
 
@@ -70,14 +69,15 @@ class BotCore {
   }
 
   start() {
-    this.startDBConnection() ;
+    this.startDBConnection();
     this.startBot();
     this.startHttp();
+    this._sensors.setHttpServer(this._httpServer);
     this._botActions.changeIntent(BotIntents.startUp);
   }
 
   main() {
-    if(this._botActions) {
+    if (this._botActions) {
       this._botActions.handleTick(this._sensors);
     }
   }

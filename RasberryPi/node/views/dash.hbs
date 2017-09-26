@@ -1,246 +1,233 @@
-	<style>
-		body {
-			display: block !important;
+
+<div id="panelBody">
+
+</div>
+
+<script>
+	const dataDiv = document.getElementById('botData');
+	const dashItems = {
+		temp: {
+			title: 'Environment',
+			headerBgColor: "rgba(0, 255, 0, 0.27)",
+			dataItems: [{
+					title: 'Air Temperature',
+					sensorKey: 'tempurature',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Altitude',
+					sensorKey: 'altitude',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Pressure',
+					sensorKey: 'pressure',
+					controlClass: ThermometerControl
+				},
+			]
+		},
+		distance: {
+			title: 'Distance (cm)',
+			headerBgColor: "rgba(72, 72, 172, 0.27)",
+			dataItems: [{
+					title: 'Left',
+					sensorKey: 'leftDistance',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Center',
+					sensorKey: 'centerDistance',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Right',
+					sensorKey: 'rightDistance',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Rear',
+					sensorKey: 'rearDistance',
+					controlClass: ThermometerControl
+				}
+			]
+		},
+		direction: {
+			title: 'Direction',
+			headerBgColor: "rgba(127, 127, 172, 0.27)",
+			dataItems: [{
+				title: 'Compass',
+				sensorKey: 'compass1',
+				controlClass: CompassControl
+			}]
+		},
+		system: {
+			title: 'System',
+			headerBgColor: "rgba(255, 0, 0, 0.27)",
+			dataItems: [{
+					title: 'CPU Temperature',
+					sensorKey: 'cpuTemp',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'CPU Utilization',
+					sensorKey: 'sysCurrLoad',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Average Load',
+					sensorKey: 'sysAvgLoad',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Free Memory',
+					sensorKey: 'memoryUsage',
+					controlClass: ThermometerControl
+				}
+			]
+		},
+		radio: {
+			title: 'RC Radio',
+			headerBgColor: "rgba(172, 72, 172, 0.27)",
+			dataItems: [{
+					title: 'Throttle',
+					sensorKey: 'throttleRadio',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Steering',
+					sensorKey: 'steeringRadio',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Tilt',
+					sensorKey: 'tiltRadio',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Pan',
+					sensorKey: 'panRadio',
+					controlClass: ThermometerControl
+				}
+			]
+		},
+		headsUp: {
+			title: "Video Feeds",
+			dataItems: [{
+					title: "Left Camera",
+					videoUrl: "http://192.168.1.120:8181/",
+					controlClass: VideoFeed
+				},
+				{
+					title: "Right Camera",
+					videoUrl: "http://192.168.1.120:8180/",
+					controlClass: VideoFeed
+				}
+
+			]
+		},
+		magnetometer: {
+			title: 'Phone Mag',
+			headerBgColor: "rgba(72, 72, 72, 0.27)",
+			dataItems: [{
+					title: 'Mag X',
+					sensorKey: 'phoneMagX',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Mag Y',
+					sensorKey: 'phoneMagY',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Mag Z',
+					sensorKey: 'phoneMagZ',
+					controlClass: ThermometerControl
+				}
+			]
 		}
-	</style>
-	<script>
-		function getStatus() {
-		  var opts = {
+		/*
+		accelerometer: {
+			title: 'Accelerometer',
+			headerBgColor: "rgba(72, 72, 72, 0.27)",
+			dataItems: [
+				{
+					title: 'Accel X',
+					sensorKey: 'accelX',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Accel Y',
+					sensorKey: 'accelY',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Accel Z',
+					sensorKey: 'accelZ',
+					controlClass: ThermometerControl
+				},
+			]
+		},
+		gyroscope: {
+			title: 'Gyroscope',
+			headerBgColor: "rgba(72, 72, 72, 0.27)",
+			dataItems: [
+				{
+					title: 'Gyro X',
+					sensorKey: 'gyroX',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Gyro Y',
+					sensorKey: 'gyroY',
+					controlClass: ThermometerControl
+				},
+				{
+					title: 'Gyro Z',
+					sensorKey: 'gyroZ',
+					controlClass: ThermometerControl
+				},
+			]
+		}
+		*/
+	}
+
+	const socket = io();
+	socket.on('connect', function (data) {
+		socket.emit('join', 'Hello World from client');
+	});
+	socket.on('sensorData', function (returnData) {
+		const sensorData = returnData.data;
+		const sensorKeys = Object.keys(sensorData);
+		const statusData = returnData.status;
+		const statusKeys = Object.keys(statusData);
+
+		for (const panelKey of Object.keys(dashItems)) {
+			const panel = dashItems[panelKey];
+			panel.control.update(sensorData);
+		}
+
+	});
+
+	fetch(`/status`, {
 			method: 'POST',
 			body: 'json',
 			headers: {}
-		  };
-		  fetch(`/status`, opts)
-		  .then(function (response) {
-			return response.json();
-		  })
-		  .then(function (returnData) {
-			const dataDiv = document.getElementById('botData');
-			const sensorData = returnData.data;
-			const sensorKeys = Object.keys(sensorData);
-			const statusData = returnData.status;
-			const statusKeys = Object.keys(statusData);
-			
-			for(const panelKey of Object.keys(dashItems)) {
-				const panel = dashItems[panelKey];
-				panel.control.update(sensorData);
-			}
-			
-
-			return;
-		  });
-
-		}
-		
-	</script>
-	
-	<div id="panelBody">
-	
-	</div>
-	
-	<script>
-	
-		const dashItems = {
-			temp : {
-				title: 'Environment',
-				headerBgColor: "rgba(0, 255, 0, 0.27)",
-				dataItems: [
-					{
-						title: 'Air Temperature',
-						sensorKey: 'tempurature',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Altitude',
-						sensorKey: 'altitude',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Pressure',
-						sensorKey: 'pressure',
-						controlClass: ThermometerControl
-					},
-				]
-			},
-			distance : {
-				title: 'Distance (cm)',
-				headerBgColor: "rgba(72, 72, 172, 0.27)",
-				dataItems: [
-					{
-						title: 'Left',
-						sensorKey: 'leftDistance',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Center',
-						sensorKey: 'centerDistance',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Right',
-						sensorKey: 'rightDistance',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Rear',
-						sensorKey: 'rearDistance',
-						controlClass: ThermometerControl
-					}
-				]
-			},
-			direction: {
-				title: 'Direction',
-				headerBgColor: "rgba(127, 127, 172, 0.27)",
-				dataItems: [
-					{
-						title: 'Compass',
-						sensorKey: 'compass1',
-						controlClass: CompassControl
-					}
-				]
-			},
-			system : {
-				title: 'System',
-				headerBgColor: "rgba(255, 0, 0, 0.27)",
-				dataItems: [
-					{
-						title: 'CPU Temperature',
-						sensorKey: 'cpuTemp',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'CPU Utilization',
-						sensorKey: 'sysCurrLoad',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Average Load',
-						sensorKey: 'sysAvgLoad',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Free Memory',
-						sensorKey: 'memoryUsage',
-						controlClass: ThermometerControl
-					}
-				]
-			},
-			radio: {
-				title: 'RC Radio',
-				headerBgColor: "rgba(172, 72, 172, 0.27)",
-				dataItems: [
-					{
-						title: 'Throttle',
-						sensorKey: 'throttleRadio',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Steering',
-						sensorKey: 'steeringRadio',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Tilt',
-						sensorKey: 'tiltRadio',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Pan',
-						sensorKey: 'panRadio',
-						controlClass: ThermometerControl
-					}
-				]
-			},
-			magnetometer: {
-				title: 'Magnetometer',
-				headerBgColor: "rgba(72, 72, 72, 0.27)",
-				dataItems: [
-					{
-						title: 'Mag X',
-						sensorKey: 'magX',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Mag Y',
-						sensorKey: 'magY',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Mag Z',
-						sensorKey: 'magZ',
-						controlClass: ThermometerControl
-					},
-				]
-			},
-			accelerometer: {
-				title: 'Accelerometer',
-				headerBgColor: "rgba(72, 72, 72, 0.27)",
-				dataItems: [
-					{
-						title: 'Accel X',
-						sensorKey: 'accelX',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Accel Y',
-						sensorKey: 'accelY',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Accel Z',
-						sensorKey: 'accelZ',
-						controlClass: ThermometerControl
-					},
-				]
-			},
-			gyroscope: {
-				title: 'Gyroscope',
-				headerBgColor: "rgba(72, 72, 72, 0.27)",
-				dataItems: [
-					{
-						title: 'Gyro X',
-						sensorKey: 'gyroX',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Gyro Y',
-						sensorKey: 'gyroY',
-						controlClass: ThermometerControl
-					},
-					{
-						title: 'Gyro Z',
-						sensorKey: 'gyroZ',
-						controlClass: ThermometerControl
-					},
-				]
-			}
-		}
-
-		var opts = {
-			method: 'POST',
-			body: 'json',
-			headers: {}
-		};
-		fetch(`/status`, opts)
+		})
 		.then(function (response) {
 			return response.json();
 		})
 		.then(function (returnData) {
-			const dataDiv = document.getElementById('botData');
+
 			const sensorData = returnData.data;
 			const sensorKeys = Object.keys(sensorData);
 			const statusData = returnData.status;
 			const statusKeys = Object.keys(statusData);
-			
-			for(const panelKey of Object.keys(dashItems)) {
+
+			for (const panelKey of Object.keys(dashItems)) {
 				const panel = dashItems[panelKey];
 				panel.control = new InstrumentPanel(panel, 'panelBody');
 				panel.control.show(sensorData);
 			}
-			
-			setInterval(getStatus, 50);
-			
-		});
-	</script>
-	
 
+		});
+</script>

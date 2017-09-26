@@ -8,7 +8,7 @@ class ArduinoPort {
     this._softwareDebug = softwareDebugEnabled;
     this._port = null;
     this._dataHandler = null;
-    if(!this._softwareDebug) {
+    if (!this._softwareDebug) {
       this._serialPort = require('serialport');
       this._readline = this._serialPort.parsers.Readline;
       this._parser = new this._readline();
@@ -26,8 +26,7 @@ class ArduinoPort {
         this._port.on('open', this.onConnectionOpened.bind(this));
         this._port.on('error', this.onError.bind(this));
         this._parser.on('data', this.onData.bind(this));
-      }
-      catch(err) {
+      } catch (err) {
         console.log(err);
       }
     }
@@ -38,7 +37,7 @@ class ArduinoPort {
   }
 
   onData(data) {
-    if(typeof this._dataHandler === 'function') {
+    if (typeof this._dataHandler === 'function') {
       this._dataHandler(data);
     }
   }

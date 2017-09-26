@@ -1,0 +1,9 @@
+# Data types
+HM55B_Compass	KEYWORD1
+
+# Methods and functions
+initialize	KEYWORD2
+read	KEYWORD2
+
+# Constants
+NO_VALUE	LITERAL1

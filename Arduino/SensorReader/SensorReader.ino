@@ -88,7 +88,7 @@ void readRcRadio(String channel, int pin) {
   int channelPulse = pulseIn(pin, HIGH, 35000);
   if(channelPulse != 0) {
     if(pin == rcChannel2Pin) {
-      channelPulse = normalizeRadioInput(channelPulse);
+      channelPulse = normalizeRadioInputForServo(channelPulse);
     } else {
       channelPulse = normalizeRadioInputForServo(channelPulse);
     }
@@ -133,7 +133,7 @@ void readPingSensor(String channel, int pin) {
   digitalWrite(pin, HIGH);
   delayMicroseconds(5);
   digitalWrite(pin, LOW);
-  int pingTimeout = 17000;
+  int pingTimeout = 15000;
 
   pinMode(pin, INPUT);
   int duration = pulseIn(pin, HIGH, pingTimeout);
@@ -183,6 +183,20 @@ void readPing4() {
   readPingSensor("4", pingPin4);
 }
 
+void readRadio1() {
+  readRcRadio("1", rcChannel1Pin);
+}
+void readRadio2() {
+  readRcRadio("2", rcChannel2Pin);
+}
+void readRadio3() {
+  readRcRadio("3", rcChannel3Pin);
+}
+void readRadio4() {
+  readRcRadio("4", rcChannel4Pin);
+}
+
+
 void readGyro() {
   // If intPin goes high, all data registers have new data
   // On interrupt, check if data ready interrupt
@@ -193,9 +207,9 @@ void readGyro() {
 
     // Now we'll calculate the accleration value into actual g's
     // This depends on scale being set
-    myIMU.ax = (float)myIMU.accelCount[0]*myIMU.aRes; // - accelBias[0];
-    myIMU.ay = (float)myIMU.accelCount[1]*myIMU.aRes; // - accelBias[1];
-    myIMU.az = (float)myIMU.accelCount[2]*myIMU.aRes; // - accelBias[2];
+    myIMU.ax = (float)myIMU.accelCount[0]*myIMU.aRes;// - accelBias[0];
+    myIMU.ay = (float)myIMU.accelCount[1]*myIMU.aRes;// - accelBias[1];
+    myIMU.az = (float)myIMU.accelCount[2]*myIMU.aRes;// - accelBias[2];
 
     myIMU.readGyroData(myIMU.gyroCount);  // Read the x/y/z adc values
     myIMU.getGres();
@@ -220,12 +234,9 @@ void readGyro() {
     // Include factory calibration per data sheet and user environmental
     // corrections
     // Get actual magnetometer value, this depends on scale being set
-    myIMU.mx = (float)myIMU.magCount[0]*myIMU.mRes*myIMU.magCalibration[0] -
-               myIMU.magbias[0];
-    myIMU.my = (float)myIMU.magCount[1]*myIMU.mRes*myIMU.magCalibration[1] -
-               myIMU.magbias[1];
-    myIMU.mz = (float)myIMU.magCount[2]*myIMU.mRes*myIMU.magCalibration[2] -
-               myIMU.magbias[2];
+    myIMU.mx = (float)myIMU.magCount[0]*myIMU.mRes*myIMU.magCalibration[0] - myIMU.magbias[0];
+    myIMU.my = (float)myIMU.magCount[1]*myIMU.mRes*myIMU.magCalibration[1] - myIMU.magbias[1];
+    myIMU.mz = (float)myIMU.magCount[2]*myIMU.mRes*myIMU.magCalibration[2] - myIMU.magbias[2];
   } // if (readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)
 
   // Must be called before updating quaternions!
@@ -324,13 +335,17 @@ void setup() {
     Serial.println(myIMU.magCalibration[2], 2);
   }
 }
-TimedAction ping1Read = TimedAction(0.4, readPing1);
-TimedAction ping2Read = TimedAction(0.3, readPing2);
-TimedAction ping3Read = TimedAction(0.2, readPing3);
-TimedAction ping4Read = TimedAction(0.1, readPing4);
-TimedAction compass1Read = TimedAction(1, readCompass1);
-TimedAction temperatureRead = TimedAction(5, readTempAndPressure);
-TimedAction gyroRead = TimedAction(1, readGyro);
+TimedAction ping1Read = TimedAction(0.01, readPing1);
+TimedAction ping2Read = TimedAction(0.01, readPing2);
+TimedAction ping3Read = TimedAction(0.01, readPing3);
+TimedAction ping4Read = TimedAction(0.01, readPing4);
+TimedAction radio1Read = TimedAction(0.01, readRadio1);
+TimedAction radio2Read = TimedAction(0.01, readRadio2);
+TimedAction radio3Read = TimedAction(0.01, readRadio3);
+TimedAction radio4Read = TimedAction(0.01, readRadio4);
+TimedAction compass1Read = TimedAction(0.1, readCompass1);
+TimedAction temperatureRead = TimedAction(0.1, readTempAndPressure);
+//TimedAction gyroRead = TimedAction(1, readGyro);
 
 void loop()
 {
@@ -338,13 +353,13 @@ void loop()
   ping2Read.check();
   ping3Read.check();
   ping4Read.check();
+  radio1Read.check();
+  radio2Read.check();
+  radio3Read.check();
+  radio4Read.check();
   compass1Read.check();
   temperatureRead.check();
-  gyroRead.check();
-  readRcRadio("1", rcChannel1Pin);
-  readRcRadio("2", rcChannel2Pin);
-  readRcRadio("3", rcChannel3Pin);
-  readRcRadio("4", rcChannel4Pin);
+  //gyroRead.check();
   String returnString = "{active:true";
 
 
@@ -414,6 +429,7 @@ void loop()
     returnString += ",compass1:";
     returnString += compass1Value;
   }
+  /*
   if(xAccelValue != xAccelValueNew) {
     xAccelValue = xAccelValueNew;
     returnString += ",accelX:";
@@ -459,7 +475,7 @@ void loop()
     returnString += ",magZ:";
     returnString += zMagValue;
   }
-  
+  */
   
   if(returnString != "{active:true") {
     Serial.println(returnString + ",end:true}");

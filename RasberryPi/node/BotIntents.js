@@ -38,7 +38,7 @@ const BotIntents = {
       update: (sensors, botActions) => {
         botActions.handlePingSensors(sensors, botActions);
         botActions.handleDriveForard(sensors, botActions);
-		botActions.handleHeadsUpMovement(sensors, botActions)
+        botActions.handleHeadsUpMovement(sensors, botActions)
       },
       end: (sensors, botActions) => {
         console.log('End driving forward state');

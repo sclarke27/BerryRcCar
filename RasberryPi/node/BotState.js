@@ -1,4 +1,3 @@
-
 class BotState {
     constructor(db) {
         this._db = db;
@@ -39,24 +38,34 @@ class BotState {
         const _dataSet = this._stateData[dataSet];
         _dataSet[key] = value;
         this._db.botState.findAndModify({
-            query: { name: key },
-            update: { $set: { value: value } },
+            query: {
+                name: key
+            },
+            update: {
+                $set: {
+                    value: value
+                }
+            },
             new: true,
             upsert: true
-        }, (err, doc, lastErrorObject) => {
-        })
+        }, (err, doc, lastErrorObject) => {})
     }
 
     saveDataSetToDB() {
-        for(const key of Object.keys(this._stateData)) {
+        for (const key of Object.keys(this._stateData)) {
             const value = this._stateData[key];
             this._db.botState.findAndModify({
-                query: { name: key },
-                update: { $set: { value: value } },
+                query: {
+                    name: key
+                },
+                update: {
+                    $set: {
+                        value: value
+                    }
+                },
                 new: true,
                 upsert: true
-            }, (err, doc, lastErrorObject) => {
-            })
+            }, (err, doc, lastErrorObject) => {})
         }
     }
 }
