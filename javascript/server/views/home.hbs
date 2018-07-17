@@ -1,0 +1,28 @@
+<script type="text/recon">
+@div {
+	@form {
+		host: '{{fullSwimUrl}}'
+		node: 'botState'
+		botName:  @link(lane: 'name', type: value)
+		[Bot Name:]
+		@input(type: text, name: device, value: $botName#0)
+		@br
+		canDriveForward:  @link(lane: 'canDriveForward', type: value)
+		[Can Drive Forwards:] 
+		@input(type: text, name: device, value: $canDriveForward#0)
+		@br
+		[Can Drive Backwards:] 
+		canDriveBackward:  @link(lane: 'canDriveBackward', type: value)
+		@input(type: text, name: device, value: $canDriveBackward#0)
+		@br
+		[Is Driving Forwards:] 
+		isDrivingForward:  @link(lane: 'isDrivingForward', type: value)
+		@input(type: text, name: device, value: $isDrivingForward#0)
+		@br
+		[Is Driving Backwards:]
+		isDrivingBackward:  @link(lane: 'isDrivingBackward', type: value)
+		@input(type: text, name: device, value: $isDrivingBackward#0)
+		@br
+	}
+}
+</script>

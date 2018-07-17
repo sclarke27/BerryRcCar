@@ -1,0 +1,359 @@
+<!-- Dynamic recon: Creating gauge components -->
+<style>
+	body {
+		background-color: black;
+	}
+</style>
+<script type="text/recon">
+@div {
+	blocks: {
+		block1: {
+			card1: {
+				node: '/sensor/leftDistance'
+				title: 'Left Ping Sensor'
+				subtitle: 'Distance'
+				sensorDialColor: '#3333ff'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-right'
+				gaugeMax: 5000
+			}
+
+			card2: {
+				node: '/sensor/rightDistance'
+				title: 'Right Ping Sensor'
+				subtitle: 'Distance'
+				sensorDialColor: '#3333ff'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-left'
+				gaugeMax: 5000
+			}
+
+			card3: {
+				node: '/sensor/centerDistance'
+				title: 'Center Ping Sensor'
+				subtitle: 'Distance'
+				sensorDialColor: '#3333ff'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'middle-right'
+				gaugeMax: 5000
+			}	
+
+			card4: {
+				node: '/sensor/rearDistance'
+				title: 'Rear Ping Sensor'
+				subtitle: 'Distance'
+				sensorDialColor: '#3333ff'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'middle-left'
+				gaugeMax: 5000
+			}	
+		}
+		{{!-- block2: {
+			card1: {
+				node: '/sensor/temperature'
+				title: 'BMP180'
+				subtitle: 'temperature C'
+				sensorDialColor: '#00cc00'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-right'
+				gaugeMax: 150
+			}
+
+			card2: {
+				node: '/sensor/temperature2'
+				title: 'BMP180'
+				subtitle: 'temperature F'
+				sensorDialColor: '#00cc00'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-left'
+				gaugeMax: 150
+			}
+
+			card3: {
+				node: '/sensor/pressure'
+				title: 'BMP180'
+				subtitle: 'Pressure'
+				sensorDialColor: '#00cc00'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'middle-right'
+				gaugeMax: 1000
+			}	
+
+			card4: {
+				node: '/sensor/altitude'
+				title: 'BMP180'
+				subtitle: 'Altitude'
+				sensorDialColor: '#00cc00'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'middle-left'
+				gaugeMax: 25000
+			}			
+		}	 --}}
+		block6: {
+			card1: {
+				node: '/sensor/steeringRadio'
+				title: 'Radio'
+				subtitle: 'Steering Radio'
+				sensorDialColor: '#cc0000'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-right'
+				gaugeMax: 180
+			}
+
+			card2: {
+				node: '/sensor/throttleRadio'
+				title: 'Radio'
+				subtitle: 'Throttle Radio'
+				sensorDialColor: '#cc0000'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-left'
+				gaugeMax: 180
+			}
+			card3: {
+				node: '/sensor/compass1'
+				title: 'HM55B'
+				subtitle: 'Compass'
+				sensorDialColor: '#cc00cc'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'middle-left'
+				gaugeMax: 360
+			}
+
+			card4: {
+				node: '/sensor/gyroZ'
+				title: 'MPU-92/65'
+				subtitle: 'Gyro Z'
+				sensorDialColor: '#0000ff'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'middle-right'
+				gaugeMax: 1000
+			}			
+			
+		}		
+		block3: {
+
+
+			card2: {
+				node: '/sensor/accelX'
+				title: 'MPU-92/65'
+				subtitle: 'X Acceleration'
+				sensorDialColor: '#550000'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-left'
+				gaugeMax: 3000
+			}
+
+			card3: {
+				node: '/sensor/accelY'
+				title: 'MPU-92/65'
+				subtitle: 'Y Acceleration'
+				sensorDialColor: '#550000'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-right'
+				gaugeMax: 3000
+			}	
+
+			card4: {
+				node: '/sensor/accelZ'
+				title: 'MPU-92/65'
+				subtitle: 'Z Acceleration'
+				sensorDialColor: '#550000'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'middle-left'
+				gaugeMax: 3000
+			}	
+						card5: {
+				node: '/sensor/magZ'
+				title: 'MPU-92/65'
+				subtitle: 'Magnetometer Z'
+				sensorDialColor: '#00ff00'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'middle-right'
+				gaugeMax: 500
+			}		
+		}		
+		{{!-- block13: {} --}}
+		block16: {
+			card1: {
+				node: '/sensor/phoneMagX'
+				title: 'Phone'
+				subtitle: 'Magnetometer X'
+				sensorDialColor: '#00ff00'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-right'
+				gaugeMax: 180
+			}
+
+			card2: {
+				node: '/sensor/phoneMagY'
+				title: 'Phone'
+				subtitle: 'Magnetometer Y'
+				sensorDialColor: '#00ff00'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-left'
+				gaugeMax: 360
+			}
+
+			card3: {
+				node: '/sensor/phoneMagZ'
+				title: 'Phone'
+				subtitle: 'Magnetometer Z'
+				sensorDialColor: '#00ff00'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'middle-left'
+				gaugeMax: 90
+			}
+	
+		}			
+		block4: {
+			card1: {
+				node: '/sensor/gyroX'
+				title: 'MPU-92/65'
+				subtitle: 'Gyro X'
+				sensorDialColor: '#0000ff'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-right'
+				gaugeMax: 1000
+			}
+
+			card2: {
+				node: '/sensor/gyroY'
+				title: 'MPU-92/65'
+				subtitle: 'Gyro Y'
+				sensorDialColor: '#0000ff'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-left'
+				gaugeMax: 1000
+			}
+
+	
+		}
+		block5: {
+			card1: {
+				node: '/sensor/magX'
+				title: 'MPU-92/65'
+				subtitle: 'Magnetometer X'
+				sensorDialColor: '#00ff00'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-right'
+				gaugeMax: 500
+			}
+
+			card2: {
+				node: '/sensor/magY'
+				title: 'MPU-92/65'
+				subtitle: 'Magnetometer Y'
+				sensorDialColor: '#00ff00'
+				sensorTextColor: '#ffffff'
+				cardPlacement: 'top-left'
+				gaugeMax: 500
+			}
+
+	
+		}	
+								
+	}	
+	@quilt {
+		host: '{{fullSwimUrl}}'
+		{{!-- host: 'ws://127.0.0.1:5620' --}}
+
+		blockAspectRatio: 1
+		transition: @transition(100, linear)
+		blockMarginScale: 10
+
+		@each(blockKey: $blocks.*:) {
+			@block {
+				@each(cardKey: $blocks.($blockKey).*:) {
+					@card {
+						backgroundColor: 'rgba(100,100,100,0.2)'
+						currentBlock: @let($blocks.($blockKey).($cardKey))
+						sensorDialColor: $currentBlock.sensorDialColor
+						sensorTextColor: $currentBlock.sensorTextColor
+						title: @text($eager($currentBlock.title))
+						subtitle: @text($eager($currentBlock.subtitle))
+						subtitleColor: $currentBlock.sensorDialColor
+						node: $currentBlock.node
+						proportion: 'square'
+						placement: $currentBlock.cardPlacement
+						body: @div{
+								style: {
+									display: 'flex'
+									flex-direction: 'column'
+									width: '100%'
+								}
+								@div {
+									style: {
+										display: 'flex'
+										flex-grow: 1
+										max-height: '60%'
+									}
+									@gauge {
+										id: gauge
+
+										# Gauge Values
+										linkData: @link(lane: 'latest', type: value)
+										meter: $round($linkData#0)/$currentBlock.gaugeMax
+										value: @text([{ $round($eager($linkData#0)) || 0}])
+
+										# Gauge Style
+										innerRadius: 60 @pct
+										dialCornerRadius: 5 @pct
+										faceColor: 'rgba(74, 74, 74, 0.6)'
+										dialColor: $currentBlock.sensorDialColor
+										valueColor: $currentBlock.sensorTextColor
+										valueWeight: 400
+										valueSize: 80 @pct
+									}
+								}
+								@div {
+									style: {
+										display: 'flex'
+										flex-grow: 1
+										max-height: '405%'
+									}
+									@chart {
+										id: chart
+										@plot(type: area) {
+											historyLink: @link(lane: 'shortHistory', type: map)
+											areaFill: $currentBlock.sensorDialColor
+											@each(t: $historyLink.*:) {
+												key: $t
+												@plotPoint {
+													v: @let($historyLink.($t))
+													x: $t
+													y: $round($eager($v/10))
+													dy: 0
+												}
+											}
+										}
+
+										top: {
+											gutter: '50px'
+										}
+										right: {
+											gutter: '0px'
+										}
+										bottom: @axis(type: time) {
+											gutter: '0px'
+											hidden: true
+										}
+										left: @axis(type: linear) {
+											gutter: '0px'
+											hidden: true
+										}
+
+										domainBoundLeft: true
+										domainBoundRight: true
+										domainPaddingTop: 1
+										domainPaddingBottom: 1
+									}	
+								}			
+							}
+					}
+				}
+				
+			}
+		}
+	}
+}
+</script>

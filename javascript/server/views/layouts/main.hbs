@@ -1,0 +1,35 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    {{!-- <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> --}}
+    <title>{{botName}} | {{routeName}}</title>
+    {{!-- <link rel="icon" type="image/png" href="/assets/favicon_x128.png"> --}}
+
+    <!-- Bootstrap style -->
+    {{!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> --}}
+
+    <!-- Main style -->
+    {{!-- <link rel="stylesheet" href="/css/style.css" type="text/css"> --}}
+
+    <!-- Javascript -->
+    <script src="/assets/recon.min.js"></script>
+    <script src="/assets/swim-app.min.js"></script>
+    <script src="/assets/swim-client.min.js"></script>
+    {{!-- <script src="/js/default.js"></script> --}}
+    <script type="text/javascript" src="/js/botClass.js"></script>
+    <script type="text/javascript" src="/js/basePage.js"></script>
+
+    <!-- Global variable from Handlebar -->
+    <script type="text/javascript">
+        const routeName = '{{routeName}}';
+        const botName = '{{botName}}';
+    </script>
+</head>
+<body class="page-{{routeName}}">
+	{{{body}}}
+</body>
+
+</html>
