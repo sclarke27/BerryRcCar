@@ -17,6 +17,7 @@ int pingPin1 = 6;
 int pingPin2 = 7;
 int pingPin3 = 8;
 int pingPin4 = 9;
+int pingPin5 = 5;
 int compassClockPin = 10;
 int compassEnablePin = 11;
 int compassIOPin = 12;
@@ -30,6 +31,7 @@ int ping1Value = 0;
 int ping2Value = 0;
 int ping3Value = 0;
 int ping4Value = 0;
+int ping5Value = 0;
 int compass1Value = 0;
 double temperatureValue = 0.0;
 double temperature2Value = 0.0;
@@ -50,6 +52,7 @@ int ping1ValueNew = 0;
 int ping2ValueNew = 0;
 int ping3ValueNew = 0;
 int ping4ValueNew = 0;
+int ping5ValueNew = 0;
 int rcChannel1ValueNew = 0;
 int rcChannel2ValueNew = 0;
 // int rcChannel3ValueNew = 0;
@@ -156,6 +159,10 @@ void readPingSensor(String channel, int pin) {
     ping4ValueNew = duration;
   }
 
+  if(pin == pingPin5) {
+    ping5ValueNew = duration;
+  }
+
 }
 
 void readCompass1() {
@@ -181,6 +188,10 @@ void readPing3() {
 
 void readPing4() {
   readPingSensor("4", pingPin4);
+}
+
+void readPing5() {
+  readPingSensor("5", pingPin5);
 }
 
 void readRadio1() {
@@ -353,6 +364,8 @@ void loop()
   ping2Read.check();
   ping3Read.check();
   ping4Read.check();
+  ping5Read.check();
+
   radio1Read.check();
   radio2Read.check();
   // radio3Read.check();
@@ -423,6 +436,11 @@ void loop()
     ping4Value = ping4ValueNew;
     returnString += ",leftDistance:";
     returnString += ping4Value;
+  }
+  if(ping5Value != ping5ValueNew) {
+    ping5Value = ping5ValueNew;
+    returnString += ",leftDistance:";
+    returnString += ping5Value;
   }
   if(compass1Value != compass1ValueNew) {
     compass1Value = compass1ValueNew;

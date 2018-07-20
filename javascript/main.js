@@ -7,9 +7,9 @@ const BotState = require('./bot/BotState');
 const BotIntents = require('./bot/BotIntents');
 const HttpServer = require('./server/HttpServer');
 const EventEmitter = require('events');
-const ArduinoPort = require('./bot/ArduinoPort');
+const ArduinoController = require('./utils/serial/ArduinoController');
 // const PythonShell = require('python-shell');
-const ServoController = require('./bot/ServoController');
+const MaestroController = require('./utils/serial/MaestroController');
 const io = require('socket.io-client')
 const swim = require('swim-client-js');
 
@@ -107,23 +107,26 @@ class Main {
         this.fullHostUrl = 'http://' + this.hostUrl + ((this.port !== 80) ? (':' + this.port) : '');
         this.fullSwimUrl = 'ws://' + this.hostUrl + ':' + this.swimPort;
 
-        this.servoController = new ServoController();
+        this._botState = new BotState(this.fullSwimUrl);
+        this._sensors = new Sensors(this.fullSwimUrl);
+        this._botActions = new BotActions(this._sensors, this._botState);
+
+        this.servoController = new MaestroController(this._softwareDebug);
         this.servoController.startPort('/dev/ttyACM1', 115200);
         this.servoController.reset();
 
-        this._arduino = new ArduinoPort(this._softwareDebug);
-        this._botState = new BotState(this.fullSwimUrl);
-        this._sensors = new Sensors(this.fullSwimUrl, this._botState, this.servoController);
-        this._botActions = new BotActions(this._sensors, this._botState);
-        if (!this._softwareDebug) {
-            this._arduino.startPort(this._arduinoBaud);
-        }
+        this._arduino = new ArduinoController(this._softwareDebug);
+        this._arduino.startPort('/dev/ttyACM0', this._arduinoBaud);
         this._arduino.setDataHandler(this._sensors.setSensorDataSet.bind(this._sensors));
 
         this.lastPhoneXValue = 90;
         this.lastPhoneYValue = 90;
         this.lastSteeringValue = 90;
         this.lastThrottleValue = 90;
+
+        // initalize bot state swim service
+        swim.command(this.fullSwimUrl, `/botState`, `setName`, this.serviceConfig.botName);
+
 
         this.phoneXValueLane = this.swimClient.downlinkValue()
             .host(`ws://127.0.0.1:5620`)
@@ -171,7 +174,6 @@ class Main {
         this.steeringValueLane.open();
         this.throttleValueLane.open();
 
-        swim.command(this.fullSwimUrl, `/botState`, `setName`, this.serviceConfig.botName);
 
         // console.info(this.phoneXValueLane);
 

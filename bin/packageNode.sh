@@ -19,6 +19,7 @@ mkdir -p ${dist_dir}
 ${path}/bin/stopNode.sh
 printf "${GREY}copy core files to build folder${NC}\n"
 cp -R ${src_dir}/bot ${build_dir}
+cp -R ${src_dir}/utils ${build_dir}
 cp -R ${src_dir}/server ${build_dir}
 cp -R ${src_dir}/main.js ${build_dir}
 cp -R ${src_dir}/package.json ${build_dir}

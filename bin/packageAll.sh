@@ -31,6 +31,7 @@ cp -R ${config_dir}/* ${build_dir}/config
 
 printf "*${GREY} copy JS files to build folder${NC}\n"
 cp -R ${javascript_src_dir}/bot ${build_dir}/javascript
+cp -R ${javascript_src_dir}/utils ${build_dir}/javascript
 cp -R ${javascript_src_dir}/server ${build_dir}/javascript
 cp -R ${javascript_src_dir}/modules ${build_dir}/javascript
 cp -R ${javascript_src_dir}/main.js ${build_dir}/javascript

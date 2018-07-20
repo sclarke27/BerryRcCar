@@ -11,10 +11,11 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
  * @type {Object}
  */
 class Sensors {
-  constructor(swimUrl, botState, servoController) {
-    console.info(swimUrl);
-    this.servoController = servoController;
+  constructor(swimUrl) {
     this.fullSwimUrl = swimUrl;
+
+    // define all sensor channels that will be tracked
+    // along with their min/max, default, and threshold values
     this._sensorData = {
       leftDistance: {
         min: 0,
@@ -37,7 +38,13 @@ class Sensors {
         current: 0,
         threshold: 2000
       },
-
+      headDistance: {
+        min: 0,
+        max: 5000,
+        default: 0,
+        current: 0,
+        threshold: 2000
+      },
       rearDistance: {
         min: 0,
         max: 5000,
@@ -219,11 +226,14 @@ class Sensors {
       }
 
     }
-    this._botState = botState;
-    this._httpServer = null;
   }
 
+  /**
+   * Sensors handler startup
+   */
   start() {
+    // prepopulate the swim sensor service with all the sensor values
+    // we will be keeping track of along with thier default threshold values
     for(const sensor of this.getSensorKeys()) {
       const currSensorData = this._sensorData[sensor];
       if(currSensorData) {
@@ -235,6 +245,7 @@ class Sensors {
     }
   }
 
+  // dont think this is used
   setHttpServer(httpServer) {
     this._httpServer = httpServer;
   }
@@ -250,25 +261,28 @@ class Sensors {
     swim.command(this.fullSwimUrl, `/sensor/${messageKey}`, `addLatest`, messageData);
   }  
 
+  /**
+   * Handle updating a specific sensor value in memory and in swim service
+   * 
+   * @param {string} key - the name of the sensor being updated
+   * @param {*} value - the value of the sensor being update
+   */
   setDataValue(key, value) {
-    const currState = this._botState.getFullState();
     if (this._sensorData.hasOwnProperty(key)) {
       if (key.indexOf('compass1') >= 0 && value !== 0) {
         value = (value < 0) ? (Number(value) + 360) : value;
       }
-      if (key.indexOf('Radio') >= 0 && !currState.main.listenToRc) {
-        sensor.current = 90;
-      } else {
-        const sensor = this._sensorData[key];
-        if (value > sensor.max) value = sensor.max;
-        if (value < sensor.min) value = sensor.min;
-        sensor.current = value;
-      }
-      if(value < 0) {
-        value = value * -1;
-      }
+      const sensor = this._sensorData[key];
+      if (value > sensor.max) value = sensor.max;
+      if (value < sensor.min) value = sensor.min;
+      sensor.current = value;
 
-      this.sendSensorDataCommand(key, Math.round(value));
+      // if(value < 0) {
+      //   value = value * -1;
+      // }
+
+      // this.sendSensorDataCommand(key, Math.round(value));
+      this.sendSensorDataCommand(key, value);
 
       // console.log(`Sensors: set ${key} to ${value}`);
     } else {
@@ -277,18 +291,23 @@ class Sensors {
   }
 
   setSensorDataSet(sensorData) {
-    // console.info(sensorData);
-    var dataArray = sensorData.split(',');
-    if (dataArray) {
-      for (var i = 0; i < dataArray.length; i++) {
-        var dataCommand = dataArray[i];
-        //console.log(dataCommand);
-        var cmdArr = dataCommand.split(':');
-        if (cmdArr && cmdArr.length == 2) {
-          this.setDataValue(cmdArr[0], cmdArr[1]);
+    try {
+      // console.info(typeof sensorData);
+      var dataArray = sensorData.toString().split(',');
+      if (dataArray) {
+        for (var i = 0; i < dataArray.length; i++) {
+          var dataCommand = dataArray[i];
+          //console.log(dataCommand);
+          var cmdArr = dataCommand.split(':');
+          if (cmdArr && cmdArr.length == 2) {
+            this.setDataValue(cmdArr[0], cmdArr[1]);
 
+          }
         }
       }
+    } catch (err) {
+      console.error('err', err)
+      console.info( sensorData);
     }
   }
 
