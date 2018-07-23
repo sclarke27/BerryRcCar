@@ -21,3 +21,4 @@ nohup.out
 *.log
 *.err
 .sass-cache
+devicehive-video-analysis

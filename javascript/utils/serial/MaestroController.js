@@ -47,6 +47,23 @@ class MaestroController extends SerialController {
       this._port.write([ command, channel, value ], onComplete);
     }
 
+    stopScript() {
+	    this._port.write([ 0xA4 ]);
+    };
+
+    restartScriptAtSubroutine(subroutineNumber) {
+      this._port.write([ 0xA7, subroutineNumber]);
+    };
+
+    restartScriptAtSubroutineWithParameter(subroutineNumber, parameter) {
+      if(parameter < 0 || parameter > 16383) {
+        LOG.error("PololuMaestro", "Subroutine parameter must be in the range 0-16383");
+        return;
+      }
+
+      this._port.write([ 0xA8, subroutineNumber].concat(ByteUtils.toLowAndHighBits(parameter)));
+    };
+
 }
 
 module.exports = MaestroController;

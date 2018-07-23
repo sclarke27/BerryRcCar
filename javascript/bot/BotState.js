@@ -1,73 +1,72 @@
+const swim = require('swim-client-js');
+
 class BotState {
-    constructor(db) {
-        this._db = db;
-
-        this._stateData = {
-            main: {
-                currentIntent: null,
-                startupTime: null,
-                listenToRc: true,
-            },
-
-            movement: {
-                canDriveForward: false,
-                canDriveBackward: false,
-                isDriving: false,
-            },
-
-            obstacles: {
-                left: false,
-                right: false,
-                center: false,
-
-            }
+    constructor(swimUrl) {
+        this._fullSwimUrl = swimUrl;
+        this._swimClient = new swim.Client();
+        this._botState = {
+            canDriveForward: null,
+            canDriveBackward: null,
+            isDrivingForward: null,
+            isDrivingBackward: null
         }
+
+        this._swimClient.downlinkValue()
+            .host(`ws://127.0.0.1:5620`)
+            .node('/botState')
+            .lane('canDriveForward')
+            .didSet((newValue) => {
+                if(this._botState.canDriveForward !== newValue) {
+                    this._botState.canDriveForward = newValue
+                }
+            })
+            .open();    
+
+        this._swimClient.downlinkValue()
+            .host(`ws://127.0.0.1:5620`)
+            .node('/botState')
+            .lane('canDriveBackward')
+            .didSet((newValue) => {
+                if(this._botState.canDriveBackward !== newValue) {
+                    this._botState.canDriveBackward = newValue
+                }
+            })
+            .open();    
+
+        this._swimClient.downlinkValue()
+            .host(`ws://127.0.0.1:5620`)
+            .node('/botState')
+            .lane('isDrivingForward')
+            .didSet((newValue) => {
+                if(this._botState.isDrivingForward !== newValue) {
+                    this._botState.isDrivingForward = newValue
+                }
+            })
+            .open();              
+
+        this._swimClient.downlinkValue()
+            .host(`ws://127.0.0.1:5620`)
+            .node('/botState')
+            .lane('isDrivingBackward')
+            .didSet((newValue) => {
+                if(this._botState.isDrivingBackward !== newValue) {
+                    this._botState.isDrivingBackward = newValue
+                }
+            })
+            .open();              
+
     }
-
-
+    
     getFullState() {
-        return this._stateData;
+        return this._botState;
     }
 
-    getStateValue(dataSet, key) {
-        const _dataSet = this._stateData[dataSet];
-        return _dataSet[key];
+    setStateValue(key, value) {
+        // console.info('set state', key, value, this._fullSwimUrl);
+        swim.command(this._fullSwimUrl, `/botState`, key, value);
+
     }
 
-    setStateValue(dataSet, key, value) {
-        const _dataSet = this._stateData[dataSet];
-        _dataSet[key] = value;
-        // this._db.botState.findAndModify({
-        //     query: {
-        //         name: key
-        //     },
-        //     update: {
-        //         $set: {
-        //             value: value
-        //         }
-        //     },
-        //     new: true,
-        //     upsert: true
-        // }, (err, doc, lastErrorObject) => {})
-    }
-
-    saveDataSetToDB() {
-        for (const key of Object.keys(this._stateData)) {
-            const value = this._stateData[key];
-            // this._db.botState.findAndModify({
-            //     query: {
-            //         name: key
-            //     },
-            //     update: {
-            //         $set: {
-            //             value: value
-            //         }
-            //     },
-            //     new: true,
-            //     upsert: true
-            // }, (err, doc, lastErrorObject) => {})
-        }
-    }
 }
 
 module.exports = BotState;

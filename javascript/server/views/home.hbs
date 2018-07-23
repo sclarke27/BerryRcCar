@@ -7,6 +7,10 @@
 		[Bot Name:]
 		@input(type: text, name: device, value: $botName#0)
 		@br
+		currentIntent: @link(lane: 'currentIntent', type: value)
+		[Current Intent:] 
+		@input(type: text, name: device, value: $currentIntent#0)
+		@br
 		canDriveForward:  @link(lane: 'canDriveForward', type: value)
 		[Can Drive Forwards:] 
 		@input(type: text, name: device, value: $canDriveForward#0)
@@ -25,4 +29,16 @@
 		@br
 	}
 }
+</script>
+<input type="button" value="Drive" onclick="drive()" />
+<input type="button" value="Idle" onclick="idle()" />
+<script type="text/javascript">
+	const fullSwimUrl = '{{fullSwimUrl}}';
+	function drive() {
+		swim.command(fullSwimUrl, `/botState`, 'setCurrentIntent', 'driveForward');
+	}
+	function idle() {
+		swim.command(fullSwimUrl, `/botState`, 'setCurrentIntent', 'idle');
+	}
+
 </script>

@@ -25,6 +25,16 @@ public class BotStateService extends AbstractService {
       name.set(t);
     });  
 
+  @SwimLane("currentIntent")
+  ValueLane<String> currentIntent = valueLane().valueClass(String.class);
+  
+  @SwimLane("setCurrentIntent")
+  CommandLane<String> setCurrentIntent = commandLane().valueClass(String.class)
+    .onCommand(t -> {
+      currentIntent.set(t);
+    });  
+
+
   @SwimLane("canDriveForward")
   ValueLane<Boolean> canDriveForward = valueLane().valueClass(Boolean.class);
 
@@ -66,6 +76,7 @@ public class BotStateService extends AbstractService {
     isDrivingForward.set(false);
     canDriveForward.set(false);
     canDriveBackward.set(false);
+    // currentIntent.set("none");
 
   };
 }

@@ -70,23 +70,6 @@ class HttpServer {
       },
     };    
 
-    this.io = require('socket.io')(this.server);
-
-    this.io.on('connection', (client) => {
-      console.log('user socket connected');
-
-      client.on('phoneMag', (data) => {
-        if (this.sensors) {
-          this.sensors.setDataValue('phoneMagX', data.x);
-          this.sensors.setDataValue('phoneMagY', data.y);
-          this.sensors.setDataValue('phoneMagZ', data.z);
-        }
-      });
-
-      client.on('disconnect', () => {
-        console.log('user disconnected');
-      });
-    })
   }
 
   /**
@@ -99,106 +82,101 @@ class HttpServer {
   /**
    * route to handle sensor data I/O
    */
-  createSensorsRoute() {
-    this.webApp.route('/sensor/:channel-:newValue')
-      .get((request, response) => {
-        const reqParams = request.params;
-        const channel = reqParams.channel;
-        const sensorData = this.sensors.getSensorDataSet();
-        response.json({
-          name: channel,
-          value: sensorData[channel],
-        });
-      })
-      .post((request, response) => {
-        const reqParams = request.params;
-        const channel = reqParams.channel;
-        const newValue = reqParams.newValue;
-        this.sensors.setDataValue(channel, newValue);
-        const sensorData = this.sensors.getSensorDataSet();
-        const botStatus = this.botActions.getBotStatus();
-        response.json({
-          data: sensorData,
-          status: botStatus,
-        })
-      })
-  }
+  // createSensorsRoute() {
+  //   this.webApp.route('/sensor/:channel-:newValue')
+  //     .get((request, response) => {
+  //       const reqParams = request.params;
+  //       const channel = reqParams.channel;
+  //       const sensorData = this.sensors.getSensorDataSet();
+  //       response.json({
+  //         name: channel,
+  //         value: sensorData[channel],
+  //       });
+  //     })
+  //     .post((request, response) => {
+  //       const reqParams = request.params;
+  //       const channel = reqParams.channel;
+  //       const newValue = reqParams.newValue;
+  //       this.sensors.setDataValue(channel, newValue);
+  //       const sensorData = this.sensors.getSensorDataSet();
+  //       const botStatus = this.botActions.getBotStatus();
+  //       response.json({
+  //         data: sensorData,
+  //         status: botStatus,
+  //       })
+  //     })
+  // }
 
   /**
    * Route to handle bot status message
    */
-  createStatusRoute() {
-    this.webApp.route('/status')
-      .get((request, response) => {
-        const sensorData = this.sensors.getSensorDataSet();
-        const botStatus = this.botActions.getBotStatus();
-        response.json({
-          data: sensorData,
-          status: botStatus,
-        })
-      })
-      .post((request, response) => {
-        const sensorData = this.sensors.getSensorDataSet();
-        const botStatus = this.botActions.getBotStatus();
-        response.json({
-          data: sensorData,
-          status: botStatus,
-        })
-      })
-  }
+  // createStatusRoute() {
+  //   this.webApp.route('/status')
+  //     .get((request, response) => {
+  //       const sensorData = this.sensors.getSensorDataSet();
+  //       const botStatus = this.botActions.getBotStatus();
+  //       response.json({
+  //         data: sensorData,
+  //         status: botStatus,
+  //       })
+  //     })
+  //     .post((request, response) => {
+  //       const sensorData = this.sensors.getSensorDataSet();
+  //       const botStatus = this.botActions.getBotStatus();
+  //       response.json({
+  //         data: sensorData,
+  //         status: botStatus,
+  //       })
+  //     })
+  // }
 
   /**
    * Route to handle bot status message
    */
-  createIntentRoute() {
-    this.webApp.route('/intent/:newIntent')
-      .post((request, response) => {
-        const newIntent = request.params.newIntent;
-        this.botActions.changeIntent(String(newIntent));
-        response.json({
-          status: 'complete'
-        })
-      })
-  }
+  // createIntentRoute() {
+  //   this.webApp.route('/intent/:newIntent')
+  //     .post((request, response) => {
+  //       const newIntent = request.params.newIntent;
+  //       this.botActions.changeIntent(String(newIntent));
+  //       response.json({
+  //         status: 'complete'
+  //       })
+  //     })
+  // }
 
 
   /**
    * Route to handle bot status message
    */
-  createResetSensorRoute() {
-    this.webApp.route('/resetSensors')
-      .post((request, response) => {
-        this.botActions.resetSensors()
-        response.json({
-          status: 'complete'
-        })
-      })
-  }
+  // createResetSensorRoute() {
+  //   this.webApp.route('/resetSensors')
+  //     .post((request, response) => {
+  //       this.botActions.resetSensors()
+  //       response.json({
+  //         status: 'complete'
+  //       })
+  //     })
+  // }
 
   /**
    * route to handle main page user sees in browser
    */
   createHomeRoute() {
     this.webApp.get('/', (request, response) => {
-      const sensorData = this.sensors.getSensorDataSet();
-      const botStatus = this.botActions.getBotStatus();
-      const sensorKeys = this.sensors.getSensorKeys();
+      // const sensorData = this.sensors.getSensorDataSet();
+      // const botStatus = this.botActions.getBotStatus();
+      // const sensorKeys = this.sensors.getSensorKeys();
 
       response.render('home', {
-        data: sensorData,
-        status: botStatus,
-        sensors: this.sensors.getSensorDataSet(),
-        intents: BotIntents,
+        // data: sensorData,
+        // status: botStatus,
+        // sensors: this.sensors.getSensorDataSet(),
+        // intents: BotIntents,
         routeName: 'home',
-        sensorKeys: sensorKeys,
+        // sensorKeys: sensorKeys,
         botName: this.botName,
         fullHostUrl: this.fullHostUrl,
         fullSwimUrl: this.fullSwimUrl,
-        aggregateHostUrl: this.fullAggUrl,
-        aggregateSwimUrl: this.fullAggSwimUrl,
-        isAggregator: this.isAggregator,
-        isPlantMon: this.isPlantMon,
-        isSenseHat: this.isSenseHat,
         helpers: this.hbsHelpers        
       })
     })
@@ -209,25 +187,20 @@ class HttpServer {
    */
   createDashRoute() {
     this.webApp.get('/dash', (request, response) => {
-      const sensorData = this.sensors.getSensorDataSet();
-      const botStatus = this.botActions.getBotStatus();
-      const sensorKeys = this.sensors.getSensorKeys();
+      // const sensorData = this.sensors.getSensorDataSet();
+      // const botStatus = this.botActions.getBotStatus();
+      // const sensorKeys = this.sensors.getSensorKeys();
 
       response.render('dash', {
-        data: sensorData,
-        status: botStatus,
-        sensorKeys: sensorKeys,
-        sensors: this.sensors.getSensorDataSet(),
-        intents: BotIntents,
+        // data: sensorData,
+        // status: botStatus,
+        // sensorKeys: sensorKeys,
+        // sensors: this.sensors.getSensorDataSet(),
+        // intents: BotIntents,
         routeName: 'dash',
         botName: this.botName,
         fullHostUrl: this.fullHostUrl,
         fullSwimUrl: this.fullSwimUrl,
-        aggregateHostUrl: this.fullAggUrl,
-        aggregateSwimUrl: this.fullAggSwimUrl,
-        isAggregator: this.isAggregator,
-        isPlantMon: this.isPlantMon,
-        isSenseHat: this.isSenseHat,
         helpers: this.hbsHelpers         
       })
     })
@@ -238,44 +211,23 @@ class HttpServer {
    */
   createPhoneRoute() {
     this.webApp.get('/phone', (request, response) => {
-      const sensorData = this.sensors.getSensorDataSet();
-      const botStatus = this.botActions.getBotStatus();
-      const sensorKeys = this.sensors.getSensorKeys();
+      // const sensorData = this.sensors.getSensorDataSet();
+      // const botStatus = this.botActions.getBotStatus();
+      // const sensorKeys = this.sensors.getSensorKeys();
 
       response.render('phone', {
-        data: sensorData,
-        status: botStatus,
-        sensorKeys: sensorKeys,
-        sensors: this.sensors.getSensorDataSet(),
-        intents: BotIntents,
+        // data: sensorData,
+        // status: botStatus,
+        // sensorKeys: sensorKeys,
+        // sensors: this.sensors.getSensorDataSet(),
+        // intents: BotIntents,
         routeName: 'phone',
         botName: this.botName,
         fullHostUrl: this.fullHostUrl,
         fullSwimUrl: this.fullSwimUrl,
-        aggregateHostUrl: this.fullAggUrl,
-        aggregateSwimUrl: this.fullAggSwimUrl,
-        isAggregator: this.isAggregator,
-        isPlantMon: this.isPlantMon,
-        isSenseHat: this.isSenseHat,
         helpers: this.hbsHelpers         
       })
     })
-    this.webApp.route('/phone/:channel-:newValueX-:newValueY-:newValueZ')
-      .post((request, response) => {
-        const phoneSensorChannel = request.params.channel;
-        const sensorValueX = request.params.newValueX;
-        const sensorValueY = request.params.newValueY;
-        const sensorValueZ = request.params.newValueZ;
-        this.sensors.setDataValue(`phone${phoneSensorChannel}X`, sensorValueX);
-        this.sensors.setDataValue(`phone${phoneSensorChannel}Y`, sensorValueY);
-        this.sensors.setDataValue(`phone${phoneSensorChannel}Z`, sensorValueZ);
-        const sensorData = this.sensors.getSensorDataSet();
-        const botStatus = this.botActions.getBotStatus();
-        response.json({
-          data: sensorData,
-          status: botStatus,
-        })
-      })
   }
 
 
@@ -294,10 +246,10 @@ class HttpServer {
     this.main = mainThread;
     this.setUpEngine();
     this.createHomeRoute();
-    this.createStatusRoute();
-    this.createSensorsRoute();
-    this.createIntentRoute();
-    this.createResetSensorRoute();
+    // this.createStatusRoute();
+    // this.createSensorsRoute();
+    // this.createIntentRoute();
+    // this.createResetSensorRoute();
     this.createPhoneRoute();
     this.createDashRoute();
 

@@ -1,10 +1,14 @@
 const BotIntents = {
   startUp: {
-    name: 'Start Up',
+    name: 'StartUp',
     rules: {
       start: (sensors, botActions) => {
         console.log('Bot entered startup state');
-        botActions.handleStartUp();
+        if(botActions.handleStartUp()) {
+          botActions.changeIntent(BotIntents.idle);
+        } else {
+          console.error('error starting bot');
+        }
       },
       end: (sensors, botActions) => {
         console.log(`Startup complete`);
@@ -19,7 +23,7 @@ const BotIntents = {
         console.log('Bot entered idle state');
       },
       update: (sensors, botActions) => {
-        botActions.handlePingSensors(sensors);
+        // botActions.handlePingSensors(sensors);
       },
       end: (sensorData, botActions) => {
         console.log('End idle state');
@@ -32,20 +36,19 @@ const BotIntents = {
     rules: {
       start: (sensors, botActions) => {
         console.log('Begin driving forward state');
-        botActions.setCanDrive('forward', true);
-        botActions.setCanDrive('backward', true);
+        // botActions.setCanDrive('forward', true);
+        // botActions.setCanDrive('backward', true);
       },
       update: (sensors, botActions) => {
-        botActions.handlePingSensors(sensors, botActions);
-        botActions.handleDriveForward(sensors, botActions);
-        botActions.handleHeadsUpMovement(sensors, botActions)
+        botActions.handlePingSensors();
+        botActions.handleHeadsUpMovement();
+        botActions.handleRcInput();
       },
       end: (sensors, botActions) => {
-        console.log('End driving forward state');
         console.log('Drive complete');
-        botActions.setCanDrive('forward', false);
-        botActions.setCanDrive('backward', false);
-        botActions.setIsDriving(false);
+        // botActions.setCanDrive('forward', false);
+        // botActions.setCanDrive('backward', false);
+        // botActions.setIsDriving(false);
       }
     }
   },

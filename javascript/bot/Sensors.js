@@ -1,6 +1,8 @@
 const sysInfo = require('systeminformation');
 const client = require('swim-client-js');
-const swim = new client.Client({sendBufferSize: 1024*1024});
+const swim = new client.Client({
+  sendBufferSize: 1024 * 1024
+});
 
 Number.prototype.map = function (in_min, in_max, out_min, out_max) {
   return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
@@ -13,6 +15,7 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
 class Sensors {
   constructor(swimUrl) {
     this.fullSwimUrl = swimUrl;
+    this.swimClient = swim;
 
     // define all sensor channels that will be tracked
     // along with their min/max, default, and threshold values
@@ -179,14 +182,14 @@ class Sensors {
       phoneMagX: {
         min: 0,
         max: 180,
-        default: 0,
+        default: 90,
         current: 0
       },
 
       phoneMagY: {
         min: 0,
         max: 360,
-        default: 0,
+        default: 90,
         current: 0
       },
 
@@ -232,22 +235,53 @@ class Sensors {
    * Sensors handler startup
    */
   start() {
+
+    this.swimClient.downlinkValue()
+      .host(`ws://127.0.0.1:5620`)
+      .node('/sensor/phoneMagX')
+      .lane('latest')
+      .didSet((newValue) => {
+        this._sensorData.phoneMagX.current = newValue;
+      })
+      .open();
+
+    this.swimClient.downlinkValue()
+      .host(`ws://127.0.0.1:5620`)
+      .node('/sensor/phoneMagY')
+      .lane('latest')
+      .didSet((newValue) => {
+        this._sensorData.phoneMagY.current = newValue;
+      })
+      .open();
+
+    this.swimClient.downlinkValue()
+      .host(`ws://127.0.0.1:5620`)
+      .node('/sensor/steeringRadio')
+      .lane('latest')
+      .didSet((newValue) => {
+        this._sensorData.steeringRadio.current = newValue;
+      })
+      .open();
+
+    this.swimClient.downlinkValue()
+      .host(`ws://127.0.0.1:5620`)
+      .node('/sensor/throttleRadio')
+      .lane('latest')
+      .didSet((newValue) => {
+        this._sensorData.throttleRadio.current = newValue;
+      })
+      .open();
     // prepopulate the swim sensor service with all the sensor values
-    // we will be keeping track of along with thier default threshold values
-    for(const sensor of this.getSensorKeys()) {
+    // we will be keeping track of along with their default threshold values
+    for (const sensor of this.getSensorKeys()) {
       const currSensorData = this._sensorData[sensor];
-      if(currSensorData) {
+      if (currSensorData) {
         this.sendSensorDataCommand(sensor, currSensorData.default);
-        if(currSensorData.threshold) {
+        if (currSensorData.threshold) {
           swim.command(this.fullSwimUrl, `/sensor/${sensor}`, `setThreshold`, currSensorData.threshold);
         }
       }
     }
-  }
-
-  // dont think this is used
-  setHttpServer(httpServer) {
-    this._httpServer = httpServer;
   }
 
   getSensorKeys() {
@@ -259,7 +293,7 @@ class Sensors {
    */
   sendSensorDataCommand(messageKey, messageData) {
     swim.command(this.fullSwimUrl, `/sensor/${messageKey}`, `addLatest`, messageData);
-  }  
+  }
 
   /**
    * Handle updating a specific sensor value in memory and in swim service
@@ -281,8 +315,8 @@ class Sensors {
       //   value = value * -1;
       // }
 
-      // this.sendSensorDataCommand(key, Math.round(value));
-      this.sendSensorDataCommand(key, value);
+      // this.sendSensorDataCommand(key, Math.round(sensor.current));
+      this.sendSensorDataCommand(key, sensor.current);
 
       // console.log(`Sensors: set ${key} to ${value}`);
     } else {
@@ -292,12 +326,11 @@ class Sensors {
 
   setSensorDataSet(sensorData) {
     try {
-      // console.info(typeof sensorData);
       var dataArray = sensorData.toString().split(',');
       if (dataArray) {
         for (var i = 0; i < dataArray.length; i++) {
           var dataCommand = dataArray[i];
-          //console.log(dataCommand);
+          // console.log(dataCommand);
           var cmdArr = dataCommand.split(':');
           if (cmdArr && cmdArr.length == 2) {
             this.setDataValue(cmdArr[0], cmdArr[1]);
@@ -307,7 +340,7 @@ class Sensors {
       }
     } catch (err) {
       console.error('err', err)
-      console.info( sensorData);
+      console.info(sensorData);
     }
   }
 
