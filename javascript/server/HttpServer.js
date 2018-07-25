@@ -1,3 +1,4 @@
+const Log = require('../utils/Log');
 const express = require('express');
 const http = require('http').Server(express);
 
@@ -237,9 +238,9 @@ class HttpServer {
    */
   onServerStarted(err) {
     if (err) {
-      console.error('http server error', err);
+      Log.error('http server error', err);
     }
-    console.log(`express server listening on ${this.port}`);
+    Log.info(`express server listening on ${this.port}`);
   }
 
   startHttpServer(mainThread) {

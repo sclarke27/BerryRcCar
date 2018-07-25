@@ -1,3 +1,4 @@
+const Log = require('../Log');
 const SerialController = require('./SerialController');
 
 class ArduinoController extends SerialController {
@@ -12,12 +13,12 @@ class ArduinoController extends SerialController {
 
   onConnectionOpened(msg) {
     super.onConnectionOpened(msg);
-    console.log('Arduino connection opened.', msg);
+    Log.info('Arduino connection opened.', msg);
   }
 
   onError(err) {
     super.onError(err);
-    console.log('Arduino connection error:', err.message);
+    Log.info('Arduino connection error:', err.message);
   }
 
   /**
@@ -29,12 +30,12 @@ class ArduinoController extends SerialController {
       // console.info(msg);
       this._port.write(msg, 'binary', () => {
         this._port.drain(() => {
-          console.info('write complete');
+          Log.info('write complete');
           this._sendingMessage = false;
         })
       });
     } catch (err) {
-      // console.log(err);
+      // Log.info(err);
     }
   }
 

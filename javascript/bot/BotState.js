@@ -1,3 +1,4 @@
+const Log = require('../utils/Log');
 const swim = require('swim-client-js');
 
 class BotState {
@@ -62,7 +63,8 @@ class BotState {
     }
 
     setStateValue(key, value) {
-        // console.info('set state', key, value, this._fullSwimUrl);
+        Log.info(`set state ${key} ${value}`);
+        this._botState[key] = value;
         swim.command(this._fullSwimUrl, `/botState`, key, value);
 
     }

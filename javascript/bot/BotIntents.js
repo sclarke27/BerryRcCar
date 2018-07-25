@@ -1,17 +1,19 @@
+const Log = require('../utils/Log');
+
 const BotIntents = {
   startUp: {
-    name: 'StartUp',
+    name: 'Start Up',
     rules: {
       start: (sensors, botActions) => {
-        console.log('Bot entered startup state');
+        Log.info('Bot entered startup state');
         if(botActions.handleStartUp()) {
           botActions.changeIntent(BotIntents.idle);
         } else {
-          console.error('error starting bot');
+          Log.error('error starting bot');
         }
       },
       end: (sensors, botActions) => {
-        console.log(`Startup complete`);
+        Log.info(`Startup complete`);
       }
     }
   },
@@ -20,22 +22,37 @@ const BotIntents = {
     rules: {
       start: (sensors, botActions) => {
         botActions.handleGoIdle();
-        console.log('Bot entered idle state');
+        Log.info('Bot entered idle state');
       },
       update: (sensors, botActions) => {
         // botActions.handlePingSensors(sensors);
       },
       end: (sensorData, botActions) => {
-        console.log('End idle state');
-        console.log(`Leave idle state`);
+        Log.info('End idle state');
+        Log.info(`Leave idle state`);
       }
     }
   },
-  driveForward: {
-    name: 'Drive Forward',
+  arOnly: {
+    name: 'AR HUD Only',
     rules: {
       start: (sensors, botActions) => {
-        console.log('Begin driving forward state');
+        botActions.handleGoIdle();
+        Log.info('Bot entered AR HUD only state');
+      },
+      update: (sensors, botActions) => {
+        botActions.handleHeadsUpMovement();
+      },
+      end: (sensorData, botActions) => {
+        Log.info('End AR HUD state');
+      }
+    }
+  },  
+  driveByRC: {
+    name: 'Drive By RC',
+    rules: {
+      start: (sensors, botActions) => {
+        Log.info('Begin driving forward state');
         // botActions.setCanDrive('forward', true);
         // botActions.setCanDrive('backward', true);
       },
@@ -45,7 +62,7 @@ const BotIntents = {
         botActions.handleRcInput();
       },
       end: (sensors, botActions) => {
-        console.log('Drive complete');
+        Log.info('Drive complete');
         // botActions.setCanDrive('forward', false);
         // botActions.setCanDrive('backward', false);
         // botActions.setIsDriving(false);

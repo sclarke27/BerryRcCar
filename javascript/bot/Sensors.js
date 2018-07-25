@@ -1,3 +1,4 @@
+const Log = require('../utils/Log');
 const sysInfo = require('systeminformation');
 const client = require('swim-client-js');
 const swim = new client.Client({
@@ -62,6 +63,7 @@ class Sensors {
         default: 90,
         current: 90
       },
+      
       steeringRadio: {
         min: 0,
         max: 180,
@@ -226,6 +228,13 @@ class Sensors {
         max: 100,
         default: 0,
         current: 0
+      },
+
+      timestamp: {
+        min: 0,
+        max: 9999999999,
+        default: 0,
+        current: 0
       }
 
     }
@@ -236,6 +245,7 @@ class Sensors {
    */
   start() {
 
+    // create value lanes for sensors which dont live onboard the rover like RC and phone
     this.swimClient.downlinkValue()
       .host(`ws://127.0.0.1:5620`)
       .node('/sensor/phoneMagX')
@@ -303,6 +313,7 @@ class Sensors {
    */
   setDataValue(key, value) {
     if (this._sensorData.hasOwnProperty(key)) {
+      value = parseInt(value);
       if (key.indexOf('compass1') >= 0 && value !== 0) {
         value = (value < 0) ? (Number(value) + 360) : value;
       }
@@ -318,29 +329,26 @@ class Sensors {
       // this.sendSensorDataCommand(key, Math.round(sensor.current));
       this.sendSensorDataCommand(key, sensor.current);
 
-      // console.log(`Sensors: set ${key} to ${value}`);
+      // Log.info(`Sensors: set ${key} to ${sensor.current}`);
     } else {
-      // console.log(`Sensors error: can't set ${key} to ${value}`);
+      Log.error(`Sensors error: can't set ${key} to ${value}`);
     }
   }
 
   setSensorDataSet(sensorData) {
+    // Log.info(sensorData);
     try {
-      var dataArray = sensorData.toString().split(',');
-      if (dataArray) {
-        for (var i = 0; i < dataArray.length; i++) {
-          var dataCommand = dataArray[i];
-          // console.log(dataCommand);
-          var cmdArr = dataCommand.split(':');
-          if (cmdArr && cmdArr.length == 2) {
-            this.setDataValue(cmdArr[0], cmdArr[1]);
-
-          }
+      var dataCommand = sensorData.toString();
+      if (dataCommand && dataCommand.length > 0 && dataCommand.indexOf(':') >= 0) {
+        // Log.info(dataCommand);
+        var cmdArr = dataCommand.split(':');
+        if (cmdArr && cmdArr.length == 2) {
+          this.setDataValue(cmdArr[0], cmdArr[1]);
         }
       }
     } catch (err) {
-      console.error('err', err)
-      console.info(sensorData);
+      Log.error(err)
+      // console.info(sensorData);
     }
   }
 

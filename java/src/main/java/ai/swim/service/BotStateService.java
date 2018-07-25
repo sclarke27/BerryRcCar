@@ -8,6 +8,7 @@ import swim.api.*;
 public class BotStateService extends AbstractService {
 
   private boolean botInitialized = false;
+  private static final int LOG_HISTORY_SIZE = 500;
 
   @SwimLane("name")
   ValueLane<String> name = valueLane().valueClass(String.class)
@@ -70,8 +71,41 @@ public class BotStateService extends AbstractService {
     .onCommand(t -> {
       isDrivingBackward.set(t);
     });      
+
+
+  @SwimLane("javaLog")
+  MapLane<Long, String> javaLog = mapLane().keyClass(Long.class).valueClass(String.class)
+    .didUpdate((key, newValue, oldValue) -> {
+      if (this.javaLog.size() > LOG_HISTORY_SIZE) {
+        this.javaLog.drop(this.javaLog.size() - LOG_HISTORY_SIZE);
+      }
+    })
+    .isTransient(true);    
       
-  private void initBot() {
+  @SwimLane("javascriptLog")
+  MapLane<Long, String> javascriptLog = mapLane().keyClass(Long.class).valueClass(String.class)
+    .didUpdate((key, newValue, oldValue) -> {
+      if (this.javascriptLog.size() > LOG_HISTORY_SIZE) {
+        this.javascriptLog.drop(this.javascriptLog.size() - LOG_HISTORY_SIZE);
+      }
+    })
+    .isTransient(true);    
+  
+  @SwimLane("addJavaLog")
+  CommandLane<String> addJavaLog = commandLane().valueClass(String.class)
+    .onCommand(t -> {
+      final long now = System.currentTimeMillis();
+      javaLog.put(now, t);
+    });    
+
+  @SwimLane("addJavascriptLog")
+  CommandLane<String> addJavascriptLog = commandLane().valueClass(String.class)
+    .onCommand(t -> {
+      final long now = System.currentTimeMillis();
+      javascriptLog.put(now, t);
+    });    
+  
+    private void initBot() {
     isDrivingBackward.set(false);
     isDrivingForward.set(false);
     canDriveForward.set(false);

@@ -30,15 +30,36 @@
 	}
 }
 </script>
+<hr>
+<script type="text/recon">
+	@div(){
+		style: {
+			max-height: '300px'
+			overflow: auto
+			margin-bottom: '25px'
+		}
+		data1: @link(host: '{{fullSwimUrl}}', node: 'botState', lane: 'javascriptLog', type: map)
+		@each(t: $data1.*:) {
+			@div {
+				v: @let($data1.($t))
+				@text($eager($v))
+			}
+		}
+	}
+</script>
 <input type="button" value="Drive" onclick="drive()" />
 <input type="button" value="Idle" onclick="idle()" />
+<input type="button" value="AR Only" onclick="arOnly()" />
 <script type="text/javascript">
 	const fullSwimUrl = '{{fullSwimUrl}}';
 	function drive() {
-		swim.command(fullSwimUrl, `/botState`, 'setCurrentIntent', 'driveForward');
+		swim.command(fullSwimUrl, `/botState`, 'setCurrentIntent', 'driveByRC');
 	}
 	function idle() {
 		swim.command(fullSwimUrl, `/botState`, 'setCurrentIntent', 'idle');
+	}
+	function arOnly() {
+		swim.command(fullSwimUrl, `/botState`, 'setCurrentIntent', 'arOnly');
 	}
 
 </script>

@@ -1,5 +1,6 @@
 const BotIntents = require('./BotIntents');
 const swim = require('swim-client-js');
+const Log = require('../utils/Log');
 
 /**
  * [_movementStatus description]
@@ -54,7 +55,7 @@ class BotActions {
         if (typeof newIntent === 'string') {
             newIntent = BotIntents[newIntent];
             if (!newIntent || !newIntent.name) {
-                console.log(`new intent not found ${newIntent}`);
+                Log.info(`new intent not found ${newIntent}`);
                 return false;
             }
         }
@@ -63,7 +64,7 @@ class BotActions {
 
         // make sure its not already active
         if (this._currentIntent && newIntent && newIntent.name === this._currentIntent.name) {
-            console.log(`intent already active`)
+            Log.info(`intent already active`)
             return false;
         }
 
@@ -76,7 +77,7 @@ class BotActions {
         if(newIntent) {
             // set the new intent value
             this._currentIntent = newIntent;
-            console.log(`Change intent: ${this._currentIntent.name}`)
+            Log.info(`Change intent: ${this._currentIntent.name}`)
             this._botState.setStateValue('setCurrentIntent', this._currentIntent.name);
         }
 
@@ -103,9 +104,13 @@ class BotActions {
         }
         if (this._tickCount > (30000/loopInterval)) {
             // sensors.refreshSystemInfo()
-            if(this._currentIntent === BotIntents.idle) {
-                this._servoController.restartScriptAtSubroutine(2);
-            }
+
+            // idle animation
+            
+            // if(this._currentIntent === BotIntents.idle) {
+            //     this._servoController.restartScriptAtSubroutine(2);
+            // }
+
             this._tickCount = 0;
         }
         if (this._currentIntent && this._currentIntent.rules && this._currentIntent.rules.update) {
@@ -119,7 +124,6 @@ class BotActions {
         // const currState = this._botState.getFullState()
         // const canDriveForward = this._sensors.centerDistance.current > this._sensors.centerDistance.threshold
         // const canDriveBackward = this._sensors.rearDistance.current > this._sensors.rearDistance.threshold
-        // console.info('forward', parseInt(sensorData.centerDistance.current), parseInt(sensorData.centerDistance.threshold))
         if(sensorData.centerDistance && sensorData.centerDistance.current && sensorData.centerDistance.threshold) {
             this._botState.setStateValue('setCanDriveForward', parseInt(sensorData.centerDistance.current) > parseInt(sensorData.centerDistance.threshold));
         }

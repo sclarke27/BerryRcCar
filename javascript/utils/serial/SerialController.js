@@ -1,4 +1,4 @@
-
+const Log = require('../Log');
 /**
  * Base class used for communicating with hardware over serial connections
  */
@@ -17,7 +17,8 @@ class SerialController {
         if (!this._softwareDebug) {
             this._serialPort = require('serialport');
             this._readline = this._serialPort.parsers.Readline;
-            this._parser = new this._readline();
+            
+            // const parser = _serialPort.pipe(new Readline());
         }
     }
 
@@ -29,17 +30,17 @@ class SerialController {
     startPort(serialAddress = '/dev/ttyACM0', baud = 115200) {
         if (!this._softwareDebug) {
             try {
-                console.info(`Open Serial controller on ${serialAddress}`);
+                Log.info(`Open Serial controller on ${serialAddress}`);
                 this._port = new this._serialPort(serialAddress, {
                     baudRate: 115200
                 });
-
-                this._port.on('open', this.onConnectionOpened.bind(this));
-                this._port.on('error', this.onError.bind(this));
-                this._port.on('data', this.onData.bind(this));
+                this._parser = this._port.pipe(new this._readline());
+                this._parser.on('open', this.onConnectionOpened.bind(this));
+                this._parser.on('error', this.onError.bind(this));
+                this._parser.on('data', this.onData.bind(this));
 
               } catch (err) {
-                console.log(err);
+                Log.info(err);
             }
         }
         this._updateInterval = setInterval(this.handleCommandBuffer.bind(this), 5);
@@ -71,7 +72,6 @@ class SerialController {
      * @param {string} data 
      */
     onData(data) {
-      // console.info('ondata', data)
       if (typeof this._dataHandler === 'function') {
           this._dataHandler(data);
       }
@@ -82,7 +82,7 @@ class SerialController {
      * @param {string} msg 
      */
     onConnectionOpened(msg) {
-      console.log('Serial controller connection opened.', msg);
+      Log.info('Serial controller connection opened.', msg);
     }
 
     /**
@@ -90,7 +90,7 @@ class SerialController {
      * @param {string} err 
      */
     onError(err) {
-        console.log('Serial controller connection error:', err.message);
+        Log.info('Serial controller connection error:', err.message);
     }
 
 }

@@ -11,8 +11,6 @@
 // Hadrware values
 int rcChannel1Pin = 2;
 int rcChannel2Pin = 3;
-// int rcChannel3Pin = 4;
-// int rcChannel4Pin = 5;
 int pingPin1 = 6;
 int pingPin2 = 7;
 int pingPin3 = 8;
@@ -25,8 +23,6 @@ int compassIOPin = 12;
 //Data Values
 int rcChannel1Value = 0;
 int rcChannel2Value = 0;
-// int rcChannel3Value = 0;
-// int rcChannel4Value = 0;
 int ping1Value = 0;
 int ping2Value = 0;
 int ping3Value = 0;
@@ -55,8 +51,6 @@ int ping4ValueNew = 0;
 int ping5ValueNew = 0;
 int rcChannel1ValueNew = 0;
 int rcChannel2ValueNew = 0;
-// int rcChannel3ValueNew = 0;
-// int rcChannel4ValueNew = 0;
 int compass1ValueNew = 0;
 double temperatureValueNew = 0.0;
 double temperature2ValueNew = 0.0;
@@ -102,13 +96,6 @@ void readRcRadio(String channel, int pin) {
   if (pin == rcChannel2Pin) {
     rcChannel2ValueNew =  channelPulse;
   }
-  // if (pin == rcChannel3Pin) {
-  //   rcChannel3ValueNew =  channelPulse;
-  // }
-  // if (pin == rcChannel4Pin) {
-  //   rcChannel4ValueNew =  channelPulse;
-  // }
-  
 }
 
 void readTempAndPressure() {
@@ -129,7 +116,7 @@ void readTempAndPressure() {
 
 void readPingSensor(String channel, int pin) {
   // The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
-  // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
+  // Give a short LOW pulse beforehand to ensure a clean HIGH pulse
   pinMode(pin, OUTPUT);
   digitalWrite(pin, LOW);
   delayMicroseconds(2);
@@ -200,13 +187,6 @@ void readRadio1() {
 void readRadio2() {
   readRcRadio("2", rcChannel2Pin);
 }
-// void readRadio3() {
-//   readRcRadio("3", rcChannel3Pin);
-// }
-// void readRadio4() {
-//   readRcRadio("4", rcChannel4Pin);
-// }
-
 
 void readGyro() {
   // If intPin goes high, all data registers have new data
@@ -289,6 +269,7 @@ void readGyro() {
 }
 
 void setup() {
+  Wire.begin();
   Serial.begin(115200);
   compass.initialize();
   /* Initialise the sensor */
@@ -323,7 +304,7 @@ void setup() {
     myIMU.calibrateMPU9250(myIMU.gyroBias, myIMU.accelBias);
     
     myIMU.initMPU9250();
-    // Initialize device for active mode read of acclerometer, gyroscope, and
+    // Initialize device for active mode read of accelerometer, gyroscope, and
     // temperature
     Serial.println("MPU9250 initialized for active data mode....");
 
@@ -350,13 +331,36 @@ TimedAction ping1Read = TimedAction(0.01, readPing1);
 TimedAction ping2Read = TimedAction(0.01, readPing2);
 TimedAction ping3Read = TimedAction(0.01, readPing3);
 TimedAction ping4Read = TimedAction(0.01, readPing4);
+TimedAction ping5Read = TimedAction(0.01, readPing5);
 TimedAction radio1Read = TimedAction(0.01, readRadio1);
 TimedAction radio2Read = TimedAction(0.01, readRadio2);
-// TimedAction radio3Read = TimedAction(0.01, readRadio3);
-// TimedAction radio4Read = TimedAction(0.01, readRadio4);
 TimedAction compass1Read = TimedAction(0.1, readCompass1);
 TimedAction temperatureRead = TimedAction(0.1, readTempAndPressure);
 TimedAction gyroRead = TimedAction(1, readGyro);
+
+void sendSerialMsg(String key, int value) {
+  String returnString = "";
+  returnString += key;
+  returnString += ":";
+  returnString += value;
+  Serial.println(returnString);
+}
+
+void sendSerialMsg(String key, double value) {
+  String returnString = "";
+  returnString += key;
+  returnString += ":";
+  returnString += value;
+  Serial.println(returnString);
+}
+
+void sendSerialMsg(String key, String value) {
+  String returnString = "";
+  returnString += key;
+  returnString += ":";
+  returnString += value;
+  Serial.println(returnString);
+}
 
 void loop()
 {
@@ -368,135 +372,93 @@ void loop()
 
   radio1Read.check();
   radio2Read.check();
-  // radio3Read.check();
-  // radio4Read.check();
   compass1Read.check();
   temperatureRead.check();
   gyroRead.check();
-  String returnString = "{active:true";
-
-
+  
   if(temperatureValue != temperatureValueNew) {
     temperatureValue = temperatureValueNew;
-    returnString += ",temperature:";
-    returnString += temperatureValue;
+    sendSerialMsg("temperature", temperatureValue);
   }
   if(temperature2Value != temperature2ValueNew) {
     temperature2Value = temperature2ValueNew;
-    returnString += ",temperature2:";
-    returnString += temperature2Value;
+    sendSerialMsg("temperature2", temperature2Value);
   }
   if(pressureValue != pressureValueNew) {
     pressureValue = pressureValueNew;
-    returnString += ",pressure:";
-    returnString += pressureValue;
+    sendSerialMsg("pressure", pressureValue);
   }
   if(altitudeValue != altitudeValueNew) {
     altitudeValue = altitudeValueNew;
-    returnString += ",altitude:";
-    returnString += altitudeValue;
+    sendSerialMsg("altitude", altitudeValue);
   }
   if(rcChannel1Value != rcChannel1ValueNew) {
     rcChannel1Value = rcChannel1ValueNew;
-    returnString += ",steeringRadio:";
-    returnString += rcChannel1Value;
+    sendSerialMsg("steeringRadio", rcChannel1Value);
   }
   if(rcChannel2Value != rcChannel2ValueNew) {
     rcChannel2Value = rcChannel2ValueNew;
-    returnString += ",throttleRadio:";
-    returnString += rcChannel2Value;
+    sendSerialMsg("throttleRadio", rcChannel2Value);
   }
-  // if(rcChannel3Value != rcChannel3ValueNew) {
-  //   rcChannel3Value = rcChannel3ValueNew;
-  //   returnString += ",tiltRadio:";
-  //   returnString += rcChannel3Value;
-  // }
-  // if(rcChannel4Value != rcChannel4ValueNew) {
-  //   rcChannel4Value = rcChannel4ValueNew;
-  //   returnString += ",panRadio:";
-  //   returnString += rcChannel4Value;
-  // }  
-
   if(ping1Value != ping1ValueNew) {
     ping1Value = ping1ValueNew;
-    returnString += ",rearDistance:";
-    returnString += ping1Value;
+    sendSerialMsg("rearDistance", ping1Value);
   }
   if(ping2Value != ping2ValueNew) {
     ping2Value = ping2ValueNew;
-    returnString += ",centerDistance:";
-    returnString += ping2Value;
+    sendSerialMsg("centerDistance", ping2Value);
   }
   if(ping3Value != ping3ValueNew) {
     ping3Value = ping3ValueNew;
-    returnString += ",rightDistance:";
-    returnString += ping3Value;
+    sendSerialMsg("rightDistance", ping3Value);
   }
   if(ping4Value != ping4ValueNew) {
     ping4Value = ping4ValueNew;
-    returnString += ",leftDistance:";
-    returnString += ping4Value;
+    sendSerialMsg("leftDistance", ping4Value);
   }
   if(ping5Value != ping5ValueNew) {
     ping5Value = ping5ValueNew;
-    returnString += ",leftDistance:";
-    returnString += ping5Value;
+    sendSerialMsg("headDistance", ping5Value);
   }
   if(compass1Value != compass1ValueNew) {
     compass1Value = compass1ValueNew;
-    returnString += ",compass1:";
-    returnString += compass1Value;
+    sendSerialMsg("compass1", compass1Value);
   }
-
   if(xAccelValue != xAccelValueNew) {
     xAccelValue = xAccelValueNew;
-    returnString += ",accelX:";
-    returnString += xAccelValue;
+    sendSerialMsg("accelX", xAccelValue);
   }
   if(yAccelValue != yAccelValueNew) {
     yAccelValue = yAccelValueNew;
-    returnString += ",accelY:";
-    returnString += yAccelValue;
+    sendSerialMsg("accelY", yAccelValue);
   }
   if(zAccelValue != zAccelValueNew) {
     zAccelValue = zAccelValueNew;
-    returnString += ",accelZ:";
-    returnString += zAccelValue;
+    sendSerialMsg("accelZ", zAccelValue);
   }
   if(xGyroValue != xGyroValueNew) {
     xGyroValue = xGyroValueNew;
-    returnString += ",gyroX:";
-    returnString += xGyroValue;
+    sendSerialMsg("gyroX", xGyroValue);
   }
   if(yGyroValue != yGyroValueNew) {
     yGyroValue = yGyroValueNew;
-    returnString += ",gyroY:";
-    returnString += yGyroValue;
+    sendSerialMsg("gyroY", yGyroValue);
   }
   if(zGyroValue != zGyroValueNew) {
     zGyroValue = zGyroValueNew;
-    returnString += ",gyroZ:";
-    returnString += zGyroValue;
+    sendSerialMsg("gyroZ", zGyroValue);
   }
   if(xMagValue != xMagValueNew) {
     xMagValue = xMagValueNew;
-    returnString += ",magX:";
-    returnString += xMagValue;
+    sendSerialMsg("magX", xMagValue);
   }
   if(yMagValue != yMagValueNew) {
     yMagValue = yMagValueNew;
-    returnString += ",magY:";
-    returnString += yMagValue;
+    sendSerialMsg("magY", yMagValue);
   }
   if(zMagValue != zMagValueNew) {
     zMagValue = zMagValueNew;
-    returnString += ",magZ:";
-    returnString += zMagValue;
-  }
-  
-  if(returnString != "{active:true") {
-    Serial.println(returnString + ",end:true}");
-    returnString = "";
+    sendSerialMsg("magZ", zMagValue);
   }
 
 }
