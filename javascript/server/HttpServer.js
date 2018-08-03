@@ -224,6 +224,7 @@ class HttpServer {
         // intents: BotIntents,
         routeName: 'phone',
         botName: this.botName,
+        hostUrl: this.hostUrl,
         fullHostUrl: this.fullHostUrl,
         fullSwimUrl: this.fullSwimUrl,
         helpers: this.hbsHelpers         

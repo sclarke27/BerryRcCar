@@ -22,3 +22,4 @@ nohup.out
 *.err
 .sass-cache
 devicehive-video-analysis
+VisionService/data/*
