@@ -26,7 +26,7 @@ mkdir -p ${dist_dir}
 
 printf "${GREY}copy files to build folder${NC}\n"
 cp -R ${src_dir}/requirements.txt ${build_dir}
-cp -R ${src_dir}/readCam.py ${build_dir}
+cp -R ${src_dir}/*.py ${build_dir}
 cp -R ${src_dir}/utils ${build_dir}
 
 printf "${GREY}tar the build${NC}\n"
