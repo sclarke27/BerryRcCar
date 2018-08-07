@@ -29,6 +29,10 @@ setup_pi () {
     '")  
 }
 
+publish_vision () {
+    ${path}/VisionService/bin/publish.sh ${@}
+}
+
 snorlax () {
     ${path}/bin/snorlax.sh
 }
@@ -216,6 +220,11 @@ case $action in
         for botIndex in ${botList[@]}; do
             publish_swim ${botIndex} ${usr} ${pwd}
             start_remote ${botIndex} ${usr} ${pwd}
+        done
+        ;;
+    publishPython)
+        for botIndex in ${botList[@]}; do
+            publish_vision ${botIndex} ${usr} ${pwd}
         done
         ;;
 
