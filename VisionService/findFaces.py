@@ -1,49 +1,72 @@
 import numpy as np
-import cv2 as cv
+import cv2
 import pafy
+import os
+import sys
+import time
+
 from utils.general import is_url
 
-data_path = '/mnt/d/BerryRcCar/VisionService/data/haarcascades/'
-face_cascade = cv.CascadeClassifier(data_path + 'haarcascade_frontalface_default.xml')
-eye_cascade = cv.CascadeClassifier(data_path + 'haarcascade_eye.xml')
+def do_detection():
+  win_name = 'face'
+  find_faces = True
+  find_eyes = False
+  frame_num = 0
+  start_time = time.time()
+  fps = 0
 
+  data_path = os.path.dirname(os.path.abspath(__file__)) + '/data/'
 
-video_url = "http://192.168.0.172:8081"
-
-if is_url(video_url):
-  videoPafy = pafy.new()
-  video = videoPafy.getbest(preftype="mp4").url
-
-  cam = cv2.VideoCapture(video)
-  if not cam.isOpened():
-      raise IOError('Can\'t open "{}"'.format(FLAGS.video))
-      
-  # img = cv.imread('faces.jpg')
-  # gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+  face_cascade = cv2.CascadeClassifier(data_path + 'haarcascades/haarcascade_frontalface_default.xml')
+  eye_cascade = cv2.CascadeClassifier(data_path + 'haarcascades/haarcascade_eye.xml')
 
   if face_cascade.empty():
     print('face cascade not found')
-  else:
-    while True:
-      ret, img = cam.read()
-      gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-      if not ret:
-          print('Can\'t read video data. Potential end of stream')
-          break
+    return
+
+  while True:
+
+    leftEyeImg = cv2.imread('latest.png', cv2.IMREAD_COLOR)
+    frame2 = cv2.imread('latest2.png', cv2.IMREAD_COLOR)
+
+    if find_faces:
+      gray = leftEyeImg # cv2.cvtColor(leftEyeImg, cv2.COLOR_BGR2GRAY)
       faces = face_cascade.detectMultiScale(gray, 1.3, 5)
       for (x,y,w,h) in faces:
-          cv.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+          cv2.rectangle(leftEyeImg,(x,y),(x+w,y+h),(255,0,0),2)
           roi_gray = gray[y:y+h, x:x+w]
-          roi_color = img[y:y+h, x:x+w]
-          eyes = eye_cascade.detectMultiScale(roi_gray)
-          for (ex,ey,ew,eh) in eyes:
-              cv.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+          roi_color = leftEyeImg[y:y+h, x:x+w]
+          if find_eyes:
+            eyes = eye_cascade.detectMultiScale(roi_gray)
+            for (ex,ey,ew,eh) in eyes:
+                cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
 
-      cv.imshow('img',img)
-      cv.waitKey(0)
-      # Exit
-      if key == ord('q'):
-        cv.destroyAllWindows()
-  
-else:
-  print('not a url:' + video_url)
+    end_time = time.time()
+    fps = fps * 0.9 + 1/(end_time - start_time) * 0.1
+    start_time = end_time
+
+    frame_info = 'Frame: {0}, FPS: {1:.2f}'.format(frame_num, fps)
+
+    if hasattr(leftEyeImg, "__len__"):
+      cv2.putText(leftEyeImg, frame_info, (10, leftEyeImg.shape[0]-20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+      cv2.imshow(win_name, leftEyeImg)
+    # cv2.imshow('img',img)
+
+    frame_num += 1
+    leftEyeImg = None
+    # frame2 = None
+
+    key = cv2.waitKey(1)
+    # Exit
+    if key == 27:
+      cv2.destroyAllWindows()
+      break
+    
+
+if __name__ == '__main__':
+  try:
+    do_detection()
+  except:
+    print("Unknown Error:", sys.exc_info()[0])
+    raise
+    

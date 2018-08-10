@@ -16,6 +16,12 @@
 		}
 	</style>
 	<script type="text/javascript" src="/js/phonePage.js"></script>
+	<script>
+		function start() {
+			const page = new PhonePage();
+			page.start('{{fullSwimUrl}}')
+		}
+	</script>
 	<style>
 		.vrWrapper {
 			width: 100%;
@@ -53,7 +59,7 @@
 	</style>	
 </head>
 
-<body onload="PhonePage.start('{{fullSwimUrl}}')">
+<body onload="start()">
 
 
 <form style="display: none">

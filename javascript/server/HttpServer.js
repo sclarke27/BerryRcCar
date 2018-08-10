@@ -6,6 +6,13 @@ const path = require('path');
 const exphbs = require('express-handlebars');
 const BotIntents = require('../bot/BotIntents');
 
+// const WebSocketServer = require('websocket').server;
+const WebSocket = require('ws');
+const client = require('swim-client-js');
+const swim = new client.Client({
+  sendBufferSize: 1024 * 1024
+});
+
 /**
  * [_sensorData description]
  * @type {Object}
@@ -31,8 +38,9 @@ class HttpServer {
     this.fullSwimUrl = 'ws://' + this.hostUrl + ':' + this.swimPort;
     this.fullAggUrl = 'http://' + this.config.aggregateHost + ((this.port !== 80) ? (':' + this.port) : '');
     this.fullAggSwimUrl = 'ws://' + this.config.aggregateHost + ':5620';
-
-    this.io = null;
+    this.clients = [];
+    this.swimClient = swim;
+    
   }
 
   /**
@@ -52,6 +60,64 @@ class HttpServer {
     this.webApp.use('/assets', express.static(path.join(__dirname + '/views/assets')));
 
     this.server = require('http').Server(this.webApp);
+
+    const leftEyeSocket = new WebSocket.Server({ port: 8090 });
+    const rightEyeSocket = new WebSocket.Server({ port: 8091 });
+    let isLeftEyeBroadcastingMsg = false;
+    let isRightEyeBroadcastingMsg = false;
+    // Broadcast to all.
+    leftEyeSocket.broadcast = (data) => {
+      if(!isLeftEyeBroadcastingMsg) {
+        isLeftEyeBroadcastingMsg = true;
+        leftEyeSocket.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(data);
+          }
+        });
+        isLeftEyeBroadcastingMsg = false;
+      }
+    };    
+    rightEyeSocket.broadcast = (data) => {
+      if(!isRightEyeBroadcastingMsg) {
+        isRightEyeBroadcastingMsg = true;
+        rightEyeSocket.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(data);
+          }
+        });
+        isRightEyeBroadcastingMsg = false;
+      }
+    };    
+
+    leftEyeSocket.on('connection', function connection(ws) {
+      Log.info(`websocket client connected to left eye socket`);
+    });    
+
+    rightEyeSocket.on('connection', function connection(ws) {
+      Log.info(`websocket client connected to right eye socket`);
+    });    
+
+    this.swimClient.downlinkValue()
+      .host(`ws://127.0.0.1:5620`)
+      .node('/image/leftEye')
+      .lane('rawImage')
+      .didSet((newValue) => {
+        if(!isLeftEyeBroadcastingMsg) {
+          leftEyeSocket.broadcast(newValue);
+        }
+      })
+      .open();    
+
+      this.swimClient.downlinkValue()
+      .host(`ws://127.0.0.1:5620`)
+      .node('/image/rightEye')
+      .lane('rawImage')
+      .didSet((newValue) => {
+        if(!isRightEyeBroadcastingMsg) {
+          rightEyeSocket.broadcast(newValue);
+        }
+      })
+      .open();    
 
     // create our handlebars helpers
     this.hbsHelpers = {

@@ -63,3 +63,40 @@
 	}
 
 </script>
+{{!-- img:<br>
+<script type="text/recon">
+	@div(){
+		style: {
+			max-height: '300px'
+			overflow: auto
+			margin-bottom: '25px'
+		}
+		data1: @link(host: '{{fullSwimUrl}}', node: 'image/leftEye', lane: 'rawImage', type: value)
+		@text($eager($data1#0))
+	}
+</script> --}}
+<p>faces:</p>
+<script type="text/recon">
+
+	@div(){
+		style: {
+			max-height: '300px'
+			overflow: auto
+			margin-bottom: '25px'
+		}
+		data1: @link(host: '{{fullSwimUrl}}', node: 'botState', lane: 'leftEyeFaces', type: value)
+		@pre { @text($eager($data1#0)) }
+	}
+</script>
+<script type="text/recon">
+
+	@div(){
+		style: {
+			max-height: '300px'
+			overflow: auto
+			margin-bottom: '25px'
+		}
+		data2: @link(host: '{{fullSwimUrl}}', node: 'botState', lane: 'rightEyeFaces', type: value)
+		@pre { @text($eager($data2#0)) }
+	}
+</script>

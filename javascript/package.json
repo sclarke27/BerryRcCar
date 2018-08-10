@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async": "^0.9",
     "eslint": "^4.7.2",
     "express": "^4.15.4",
     "express-handlebars": "^3.0.0",
@@ -21,7 +22,8 @@
     "socket.io-client": "^2.1.1",
     "swim-client-js": "^0.6.0",
     "systeminformation": "^3.29.0",
+    "websocket": "^1.0.26",
     "winston": "^0.8",
-    "async": "^0.9"
+    "ws": "^5.1.1"
   }
 }

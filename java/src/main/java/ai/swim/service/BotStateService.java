@@ -35,6 +35,23 @@ public class BotStateService extends AbstractService {
       currentIntent.set(t);
     });  
 
+  @SwimLane("leftEyeFaces")
+  ValueLane<String> leftEyeFaces = valueLane().valueClass(String.class);
+  
+  @SwimLane("setLeftEyeFaces")
+  CommandLane<String> setLeftEyeFaces = commandLane().valueClass(String.class)
+    .onCommand(t -> {
+      leftEyeFaces.set(t);
+    });  
+
+  @SwimLane("rightEyeFaces")
+  ValueLane<String> rightEyeFaces = valueLane().valueClass(String.class);
+  
+  @SwimLane("setRightEyeFaces")
+  CommandLane<String> setRightEyeFaces = commandLane().valueClass(String.class)
+    .onCommand(t -> {
+      rightEyeFaces.set(t);
+    });     
 
   @SwimLane("canDriveForward")
   ValueLane<Boolean> canDriveForward = valueLane().valueClass(Boolean.class);

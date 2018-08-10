@@ -42,7 +42,7 @@ def readWriteImage():
       print('Can\'t read video data. Potential end of stream')
       return
     else:
-      cv2.putText(frame, frame_info, (10, frame.shape[0]-40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+      cv2.putText(frame, frame_info, (10, frame.shape[0]-40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
       cv2.imwrite('raw.png', frame, [cv2.IMWRITE_PNG_COMPRESSION, 9])
       shutil.move('raw.png', 'latest.png')
       # videoFeed.release()
@@ -53,7 +53,7 @@ def readWriteImage():
         print('Can\'t read video data. Potential end of stream')
         return
       else:
-        cv2.putText(frame2, frame_info, (10, frame2.shape[0]-40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+        cv2.putText(frame2, frame_info, (10, frame2.shape[0]-40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
         cv2.imwrite('raw2.png', frame2, [cv2.IMWRITE_PNG_COMPRESSION, 9])
         shutil.move('raw2.png', 'latest2.png')
         # videoFeed2.release()
