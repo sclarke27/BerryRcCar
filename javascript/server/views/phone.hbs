@@ -37,9 +37,6 @@
 		.rightEye {
 			height: 100%;
 			width: 100%;
-			background-position: center;
-			background-repeat: no-repeat;
-			background-size: contain;
 			position: relative;
 		}
 
@@ -56,6 +53,17 @@
 			padding: 0px 5px 0px 2px;
 			color: rgba(255, 255, 255, 0.6);
 		}
+
+		canvas {
+			width: 480px;
+			height: 360px;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 480px 360px;
+			position: absolute;
+			top: calc(50% - 180px);
+			left: calc(50% - 240px);
+		}
 	</style>	
 </head>
 
@@ -71,8 +79,7 @@
 	<input type="range" id="roll" name="volume" value="0" min="-90" max="90" oninput="sendCommand('phoneMagZ', this.value)"  />
 </form>	
 	<div class="vrWrapper">
-		<div class="leftEye" style="background-image: url(http://{{{hostUrl}}}:8081/)">
-
+		<div class="leftEye">
 			<div class="coords">
 				X:
 				<div id="magnetometerXL"></div>
@@ -81,8 +88,9 @@
 				Z:
 				<div id="magnetometerZL"></div>
 			</div>
+			<canvas id="leftEyeCanvas" style="background-image: url(http://{{{hostUrl}}}:8081/)"></canvas>
 		</div>
-		<div class="rightEye" style="background-image: url(http://{{{hostUrl}}}:8082/)">
+		<div class="rightEye">
 			<div class="coords">
 				X:
 				<div id="magnetometerXR"></div>
@@ -91,6 +99,7 @@
 				Z:
 				<div id="magnetometerZR"></div>
 			</div>
+			<canvas id="rightEyeCanvas" style="background-image: url(http://{{{hostUrl}}}:8082/)"></canvas>
 		</div>
 	</div>
 

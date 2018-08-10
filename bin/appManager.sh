@@ -65,6 +65,10 @@ package_node () {
     ${path}/bin/packageNode.sh
 }
 
+package_web_ui () {
+    ${path}/bin/packageWebUI.sh
+}
+
 package_swim () {
     ${path}/bin/packageSwim.sh
 }
@@ -91,6 +95,10 @@ update_all () {
 
 update_node () {
     ${path}/bin/updateNode.sh ${@}
+}
+
+update_web_ui () {
+    ${path}/bin/updateWebUI.sh ${@}
 }
 
 test_ssh () {
@@ -249,6 +257,12 @@ case $action in
             start_remote ${botIndex} ${usr} ${pwd}
         done        
         ;;
+    updateWebUI)
+        package_web_ui
+        for botIndex in ${botList[@]}; do
+            update_web_ui ${botIndex} ${usr} ${pwd}
+        done        
+        ;;        
     # update, rebuild and restart remote sources and devices
     all) 
         package_all
