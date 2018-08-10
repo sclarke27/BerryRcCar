@@ -61,8 +61,8 @@ class HttpServer {
 
     this.server = require('http').Server(this.webApp);
 
-    const leftEyeSocket = new WebSocket.Server({ port: 8090 });
-    const rightEyeSocket = new WebSocket.Server({ port: 8091 });
+    const leftEyeSocket = new WebSocket.Server({ port: 8085 });
+    const rightEyeSocket = new WebSocket.Server({ port: 8086 });
     let isLeftEyeBroadcastingMsg = false;
     let isRightEyeBroadcastingMsg = false;
     // Broadcast to all.
@@ -97,7 +97,7 @@ class HttpServer {
       Log.info(`websocket client connected to right eye socket`);
     });    
 
-    this.swimClient.downlinkValue()
+    swim.downlinkValue()
       .host(`ws://127.0.0.1:5620`)
       .node('/image/leftEye')
       .lane('rawImage')

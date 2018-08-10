@@ -16,7 +16,7 @@ remoteUrl2 = 1 # "http://192.168.1.106:8082"
 capture_local = False
 
 if not capture_local:
-  host = 'ws://127.0.0.1:5620'
+  host = 'ws://192.168.1.106:5620'
   remoteUrl = "http://192.168.1.106:8081"
   remoteUrl2 = "http://192.168.1.106:8082"
 
@@ -52,10 +52,10 @@ def readImage(selectedEye, videoUrl, imageQueue):
       return
     else:
       height, width = frame.shape[:2]
-      frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-      frame = cv2.resize(frame, (width/3, height/3), interpolation = cv2.INTER_AREA)
+      # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+      frame = cv2.resize(frame, (width/1, height/1), interpolation = cv2.INTER_AREA)
       cv2.putText(frame, frame_info, (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
-      encoded, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 27])
+      encoded, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 10])
       zlib_text = zlib.compress(buffer)
       jpg_as_text = base64.b64encode(zlib_text)
       imageQueue.put(jpg_as_text)

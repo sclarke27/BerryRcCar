@@ -55,8 +55,8 @@ def start_right_socket(image_queue):
 
 if __name__ == '__main__':
     print("starting main")
-    leftEyeSocketUrl = "ws://192.168.1.106:8090"
-    rightEyeSocketUrl = "ws://192.168.1.106:8091"
+    leftEyeSocketUrl = "ws://192.168.1.106:8085"
+    rightEyeSocketUrl = "ws://192.168.1.106:8086"
 
     left_image_queue = multiprocessing.Queue(1)
     right_image_queue = multiprocessing.Queue(1)

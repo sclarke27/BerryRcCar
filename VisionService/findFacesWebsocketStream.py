@@ -10,12 +10,14 @@ import json
 
 from websocket import create_connection
 
+host = 'ws://192.168.1.106:5620'
+swimSocket = create_connection(host)
 
 def on_message(ws, message):
     # print message
     try:
-        host = 'ws://192.168.1.106:5620'
-        ws = create_connection(host)
+        # host = 'ws://192.168.0.125:5620'
+        # ws = create_connection(host)
         frameStr = message
         img = base64.b64decode(frameStr)
         img = zlib.decompress(img)
@@ -33,7 +35,7 @@ def on_message(ws, message):
                 "x1": x,
                 "y1": y,
                 "x2": x+w,
-                "x2": y+h,
+                "y2": y+h,
                 "eyes": []
             }
             eyeList = []
@@ -46,7 +48,7 @@ def on_message(ws, message):
                     "x1": ex,
                     "y1": ey,
                     "x2": ex+w,
-                    "x2": ey+h
+                    "y2": ey+h
                 })
 
             faceResult.append(currFace)
@@ -54,7 +56,7 @@ def on_message(ws, message):
         resultStr = str(faceResult)
         message = "@command(node:\"/botState\",lane:\"setLeftEyeFaces\"){\"" + resultStr + "\"}"
         # print(message)
-        ws.send(message)     
+        swimSocket.send(message)     
 
         # cv2.imshow("Left Eye Face Detect", frame)
         # cv2.waitKey(1)
@@ -65,8 +67,8 @@ def on_message(ws, message):
 def on_message2(ws, message):
     # print message
     try:
-        host = 'ws://192.168.1.106:5620'
-        ws = create_connection(host)
+        # host = 'ws://192.168.0.125:5620'
+        # ws = create_connection(host)
         frame = message
         img = base64.b64decode(frame)
         img = zlib.decompress(img)
@@ -85,7 +87,7 @@ def on_message2(ws, message):
                 "x1": x,
                 "y1": y,
                 "x2": x+w,
-                "x2": y+h,
+                "y2": y+h,
                 "eyes": []
             }
             eyeList = []
@@ -98,7 +100,7 @@ def on_message2(ws, message):
                     "x1": ex,
                     "y1": ey,
                     "x2": ex+w,
-                    "x2": ey+h
+                    "y2": ey+h
                 })
 
             faceResult.append(currFace)
@@ -106,7 +108,7 @@ def on_message2(ws, message):
         resultStr = str(faceResult)
         message = "@command(node:\"/botState\",lane:\"setRightEyeFaces\"){\"" + resultStr + "\"}"
         # print(message)
-        ws.send(message)   
+        swimSocket.send(message)   
 
         # cv2.imshow("Right Eye Face Detect", frame)
         # cv2.waitKey(1)
@@ -115,13 +117,13 @@ def on_message2(ws, message):
         raise    
 
 def on_error(ws, error):
-    print error
+    print(error)
 
 def on_close(ws):
-    print "### closed ###"
+    print("### closed ###")
 
 def on_open(ws):
-    print "### opened ###"
+    print("### opened ###")
 
 def start_left_socket(image_queue):
     ws = websocket.WebSocketApp(leftEyeSocketUrl, on_message = on_message, on_error = on_error, on_close = on_close)
@@ -135,8 +137,8 @@ def start_right_socket(image_queue):
 
 if __name__ == '__main__':
     print("starting main")
-    leftEyeSocketUrl = "ws://192.168.1.106:8090"
-    rightEyeSocketUrl = "ws://192.168.1.106:8091"
+    leftEyeSocketUrl = "ws://192.168.1.106:8085"
+    rightEyeSocketUrl = "ws://192.168.1.106:8086"
 
     left_image_queue = multiprocessing.Queue(1)
     right_image_queue = multiprocessing.Queue(1)
