@@ -8,7 +8,7 @@ import zlib
 
 from websocket import create_connection
 
-host = 'ws://192.168.1.106:5620'
+host = 'ws://192.168.0.125:5620'
 ws = create_connection(host)
 
 remoteUrl = 0 # "http://192.168.1.106:8081"

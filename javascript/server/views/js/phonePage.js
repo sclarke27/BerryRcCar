@@ -104,6 +104,35 @@ class PhonePage {
         }
       }
     }
+
+    var left = document.getElementById("leftEyeCanvas");
+    this.leftCanvas = left.getContext("2d");
+
+    var right = document.getElementById("rightEyeCanvas");
+    this.rightCanvas = right.getContext("2d");
+
+    // this.leftCanvas.beginPath();
+    // this.leftCanvas.moveTo(0,0);
+    // this.leftCanvas.lineTo(300,150);
+    // this.leftCanvas.stroke();    
+
+    // this.rightCanvas.beginPath();
+    // this.rightCanvas.moveTo(0,0);
+    // this.rightCanvas.lineTo(300,150);
+    // this.rightCanvas.stroke();    
+    
+    this.drawBox(this.leftCanvas, 10, 20, 200, 220)
+    this.drawBox(this.rightCanvas, 10, 20, 200, 220)
+  }
+
+  drawBox(canvas, x1, y1, x2, y2) {
+    canvas.beginPath();
+    canvas.moveTo(x1, y1);
+    canvas.lineTo(x1, y2);
+    canvas.lineTo(x2, y2);
+    canvas.lineTo(x2, y1);
+    canvas.lineTo(x1, y1);
+    canvas.stroke();
   }
 
   readOrientation(event) {

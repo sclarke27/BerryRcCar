@@ -58,8 +58,8 @@ def on_message(ws, message):
         # print(message)
         swimSocket.send(message)     
 
-        # cv2.imshow("Left Eye Face Detect", frame)
-        # cv2.waitKey(1)
+        cv2.imshow("Left Eye Face Detect", frame)
+        cv2.waitKey(1)
     except:
         print("Unknown Error:", sys.exc_info()[0])
         raise    
@@ -110,8 +110,8 @@ def on_message2(ws, message):
         # print(message)
         swimSocket.send(message)   
 
-        # cv2.imshow("Right Eye Face Detect", frame)
-        # cv2.waitKey(1)
+        cv2.imshow("Right Eye Face Detect", frame)
+        cv2.waitKey(1)
     except:
         print("Unknown Error:", sys.exc_info())
         raise    
