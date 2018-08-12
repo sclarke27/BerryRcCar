@@ -8,8 +8,7 @@ import zlib
 
 from websocket import create_connection
 
-host = 'ws://192.168.0.125:5620'
-ws = create_connection(host)
+host = 'ws://127.0.0.1:5620'
 
 remoteUrl = 0 # "http://192.168.1.106:8081"
 remoteUrl2 = 1 # "http://192.168.1.106:8082"
@@ -20,6 +19,8 @@ if not capture_local:
   remoteUrl = "http://192.168.1.106:8081"
   remoteUrl2 = "http://192.168.1.106:8082"
 
+ws = create_connection(host)
+
 def writeImage(selectedEye, videoUrl, imageQueue):
   print('start write update loop')
   while True:
@@ -27,6 +28,7 @@ def writeImage(selectedEye, videoUrl, imageQueue):
     message = "@command(node:\"/image/" + selectedEye +"\",lane:\"updateRawImage\"){\"" + jpg_as_text + "\"}"
     # print(message)
     ws.send(message)    
+    time.sleep(1/4)
 
 def readImage(selectedEye, videoUrl, imageQueue):
 
@@ -55,18 +57,24 @@ def readImage(selectedEye, videoUrl, imageQueue):
       # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
       frame = cv2.resize(frame, (width/1, height/1), interpolation = cv2.INTER_AREA)
       cv2.putText(frame, frame_info, (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
-      encoded, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 10])
+      encoded, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 64])
       zlib_text = zlib.compress(buffer)
       jpg_as_text = base64.b64encode(zlib_text)
       imageQueue.put(jpg_as_text)
       # message = "@command(node:\"/image/" + selectedEye +"\",lane:\"updateRawImage\"){\"" + jpg_as_text + "\"}"
       # ws.send(message)
 
-    
+    # if frame_num % 120 == 0:
+    # print("restart reading cam for " + selectedEye + " @" + str(videoUrl))
+    videoFeed.release()
+    videoFeed = cv2.VideoCapture(videoUrl)
+
+
     end_time = time.time()
     fps = fps * 0.9 + 1/(end_time - start_time) * 0.1
     start_time = end_time
     frame_num += 1
+    time.sleep(1/4)
     
 
 

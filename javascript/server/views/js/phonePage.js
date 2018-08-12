@@ -88,19 +88,20 @@ class PhonePage {
     this.clearCanvas(canvas);
     for(const face of data) {
       // console.info(face);
-      const scale = 1;
+      const scale = 0.75;
       const x1 = face.x1*scale;
       const y1 = face.y1*scale;
       const x2 = face.x2*scale;
       const y2 = face.y2*scale;
-      this.drawBox(canvas, x1, y1, x2, y2);        
+      
+      this.drawBox(canvas, x1, y1, x2, y2, 3, "#0000FF");        
       if(face.eyes.length > 0) {
         for(const eye of face.eyes) {
           const eyeX1 = x1 + (eye.x1*scale);
           const eyeY1 = y1 + (eye.y1*scale);
           const eyeX2 = eyeX1 + (eye.width*scale);
           const eyeY2 = eyeY1 + (eye.height*scale);
-          this.drawBox(canvas, eyeX1, eyeY1, eyeX2, eyeY2);        
+          this.drawBox(canvas, eyeX1, eyeY1, eyeX2, eyeY2, 3, "#00ff00");            
         }
       }
     }
@@ -111,21 +112,11 @@ class PhonePage {
     var right = document.getElementById("rightEyeCanvas");
     this.rightCanvas = right.getContext("2d");
 
-    // this.leftCanvas.beginPath();
-    // this.leftCanvas.moveTo(0,0);
-    // this.leftCanvas.lineTo(300,150);
-    // this.leftCanvas.stroke();    
-
-    // this.rightCanvas.beginPath();
-    // this.rightCanvas.moveTo(0,0);
-    // this.rightCanvas.lineTo(300,150);
-    // this.rightCanvas.stroke();    
-    
-    this.drawBox(this.leftCanvas, 10, 20, 200, 220)
-    this.drawBox(this.rightCanvas, 10, 20, 200, 220)
   }
 
-  drawBox(canvas, x1, y1, x2, y2) {
+  drawBox(canvas, x1, y1, x2, y2, size = 1, color = "#ffffff") {
+    canvas.strokeStyle=color;
+    canvas.lineWidth=size;
     canvas.beginPath();
     canvas.moveTo(x1, y1);
     canvas.lineTo(x1, y2);

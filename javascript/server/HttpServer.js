@@ -65,6 +65,9 @@ class HttpServer {
     const rightEyeSocket = new WebSocket.Server({ port: 8086 });
     let isLeftEyeBroadcastingMsg = false;
     let isRightEyeBroadcastingMsg = false;
+    let lastLeftEyeMsg = null;
+    let lastRightEyeMsg = null;
+
     // Broadcast to all.
     leftEyeSocket.broadcast = (data) => {
       if(!isLeftEyeBroadcastingMsg) {
@@ -102,22 +105,23 @@ class HttpServer {
       .node('/image/leftEye')
       .lane('rawImage')
       .didSet((newValue) => {
-        if(!isLeftEyeBroadcastingMsg) {
-          leftEyeSocket.broadcast(newValue);
-        }
+        lastLeftEyeMsg = newValue;
       })
       .open();    
 
-      this.swimClient.downlinkValue()
+    swim.downlinkValue()
       .host(`ws://127.0.0.1:5620`)
       .node('/image/rightEye')
       .lane('rawImage')
       .didSet((newValue) => {
-        if(!isRightEyeBroadcastingMsg) {
-          rightEyeSocket.broadcast(newValue);
-        }
+        lastRightEyeMsg = newValue;
       })
       .open();    
+
+    setInterval(() => {
+      leftEyeSocket.broadcast(lastLeftEyeMsg);
+      rightEyeSocket.broadcast(lastRightEyeMsg);
+    }, 100)
 
     // create our handlebars helpers
     this.hbsHelpers = {
