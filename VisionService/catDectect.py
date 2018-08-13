@@ -104,25 +104,25 @@ def readImage(selectedEye, videoUrl, imageQueue):
   
       resultStr = str(faceResult)
       if selectedEye == "leftEye":
-        message = "@command(node:\"/botState\",lane:\"setLeftEyeFaces\"){\"" + resultStr + "\"}"
-        # print(message)
-        swimSocket.send(message)         
+        # message = "@command(node:\"/botState\",lane:\"setLeftEyeFaces\"){\"" + resultStr + "\"}"
+        # # print(message)
+        # swimSocket.send(message)         
 
-        # cv2.imshow("Left Eye Face Detect", frame)
-        # cv2.waitKey(1)  
+        cv2.imshow("Left Eye Face Detect", frame)
+        cv2.waitKey(1)  
       else:    
-        message = "@command(node:\"/botState\",lane:\"setRightEyeFaces\"){\"" + resultStr + "\"}"
-        # print(message)
-        swimSocket.send(message)         
+        # message = "@command(node:\"/botState\",lane:\"setRightEyeFaces\"){\"" + resultStr + "\"}"
+        # # print(message)
+        # swimSocket.send(message)         
 
-        # cv2.imshow("Right Eye Face Detect", frame)
-        # cv2.waitKey(1)  
+        cv2.imshow("Right Eye Face Detect", frame)
+        cv2.waitKey(1)  
 
 
-    # if frame_num % 120 == 0:
-    # print("restart reading cam for " + selectedEye + " @" + str(videoUrl))
-    videoFeed.release()
-    videoFeed = cv2.VideoCapture(videoUrl)
+    if frame_num % 240 == 0:
+      # print("restart reading cam for " + selectedEye + " @" + str(videoUrl))
+      videoFeed.release()
+      videoFeed = cv2.VideoCapture(videoUrl)
 
 
     end_time = time.time()
@@ -144,7 +144,7 @@ if __name__ == '__main__':
 
     data_path = os.path.dirname(os.path.abspath(__file__)) + '/data/'
 
-    face_cascade = cv2.CascadeClassifier(data_path + 'haarcascades/haarcascade_frontalface_alt2.xml')
+    face_cascade = cv2.CascadeClassifier(data_path + 'haarcascades/haarcascade_frontalcatface.xml')
     eye_cascade = cv2.CascadeClassifier(data_path + 'haarcascades/haarcascade_eye.xml')
 
     left_image_queue = multiprocessing.Queue(1)
