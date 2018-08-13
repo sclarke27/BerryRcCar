@@ -40,7 +40,7 @@ class PhonePage {
     // });    
 
     swim.downlinkValue()
-      .host(`ws://192.168.1.106:5620`)
+      .host(this.swimUrl)
       .node('/botState')
       .lane('leftEyeFaces')
       .didSet((newValue) => {
@@ -51,7 +51,7 @@ class PhonePage {
       .open();  
 
     swim.downlinkValue()
-    .host(`ws://192.168.1.106:5620`)
+    .host(this.swimUrl)
     .node('/botState')
     .lane('rightEyeFaces')
     .didSet((newValue) => {

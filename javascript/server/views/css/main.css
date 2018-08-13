@@ -33,13 +33,22 @@ h3 {
 input,
 select {
   color: white;
-  background-color: #0C0C0C;
+  background-color: transparent;
   border: 0px;
   padding: 5px;
   margin: 10px;
-  width: 100%;
   font-size: 1.3rem;
   box-shadow: 0px 0px 5px rgba(100, 100, 255, .5);
+}
+
+input[type="button"] {
+  background-color: midnightblue;
+  transition: all 150ms linear;
+  padding: 5px 10px;
+}
+
+input[type="button"]:hover {
+  background-color: dodgerblue;
 }
 
 td input {

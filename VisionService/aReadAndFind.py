@@ -16,9 +16,9 @@ remoteUrl2 = 1 # "http://192.168.1.106:8082"
 capture_local = False
 
 if not capture_local:
-  host = 'ws://192.168.1.106:5620'
-  remoteUrl = "http://192.168.1.106:8081"
-  remoteUrl2 = "http://192.168.1.106:8082"
+  host = 'ws://192.168.0.125:5620'
+  remoteUrl = "http://192.168.0.125:8081"
+  remoteUrl2 = "http://192.168.0.125:8082"
 
 ws = create_connection(host)
 swimSocket = create_connection(host)

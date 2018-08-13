@@ -1,0 +1,101 @@
+<html>
+
+<head>
+
+	<style>
+		.vrWrapper {
+			height: 720px;
+			display: flex;
+			flex-direction: row;
+			padding: 0px;
+			margin: 0px 0px;
+			background-color: rgba(200,200,200,0.2);
+			flex-grow: 1;
+		}
+
+		.leftEye,
+		.rightEye {
+			flex-grow: 1;
+		}
+
+		.coords {
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			font-size: 10px;
+			margin: 5px;
+			color: rgba(255, 255, 255, 0.2);
+		}
+
+		.coords div {
+			padding: 0px 5px 0px 2px;
+			color: rgba(255, 255, 255, 0.6);
+		}
+
+		canvas {
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 100%;
+			margin: 10px auto;
+		}
+
+		.statusHeader {
+			height: 55px;
+			background-color: darkslateblue;
+			color: ghostwhite;
+			padding: 5px 15px;
+		}
+
+		.pageRow {
+
+		}
+	</style>	
+</head>
+
+<body onload="start()">
+	<script type="text/javascript" src="/js/groundStationPage.js"></script>
+	<script>
+		let page = null;
+		function start() {
+			page = new GroundStationPage();
+			page.start('{{fullSwimUrl}}')
+		}
+	</script>
+	<div class="statusHeader">
+		<script type="text/recon">
+			@form {
+				host: '{{fullSwimUrl}}'
+				node: 'botState'
+				botName:  @link(lane: 'name', type: value)
+				[Bot Name:]
+				@input(type: text, name: device, value: $botName#0)
+
+				currentIntent: @link(lane: 'currentIntent', type: value)
+				[Current Intent:] 
+				@input(type: text, name: device, value: $currentIntent#0)
+
+				@input(type: button, value: 'Drive', onclick: 'page.setIntent(\'drive\')')
+				@input(type: button, value: 'Go Idle', onclick: 'page.setIntent(\'idle\')')
+				@input(type: button, value: 'AR Only', onclick: 'page.setIntent(\'arOnly\')')
+			}
+		</script>
+	</div>
+
+<div class="pageRow">
+	<div class="vrWrapper">
+		<div class="leftEye">
+			<canvas id="leftEyeCanvas" width="800" height="600" style="background-image: url(http://{{{hostUrl}}}:8081/)"></canvas>
+			{{!-- <canvas id="leftEyeCanvas" width="480" height="360" style="background-image: url(http://192.168.1.106:8081/)"></canvas> --}}
+		</div>
+		<div class="rightEye">
+			<canvas id="rightEyeCanvas" width="800" height="600" style="background-image: url(http://{{{hostUrl}}}:8082/)"></canvas>
+			{{!-- <canvas id="rightEyeCanvas" width="480" height="360" style="background-image: url(http://192.168.1.106:8082/)"></canvas> --}}
+		</div>
+	</div>
+</div>
+
+
+
+</body>
+
+</html>

@@ -278,6 +278,31 @@ class HttpServer {
   }
 
   /**
+   * route to handle ground station page user sees in browser
+   */
+  createGroundStationRoute() {
+    this.webApp.get('/ground', (request, response) => {
+      // const sensorData = this.sensors.getSensorDataSet();
+      // const botStatus = this.botActions.getBotStatus();
+      // const sensorKeys = this.sensors.getSensorKeys();
+
+      response.render('groundStation', {
+        // data: sensorData,
+        // status: botStatus,
+        // sensorKeys: sensorKeys,
+        // sensors: this.sensors.getSensorDataSet(),
+        // intents: BotIntents,
+        routeName: 'groundStation',
+        botName: this.botName,
+        hostUrl: this.hostUrl,
+        fullHostUrl: this.fullHostUrl,
+        fullSwimUrl: this.fullSwimUrl,
+        helpers: this.hbsHelpers         
+      })
+    })
+  }
+
+  /**
    * route to handle phone page user sees in browser
    */
   createPhoneRoute() {
@@ -318,6 +343,7 @@ class HttpServer {
     this.main = mainThread;
     this.setUpEngine();
     this.createHomeRoute();
+    this.createGroundStationRoute();
     // this.createStatusRoute();
     // this.createSensorsRoute();
     // this.createIntentRoute();
