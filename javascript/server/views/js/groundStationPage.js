@@ -6,6 +6,11 @@ class GroundStationPage {
     this.defaultCanvasWidth = 640;
     this.defaultCanvasHeight = 480;
 
+    this.rightFaceList = null;
+    this.leftFaceList = null;
+    this.currThrottle = 0;
+    this.currSteering = 0;
+
     // these 3 values will be set automatically based on the size of the actual canvas on the page
     this.canvasWidth = this.defaultCanvasWidth;
     this.canvasHeight = this.defaultCanvasHeight;
@@ -31,11 +36,7 @@ class GroundStationPage {
       .lane('leftEyeFaces')
       .didSet((newValue) => {
         const data = eval(newValue)
-        this.clearCanvas(this.leftCanvas);
-        this.drawThrottle(this.leftCanvas);
-        this.drawSteering(this.leftCanvas);
-        this.updateFaceBoundingBoxes(this.leftCanvas, data);
-  
+        this.leftFaceList = data;
       })
       .open();  
 
@@ -44,40 +45,109 @@ class GroundStationPage {
     .node('/botState')
     .lane('rightEyeFaces')
     .didSet((newValue) => {
-      const data = eval(newValue)
-      this.clearCanvas(this.rightCanvas);
-      this.drawThrottle(this.rightCanvas);
-      this.drawSteering(this.rightCanvas);
-      this.updateFaceBoundingBoxes(this.rightCanvas, data);
+      const data = eval(newValue);
+      this.rightFaceList = data;
     })
     .open();        
 
+    swim.downlinkValue()
+      .host(this.swimUrl)
+      .node('/sensor/throttleRadio')
+      .lane('latest')
+      .didSet((newValue) => {
+        const data = eval(newValue)
+        this.currThrottle = data;
+      })
+      .open();  
+
+    swim.downlinkValue()
+      .host(this.swimUrl)
+      .node('/sensor/steeringRadio')
+      .lane('latest')
+      .didSet((newValue) => {
+        const data = eval(newValue)
+        this.currSteering = data;
+      })
+      .open();  
+
+    setInterval(() => {
+      this.clearCanvas(this.leftCanvas);
+      this.clearCanvas(this.rightCanvas);
+
+      if(this.leftFaceList) {
+        this.updateFaceBoundingBoxes(this.leftCanvas, this.leftFaceList);
+      }
+      if(this.rightFaceList) {
+        this.updateFaceBoundingBoxes(this.rightCanvas, this.rightFaceList);
+      }
+
+      this.drawThrottle(this.leftCanvas, this.currThrottle, 0);
+      this.drawThrottle(this.rightCanvas, this.currThrottle, 0);
+
+      this.drawSteering(this.leftCanvas, this.currSteering, 0);
+      this.drawSteering(this.rightCanvas, this.currSteering, 0);
+
+  
+    }, 1/30);
+
   }
 
-  drawThrottle(canvas) {
-    const totalTicks = 20;
-    const tickTopDistance = this.canvasHeight / totalTicks;
-    let tickWidth = 10;
+  drawThrottle(canvas, throttleValue, eyeOffset) {
+    const totalTicks = 40;
+    const gutterWidth = 10;
+    const containerHeight = this.canvasHeight-gutterWidth;
+    const tickTopDistance = containerHeight / totalTicks;
+    let tickWidth = gutterWidth;
     let tickLeft = this.canvasWidth - tickWidth;
+    const bgGrad = canvas.createLinearGradient(0, 0, gutterWidth, containerHeight);
+    bgGrad.addColorStop(0.05, "rgba(255, 0, 0, 0.75)");
+    bgGrad.addColorStop(0.25, "rgba(255, 255, 0, 0.75)");
+    bgGrad.addColorStop(0.35, "rgba(0, 255, 0, 0.75)");
+    bgGrad.addColorStop(0.5, "rgba(0, 0, 0, 0.500)");
+    bgGrad.addColorStop(0.85, "rgba(0, 255, 0, 0.75)");
+    bgGrad.addColorStop(0.90, "rgba(255, 255, 0, 0.75)");
+    bgGrad.addColorStop(1, "rgba(255, 0, 0, 0.75)");
+    canvas.fillStyle=bgGrad;
+    canvas.fillRect(this.canvasWidth-gutterWidth, 0, 25, containerHeight);
+    this.drawLine(canvas, this.canvasWidth-gutterWidth+eyeOffset, 0, this.canvasWidth-gutterWidth+eyeOffset, this.canvasHeight, 2, "rgba(0, 0, 0, 0.25)");            
+    this.drawLine(canvas, this.canvasWidth+eyeOffset, 0, this.canvasWidth+eyeOffset, this.canvasHeight, 2, "rgba(0, 0, 0, 0.25)");            
     for(let tickIndex = 0; tickIndex <= totalTicks; tickIndex++) {
-      tickWidth = (tickIndex % 5 === 0) ? 20 : 10;
-      tickLeft = this.canvasWidth - tickWidth;
-      const currTop = tickTopDistance*tickIndex;
-      this.drawBox(canvas, tickLeft, currTop, this.canvasWidth, currTop, "#ffffff");            
+      tickLeft = this.canvasWidth - gutterWidth;
+      const currTop = Math.floor(tickTopDistance*tickIndex);
+      this.drawLine(canvas, tickLeft+eyeOffset, currTop, this.canvasWidth+eyeOffset, currTop, 1, (tickIndex % 5 === 0) ? "rgba(0, 0, 0, 0.75)" : "rgba(100, 100, 100, 0.5");            
     }
+    tickLeft = this.canvasWidth - tickWidth - 1;
+    throttleValue = this.map(throttleValue, 0, 180, 0, containerHeight)
+    this.drawBox(canvas, tickLeft+eyeOffset, throttleValue-2, this.canvasWidth+eyeOffset, throttleValue-2, 2, "#FF7272");            
+    this.drawBox(canvas, tickLeft+eyeOffset-1, throttleValue, this.canvasWidth+eyeOffset, throttleValue, 2, "#FF0000");            
+    this.drawBox(canvas, tickLeft+eyeOffset, throttleValue+2, this.canvasWidth+eyeOffset, throttleValue+2, 2, "#CC0000");            
   }
 
-  drawSteering(canvas) {
-    const totalTicks = 20;
-    const tickDistance = this.canvasWidth / totalTicks;
-    let tickHeight = 10;
+  drawSteering(canvas, steeringValue, eyeOffset) {
+    const totalTicks = 40;
+    const gutterHeight = 10;
+    const containerWidth = this.canvasWidth - gutterHeight;
+    const tickDistance = containerWidth / totalTicks;
+    let tickHeight = gutterHeight;
     let tickLeft = this.canvasWidth - 1;
+    const bgGrad = canvas.createLinearGradient(0, 0, containerWidth, gutterHeight);
+    bgGrad.addColorStop(0, "rgba(0, 255, 0, 0.75)");
+    bgGrad.addColorStop(0.5, "rgba(0, 255, 0, 0.0)");
+    bgGrad.addColorStop(1, "rgba(0, 255, 0, 0.75)");
+    canvas.fillStyle=bgGrad;
+    canvas.fillRect(0, this.canvasHeight-gutterHeight, containerWidth, gutterHeight);
+    this.drawLine(canvas, 0, this.canvasHeight-gutterHeight, containerWidth-gutterHeight+eyeOffset, this.canvasHeight-gutterHeight, 2, "rgba(0, 0, 0, 0.25)");            
+    this.drawLine(canvas, 0, this.canvasHeight+eyeOffset, containerWidth+eyeOffset, this.canvasHeight, 2, "rgba(0, 0, 0, 0.25)");            
+    
     for(let tickIndex = 0; tickIndex <= totalTicks; tickIndex++) {
-      tickHeight = (tickIndex % 5 === 0) ? 20 : 10;
       tickLeft = tickDistance * tickIndex;
       let tickTop = this.canvasHeight - tickHeight
-      this.drawBox(canvas, tickLeft, tickTop, tickLeft+1, this.canvasHeight, "#ffffff");            
+      this.drawLine(canvas, tickLeft+eyeOffset, tickTop, tickLeft+eyeOffset, this.canvasHeight, 1, "rgba(0,0,0,0.75");            
     }
+    steeringValue = this.map(steeringValue, 0, 180, 0, containerWidth)
+    this.drawLine(canvas, steeringValue-2+eyeOffset, this.canvasHeight-tickHeight, steeringValue-2+eyeOffset, this.canvasHeight, 2, "rgba(100, 255, 100, 0.5)");            
+    this.drawLine(canvas, steeringValue+eyeOffset, this.canvasHeight-tickHeight-1, steeringValue+eyeOffset, this.canvasHeight, 2, "rgba(0, 255, 0, 0.8");            
+    this.drawLine(canvas, steeringValue+2+eyeOffset, this.canvasHeight-tickHeight, steeringValue+2+eyeOffset, this.canvasHeight, 2, "rgba(100, 255, 100, 0.5)");            
   }
 
   clearCanvas(canvas) {
@@ -113,13 +183,6 @@ class GroundStationPage {
         }
       }
     }
-
-    var left = document.getElementById("leftEyeCanvas");
-    this.leftCanvas = left.getContext("2d");
-
-    var right = document.getElementById("rightEyeCanvas");
-    this.rightCanvas = right.getContext("2d");
-
   }
 
   drawBox(canvas, x1, y1, x2, y2, size = 1, color = "#ffffff") {
@@ -131,6 +194,15 @@ class GroundStationPage {
     canvas.lineTo(x2, y2);
     canvas.lineTo(x2, y1);
     canvas.lineTo(x1, y1);
+    canvas.stroke();
+  }
+
+  drawLine(canvas, x1, y1, x2, y2, size = 1, color = "#ffffff") {
+    canvas.strokeStyle=color;
+    canvas.lineWidth=size;
+    canvas.beginPath();
+    canvas.moveTo(x1, y1);
+    canvas.lineTo(x2, y2);
     canvas.stroke();
   }
 
