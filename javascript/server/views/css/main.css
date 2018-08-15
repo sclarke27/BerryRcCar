@@ -3,12 +3,59 @@
   margin: 0px;
 }
 
+@font-face {
+  font-family: Digital7;
+  font-style: normal;
+  src: url(/fonts/digital-7-mono.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: Digital7;
+  font-style: italic;
+  src: url(/fonts/digital-7-mono-italic.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: Renner;
+  font-style: normal;
+  src: url(/fonts/Renner_400.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: Calculator;
+  font-style: normal;
+  src: url(/fonts/Calculator.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: SulphurPoint;
+  font-style: normal;
+  src: url(/fonts/SulphurPoint-Regular.otf) format("opentype");
+}
+
+@font-face {
+  font-family: SulphurPoint;
+  font-style: bold;
+  src: url(/fonts/SulphurPoint-Bold.otf) format("opentype");
+}
+
+@font-face {
+  font-family: SulphurPoint;
+  font-style: light;
+  src: url(/fonts/SulphurPoint-Light.otf) format("opentype");
+}
+
+@font-face {
+  font-family: FreePixel;
+  font-style: normal;
+  src: url(/fonts/FreePixel.ttf) format("truetype");
+}
+
 body {
   background-color: black;
   color: white;
-  font-family: arial;
-  font-size: 1.3rem;
-  font-family: 'Exo', sans-serif;
+  font-size: 16pt;
+  font-family: SulphurPoint;
 }
 
 h3 {
@@ -38,12 +85,15 @@ select {
   padding: 5px;
   margin: 10px;
   font-size: 1.3rem;
+  font-family: Calculator;
   box-shadow: 0px 0px 5px rgba(100, 100, 255, .5);
 }
 
 input[type="button"] {
   background-color: midnightblue;
   transition: all 150ms linear;
+  font-size: 1.3rem;
+  font-family: Renner;
   padding: 5px 10px;
 }
 

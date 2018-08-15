@@ -37,6 +37,8 @@
 			max-height: '300px'
 			overflow: auto
 			margin-bottom: '25px'
+			font-family: FreePixel
+			font-size: '14px'
 		}
 		data1: @link(host: '{{fullSwimUrl}}', node: 'botState', lane: 'javascriptLog', type: map)
 		@each(t: $data1.*:) {
@@ -63,18 +65,7 @@
 	}
 
 </script>
-{{!-- img:<br>
-<script type="text/recon">
-	@div(){
-		style: {
-			max-height: '300px'
-			overflow: auto
-			margin-bottom: '25px'
-		}
-		data1: @link(host: '{{fullSwimUrl}}', node: 'image/leftEye', lane: 'rawImage', type: value)
-		@text($eager($data1#0))
-	}
-</script> --}}
+
 <p>faces:</p>
 <script type="text/recon">
 

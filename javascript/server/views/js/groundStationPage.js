@@ -70,6 +70,28 @@ class GroundStationPage {
       })
       .open();  
 
+    this.compassValueElem = null;
+    this.compassCircleElem = null;
+    swim.downlinkValue()
+      .host(this.swimUrl)
+      .node('/sensor/compass1')
+      .lane('latest')
+      .didSet((newValue) => {
+        if(!this.compassValueElem) {
+          this.compassValueElem = document.getElementById('compassValue');
+        }
+        if(!this.compassCircleElem) {
+          this.compassCircleElem = document.getElementById('compassCircle');
+        }
+        if(this.compassValueElem) {
+          this.compassValueElem.innerHTML = newValue + "&deg;";
+        }
+        if(this.compassCircleElem) {
+          this.compassCircleElem.style.transform = 'perspective(500px) rotateX(72deg) rotateY(0deg) rotateZ(' + newValue + 'deg)';
+        }
+      })
+      .open();       
+
     setInterval(() => {
       this.clearCanvas(this.leftCanvas);
       this.clearCanvas(this.rightCanvas);

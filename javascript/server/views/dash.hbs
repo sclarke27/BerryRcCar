@@ -2,6 +2,10 @@
 <style>
 	body {
 		background-color: black;
+		
+	}
+	.value {
+		font-family: Digital7;
 	}
 </style>
 <script type="text/recon">
@@ -272,7 +276,7 @@
 			@block {
 				@each(cardKey: $blocks.($blockKey).*:) {
 					@card {
-						backgroundColor: 'rgba(100,100,100,0.2)'
+						backgroundColor: 'rgba(100,100,100,0.1)'
 						currentBlock: @let($blocks.($blockKey).($cardKey))
 						sensorDialColor: $currentBlock.sensorDialColor
 						sensorTextColor: $currentBlock.sensorTextColor
@@ -305,7 +309,7 @@
 										# Gauge Style
 										innerRadius: 60 @pct
 										dialCornerRadius: 5 @pct
-										faceColor: 'rgba(74, 74, 74, 0.6)'
+										faceColor: 'rgba(74, 74, 74, 0.3)'
 										dialColor: $currentBlock.sensorDialColor
 										valueColor: $currentBlock.sensorTextColor
 										valueWeight: 400

@@ -57,6 +57,7 @@ class HttpServer {
     this.webApp.set('views', path.join(__dirname, 'views'));
     this.webApp.use('/js', express.static(path.join(__dirname + '/views/js')));
     this.webApp.use('/css', express.static(path.join(__dirname + '/views/css')));
+    this.webApp.use('/fonts', express.static(path.join(__dirname + '/views/assets/fonts')));
     this.webApp.use('/assets', express.static(path.join(__dirname + '/views/assets')));
 
     this.server = require('http').Server(this.webApp);
