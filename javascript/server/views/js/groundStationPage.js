@@ -70,6 +70,37 @@ class GroundStationPage {
       })
       .open();  
 
+    this.tileValueElem = null;
+    this.panValueElem = null;
+    swim.downlinkValue()
+      .host(this.swimUrl)
+      .node('/sensor/tiltRadio')
+      .lane('latest')
+      .didSet((newValue) => {
+        if(!this.tileValueElem) {
+          this.tileValueElem = document.getElementById('tiltValueLabel');
+        }
+        if(this.tileValueElem) {
+          this.tileValueElem.innerHTML = newValue + "&deg;";
+        }
+
+      })
+      .open();
+
+    swim.downlinkValue()
+      .host(this.swimUrl)
+      .node('/sensor/panRadio')
+      .lane('latest')
+      .didSet((newValue) => {
+        if(!this.panValueElem) {
+          this.panValueElem = document.getElementById('panValueLabel');
+        }
+        if(this.panValueElem) {
+          this.panValueElem.innerHTML = newValue + "&deg;";
+        }
+      })
+      .open();      
+
     this.compassValueElem = null;
     this.compassCircleElem = null;
     swim.downlinkValue()
@@ -116,7 +147,7 @@ class GroundStationPage {
 
   drawThrottle(canvas, throttleValue, eyeOffset) {
     const totalTicks = 40;
-    const gutterWidth = 10;
+    const gutterWidth = 20;
     const containerHeight = this.canvasHeight-gutterWidth;
     const tickTopDistance = containerHeight / totalTicks;
     let tickWidth = gutterWidth;
@@ -147,7 +178,7 @@ class GroundStationPage {
 
   drawSteering(canvas, steeringValue, eyeOffset) {
     const totalTicks = 40;
-    const gutterHeight = 10;
+    const gutterHeight = 20;
     const containerWidth = this.canvasWidth - gutterHeight;
     const tickDistance = containerWidth / totalTicks;
     let tickHeight = gutterHeight;
@@ -229,7 +260,7 @@ class GroundStationPage {
   }
 
   sendIntCommand(channel, lane, value) {
-    // console.info(channel, value)
+    // console.info(channel, lane, value)
     swim.client.command(this.swimUrl, channel, lane, parseInt(value));
   }
   

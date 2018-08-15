@@ -141,18 +141,28 @@ class BotActions {
 
     }
 
+    handleManualHeadMovement() {
+        const sensorData = this._sensors.getSensorDataSet();
+        this._servoController.setTarget(0, parseInt(sensorData.tiltRadio.current).map(0, 180, 640, 2304));
+        this._servoController.setTarget(1, parseInt(sensorData.panRadio.current).map(0, 360, 640, 2304));
+    }
+
     handleHeadsUpMovement() {
         const sensorData = this._sensors.getSensorDataSet();
-        this._servoController.setTarget(0, parseInt(sensorData.phoneMagX.current).map(0, 180, 640, 2304));
-        this._servoController.setTarget(1, parseInt(sensorData.phoneMagY.current).map(0, 360, 640, 2304));
-        // const tiltValue = sensorData.phoneMagX.current - 25;
-        // if (tiltValue > 14 && tiltValue < 175) {
-        //     sensors.setDataValue('tiltRadio', tiltValue);
-        // }
-        // if (sensorData.phoneMagY.current >= 90 && sensorData.phoneMagY.current <= 270) {
-        //     let panValue = this.map(sensorData.phoneMagY.current, 90, 270, 0, 180);
-        //     sensors.setDataValue('panRadio', panValue);
-        // }
+        // this._servoController.setTarget(0, parseInt(sensorData.phoneMagX.current).map(0, 180, 640, 2304));
+        // this._servoController.setTarget(1, parseInt(sensorData.phoneMagY.current).map(0, 360, 640, 2304));
+        const tiltValue = sensorData.phoneMagX.current - 25;
+        if (tiltValue > 14 && tiltValue < 175) {
+            this._sensors.setDataValue('tiltRadio', tiltValue);
+        }
+        if (sensorData.phoneMagY.current >= 90 && sensorData.phoneMagY.current <= 270) {
+            let panValue = this.map(sensorData.phoneMagY.current, 90, 270, 0, 180);
+            this._sensors.setDataValue('panRadio', panValue);
+        }
+
+        this._servoController.setTarget(0, parseInt(sensorData.tiltRadio.current).map(0, 180, 640, 2304));
+        this._servoController.setTarget(1, parseInt(sensorData.panRadio.current).map(0, 360, 640, 2304));
+
     }
 
     handleRcInput() {

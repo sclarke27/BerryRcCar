@@ -1,11 +1,14 @@
 
 	<style>
+		body {
+			background-color: #070707;
+		}
 		.vrWrapper {
 			display: flex;
 			flex-direction: row;
 			padding: 20px 0px;
 			margin: 0px 0px;
-			background-color: rgba(200,200,200,0.2);
+			
 			flex-grow: 1;
 		}
 
@@ -13,20 +16,6 @@
 		.rightEye {
 			flex-grow: 1;
 			display: grid;
-		}
-
-		.coords {
-			width: 100%;
-			display: flex;
-			flex-direction: row;
-			font-size: 10px;
-			margin: 5px;
-			color: rgba(255, 255, 255, 0.2);
-		}
-
-		.coords div {
-			padding: 0px 5px 0px 2px;
-			color: rgba(255, 255, 255, 0.6);
 		}
 
 		canvas {
@@ -38,50 +27,9 @@
 
 		.statusHeader {
 			height: 55px;
-			background-color: darkslateblue;
 			color: ghostwhite;
 			padding: 5px 15px;
 		}
-
-		.pageRow {
-
-		}
-	</style>	
-	<script type="text/javascript" src="/js/groundStationPage.js"></script>
-
-	<div class="statusHeader">
-		<script type="text/recon">
-			@form {
-				host: '{{fullSwimUrl}}'
-				node: 'botState'
-				botName:  @link(lane: 'name', type: value)
-				[Bot Name:]
-				@input(type: text, name: device, value: $botName#0)
-
-				currentIntent: @link(lane: 'currentIntent', type: value)
-				[Current Intent:] 
-				@input(type: text, name: device, value: $currentIntent#0)
-
-				@input(type: button, value: 'Drive', onclick: 'page.setIntent(\'drive\')')
-				@input(type: button, value: 'Go Idle', onclick: 'page.setIntent(\'idle\')')
-				@input(type: button, value: 'AR Only', onclick: 'page.setIntent(\'arOnly\')')
-			}
-		</script>
-	</div>
-
-<div class="pageRow">
-	<div class="vrWrapper">
-		<div class="leftEye">
-			<canvas id="leftEyeCanvas" width="800" height="600" style="background-image: url(http://{{{hostUrl}}}:8081/)"></canvas>
-			{{!-- <canvas id="leftEyeCanvas" width="480" height="360" style="background-image: url(http://192.168.1.106:8081/)"></canvas> --}}
-		</div>
-		<div class="rightEye">
-			<canvas id="rightEyeCanvas" width="800" height="600" style="background-image: url(http://{{{hostUrl}}}:8082/)"></canvas>
-			{{!-- <canvas id="rightEyeCanvas" width="480" height="360" style="background-image: url(http://192.168.1.106:8082/)"></canvas> --}}
-		</div>
-	</div>
-</div>
-<style>
 	.compassContainer {
 		margin: 10px;
 		width: 420px;
@@ -162,12 +110,12 @@
 		position: absolute;
 		color: greenyellow;
 		text-shadow: 1px 1px 0px rgba(50,50,50,0.2);
-		top: 12px;
+		top: 15px;
 		left: calc(50% - 70px);
 		width: 130px;
 		height: 90px;
 		text-align: center;
-		font-size: 72px;
+		font-size: 62px;
 	}
 	.numberContainer #valueLabel {
 		background-color: rgba(50,50,50,0.8);
@@ -183,7 +131,90 @@
 	.small {
 		font-size: 12px;
 	}
-</style>
+
+	.tiltPanCard {
+		width: 240px;
+		height: 240px;
+	}
+
+	.tiltPanCard .panSliderDiv, .tiltPanCard .tiltSliderDiv {
+		position: absolute;
+		
+	}
+
+	.tiltPanCard .tiltSliderDiv input[type=range] {
+		margin: 0px;
+		width: 190px;
+	}
+
+	.tiltPanCard .panSliderDiv input[type=range] {
+		margin: 0px;
+		width: 200px;
+	}	
+
+	.tiltPanCard .tiltSliderDiv {
+		right: -93px;
+		top: 109px;
+		transform: rotate(270deg);
+	}
+
+	.tiltPanCard .panSliderDiv {
+		right: 20px;
+		bottom: -6px;
+	}
+
+	.tiltPanValueLabel {
+		color: black;
+		text-align: left;
+		width: 200px;
+		font-size: 62px;
+		font-size: 27px;
+		font-family: Renner;
+		padding: 0px 5px;
+	}
+
+	#tiltValueLabel, #panValueLabel {
+		color: greenyellow;
+		text-shadow: 1px 1px 0px rgba(50,50,50,0.2);
+		text-align: center;
+		font-size: 62px;
+		font-family: Digital7
+	}
+	</style>	
+	<script type="text/javascript" src="/js/groundStationPage.js"></script>
+
+	<div class="statusHeader">
+		<script type="text/recon">
+			@form {
+				host: '{{fullSwimUrl}}'
+				node: 'botState'
+				botName:  @link(lane: 'name', type: value)
+				[Bot Name:]
+				@input(type: text, name: device, value: $botName#0)
+
+				currentIntent: @link(lane: 'currentIntent', type: value)
+				[Current Intent:] 
+				@input(type: text, name: device, value: $currentIntent#0)
+
+				@input(type: button, value: 'Drive', onclick: 'page.setIntent(\'drive\')')
+				@input(type: button, value: 'Go Idle', onclick: 'page.setIntent(\'idle\')')
+				@input(type: button, value: 'AR Only', onclick: 'page.setIntent(\'arOnly\')')
+			}
+		</script>
+	</div>
+
+<div class="pageRow">
+	<div class="vrWrapper">
+		<div class="leftEye">
+			<canvas id="leftEyeCanvas" width="800" height="600" style="background-image: url(http://{{{hostUrl}}}:8081/)"></canvas>
+			{{!-- <canvas id="leftEyeCanvas" width="480" height="360" style="background-image: url(http://192.168.1.106:8081/)"></canvas> --}}
+		</div>
+		<div class="rightEye">
+			<canvas id="rightEyeCanvas" width="800" height="600" style="background-image: url(http://{{{hostUrl}}}:8082/)"></canvas>
+			{{!-- <canvas id="rightEyeCanvas" width="480" height="360" style="background-image: url(http://192.168.1.106:8082/)"></canvas> --}}
+		</div>
+	</div>
+</div>
 <div class="pageRow">
 	<div>
 		<script type="text/recon">
@@ -237,6 +268,20 @@
 				}
 			}
 		</script>		
+		<script type="text/recon">
+			@div(class: numberContainer) {
+				host: '{{fullSwimUrl}}'
+				node: 'sensor/headDistance'
+				currValue:  @link(lane: 'latest', type: value)
+
+				@div(id: valueLabel) {
+					Head
+				}
+				@div(id: compassValue) {
+					@text($round($eager($currValue#0)/74/2))
+				}
+			}
+		</script>			
 	</div>
 	<div style="position: relative;">
 		<script type="text/recon">
@@ -268,6 +313,23 @@
 			}
 		</script>		
 	</div>	
+	<form>
+	<div class="numberContainer tiltPanCard">
+			<div id="valueLabel">Tilt/Pan</div>
+			<div class="tiltPanValueLabel ">
+				Tilt&nbsp;&nbsp;<span id="tiltValueLabel">0</span>
+			</div>
+			<div class="tiltPanValueLabel ">
+				Pan <span id="panValueLabel">0</span>
+			</div>
+			<div class="tiltSliderDiv">
+				<input type="range" id="tilt" name="volume" value="90" min="0" max="180" oninput="page.sendIntCommand('/sensor/tiltRadio', 'addLatest', this.value)" />
+			</div>
+			<div class="panSliderDiv">
+				<input type="range" id="pan" name="volume" value="180" min="0" max="360" oninput="page.sendIntCommand('/sensor/panRadio', 'addLatest', this.value)"  />
+			</div>
+	</div>
+	</form>			
 </div>
 
 <script>

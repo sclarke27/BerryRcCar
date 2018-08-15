@@ -281,6 +281,25 @@ class Sensors {
         this._sensorData.throttleRadio.current = newValue;
       })
       .open();
+
+    this.swimClient.downlinkValue()
+      .host(`ws://127.0.0.1:5620`)
+      .node('/sensor/tiltRadio')
+      .lane('latest')
+      .didSet((newValue) => {
+        this._sensorData.tiltRadio.current = newValue;
+      })
+      .open();
+
+    this.swimClient.downlinkValue()
+      .host(`ws://127.0.0.1:5620`)
+      .node('/sensor/panRadio')
+      .lane('latest')
+      .didSet((newValue) => {
+        this._sensorData.panRadio.current = newValue;
+      })
+      .open();
+
     // prepopulate the swim sensor service with all the sensor values
     // we will be keeping track of along with their default threshold values
     for (const sensor of this.getSensorKeys()) {

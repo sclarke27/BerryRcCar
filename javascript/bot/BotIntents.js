@@ -25,7 +25,7 @@ const BotIntents = {
         Log.info('Bot entered idle state');
       },
       update: (sensors, botActions) => {
-        // botActions.handlePingSensors(sensors);
+        botActions.handleManualHeadMovement();
       },
       end: (sensorData, botActions) => {
         Log.info('End idle state');
