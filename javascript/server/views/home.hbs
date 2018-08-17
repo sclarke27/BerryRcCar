@@ -1,3 +1,14 @@
+<div class="statusHeader">
+	<script type="text/recon">
+		@div {
+			host: '{{fullSwimUrl}}'
+			node: 'botState'
+			botName:  @link(lane: 'name', type: value)
+			@text([{$eager($botName#0)} Debug Screen])
+		}
+	</script>
+</div>
+
 <script type="text/recon">
 @div {
 	@form {

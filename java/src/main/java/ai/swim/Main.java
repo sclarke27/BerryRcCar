@@ -1,7 +1,6 @@
 package ai.swim;
 
 import ai.swim.service.*;
-import ai.swim.util.SerialReader;
 import recon.Recon;
 import recon.Value;
 import swim.api.*;
@@ -49,7 +48,6 @@ public class Main extends AbstractPlane {
     // Run the swim server, this stays alive until termination
     server.run();
 
-    // doSerial(plane);
   }
 
   private static void loadConfig() {
@@ -66,16 +64,6 @@ public class Main extends AbstractPlane {
       System.out.println("[WARN] No properties file detected");
     }
     System.setProperties(props);
-  }
-
-  private static void doSerial(SwimPlane plane) {
-    final String serialPort = System.getProperty("serial.port", "");
-    if (!serialPort.isEmpty()) {
-      // Polls forever in the main thread
-      new SerialReader(plane, serialPort).poll();
-    } else {
-      System.out.println("[WARN] No serial property found. Serial feed to SWIM must now be provided by another process");
-    }
   }
 
   private static String getConfigPath(String[] args, String property, String defaultPath) {

@@ -1,223 +1,30 @@
 
-	<style>
-		body {
-			background-color: #070707;
+<script type="text/javascript" src="/js/groundStationPage.js"></script>
+
+<div class="statusHeader">
+	<script type="text/recon">
+		@div {
+			host: '{{fullSwimUrl}}'
+			node: 'botState'
+			botName:  @link(lane: 'name', type: value)
+			@text([{$eager($botName#0)} GroundStation])
 		}
-		.vrWrapper {
-			display: flex;
-			flex-direction: row;
-			padding: 20px 0px;
-			margin: 0px 0px;
-			
-			flex-grow: 1;
-		}
-
-		.leftEye,
-		.rightEye {
-			flex-grow: 1;
-			display: grid;
-		}
-
-		canvas {
-			background-position: center;
-			background-repeat: no-repeat;
-			background-size: 100%;
-			margin: auto auto;
-		}
-
-		.statusHeader {
-			height: 55px;
-			color: ghostwhite;
-			padding: 5px 15px;
-		}
-	.compassContainer {
-		margin: 10px;
-		width: 420px;
-		height: 170px;
-		display: block;
-		position: relative;
-	}
-	#compassCircle { 
-		border: dashed 15px rgba(100,100,255,0.75);
-		border-radius: 50%;
-		width: 300px;
-		height: 300px;
-		position: absolute;
-		top: -98px;
-		left: 50px;
-		transform: perspective(500px) rotateX(72deg) rotateY(0deg) rotateZ(0deg);
-		display: grid;
-		box-shadow: inset 0px 0px 5px 2px rgba(100,100,255,1);
-	}
-
-	#compassCircle .north,
-	#compassCircle .south,
-	#compassCircle .east,
-	#compassCircle .west {
-		font-size: 42px;
-		position: absolute;	
-		font-weight: bold;
-	}
-
-	#compassCircle .north { 
-		top: -60px;
-		width: 100%;
-		text-align: center;
-	}
-	#compassCircle .south { 
-		bottom: -60px;
-		width: 100%;
-		text-align: center;
-		transform: rotate(180deg);
-	}
-	#compassCircle .east { 
-		top: 125px;
-		width: 100%;
-		right: -185px;
-		text-align: center;
-		transform: rotate(90deg);
-	}
-	#compassCircle .west { 
-		top: 125px;
-		width: 100%;
-		right: 185px;
-		text-align: center;
-		transform: rotate(270deg);
-	}
-
-	#compassLabel {
-		position: absolute;
-		top: 5px;
-		left: calc(50% - 70px);
-	}
-
-	.numberContainer {
-		width: 130px;
-		height: 90px;
-		text-align: center;
-		border-radius: 30px 0px 30px 30px;
-		border: solid 3px rgba(250, 250, 250, 0.8);
-		border-right: solid 5px rgba(255, 255, 255, 0.8);
-		background: rgba(255,255,255,0.5);
-		overflow: hidden;
-		font-family: Digital7;
-		position: relative;
-		margin-top: 5px;
-		margin-right: 5px;
-	}
-
-	#compassValue {
-		position: absolute;
-		color: greenyellow;
-		text-shadow: 1px 1px 0px rgba(50,50,50,0.2);
-		top: 15px;
-		left: calc(50% - 70px);
-		width: 130px;
-		height: 90px;
-		text-align: center;
-		font-size: 62px;
-	}
-	.numberContainer #valueLabel {
-		background-color: rgba(50,50,50,0.8);
-		text-align: right;
-		font-size: 14px;
-		font-family: Renner;
-		padding: 0px 5px;
-	}
-	.pageRow {
-		display: flex;
-		flex-direction: row;
-	}
-	.small {
-		font-size: 12px;
-	}
-
-	.tiltPanCard {
-		width: 240px;
-		height: 240px;
-	}
-
-	.tiltPanCard .panSliderDiv, .tiltPanCard .tiltSliderDiv {
-		position: absolute;
-		
-	}
-
-	.tiltPanCard .tiltSliderDiv input[type=range] {
-		margin: 0px;
-		width: 190px;
-	}
-
-	.tiltPanCard .panSliderDiv input[type=range] {
-		margin: 0px;
-		width: 200px;
-	}	
-
-	.tiltPanCard .tiltSliderDiv {
-		right: -93px;
-		top: 109px;
-		transform: rotate(270deg);
-	}
-
-	.tiltPanCard .panSliderDiv {
-		right: 20px;
-		bottom: -6px;
-	}
-
-	.tiltPanValueLabel {
-		color: black;
-		text-align: left;
-		width: 200px;
-		font-size: 62px;
-		font-size: 27px;
-		font-family: Renner;
-		padding: 0px 5px;
-	}
-
-	#tiltValueLabel, #panValueLabel {
-		color: greenyellow;
-		text-shadow: 1px 1px 0px rgba(50,50,50,0.2);
-		text-align: center;
-		font-size: 62px;
-		font-family: Digital7
-	}
-	</style>	
-	<script type="text/javascript" src="/js/groundStationPage.js"></script>
-
-	<div class="statusHeader">
-		<script type="text/recon">
-			@form {
-				host: '{{fullSwimUrl}}'
-				node: 'botState'
-				botName:  @link(lane: 'name', type: value)
-				[Bot Name:]
-				@input(type: text, name: device, value: $botName#0)
-
-				currentIntent: @link(lane: 'currentIntent', type: value)
-				[Current Intent:] 
-				@input(type: text, name: device, value: $currentIntent#0)
-
-				@input(type: button, value: 'Drive', onclick: 'page.setIntent(\'drive\')')
-				@input(type: button, value: 'Go Idle', onclick: 'page.setIntent(\'idle\')')
-				@input(type: button, value: 'AR Only', onclick: 'page.setIntent(\'arOnly\')')
-			}
-		</script>
-	</div>
+	</script>
+</div>
 
 <div class="pageRow">
 	<div class="vrWrapper">
 		<div class="leftEye">
 			<canvas id="leftEyeCanvas" width="800" height="600" style="background-image: url(http://{{{hostUrl}}}:8081/)"></canvas>
-			{{!-- <canvas id="leftEyeCanvas" width="480" height="360" style="background-image: url(http://192.168.1.106:8081/)"></canvas> --}}
 		</div>
 		<div class="rightEye">
 			<canvas id="rightEyeCanvas" width="800" height="600" style="background-image: url(http://{{{hostUrl}}}:8082/)"></canvas>
-			{{!-- <canvas id="rightEyeCanvas" width="480" height="360" style="background-image: url(http://192.168.1.106:8082/)"></canvas> --}}
 		</div>
 	</div>
 </div>
-<div class="pageRow">
-	<div>
-		<script type="text/recon">
+<div class="pageRow dataRow">
+	<script type="text/recon">
+		@div(class: pageRowColumn) {
 			@div(class: compassContainer) {
 
 				@div(id:compassCircle) {
@@ -237,12 +44,32 @@
 				}
 
 			}
-		</script>
-	</div>
-	<div style="position: relative;">
-		<script type="text/recon">
 			@div(class: numberContainer) {
 				host: '{{fullSwimUrl}}'
+				node: 'botState'
+				currentIntent: @link(lane: 'currentIntent', type: value)
+				style: {
+					width: '95%'
+				}
+				@div(id: valueLabel) {
+					@text([Current Intent: {$eager($currentIntent#0)}])
+				}
+				@form {
+					style: {
+						text-align: 'left'
+					}
+					@input(type: button, value: 'Drive', onclick: 'page.setIntent(\'drive\')')
+					@input(type: button, value: 'Go Idle', onclick: 'page.setIntent(\'idle\')')
+					@input(type: button, value: 'AR Only', onclick: 'page.setIntent(\'arOnly\')')
+				}
+			}
+		}
+	</script>
+
+	<script type="text/recon">
+		@div(class: pageRowColumn) {
+			host: '{{fullSwimUrl}}'
+			@div(class: numberContainer) {
 				node: 'sensor/centerDistance'
 				currValue:  @link(lane: 'latest', type: value)
 
@@ -253,10 +80,7 @@
 					@text($round($eager($currValue#0)/74/2))
 				}
 			}
-		</script>
-		<script type="text/recon">
 			@div(class: numberContainer) {
-				host: '{{fullSwimUrl}}'
 				node: 'sensor/rearDistance'
 				currValue:  @link(lane: 'latest', type: value)
 
@@ -267,10 +91,7 @@
 					@text($round($eager($currValue#0)/74/2))
 				}
 			}
-		</script>		
-		<script type="text/recon">
 			@div(class: numberContainer) {
-				host: '{{fullSwimUrl}}'
 				node: 'sensor/headDistance'
 				currValue:  @link(lane: 'latest', type: value)
 
@@ -281,12 +102,13 @@
 					@text($round($eager($currValue#0)/74/2))
 				}
 			}
-		</script>			
-	</div>
-	<div style="position: relative;">
-		<script type="text/recon">
+		}
+	</script>			
+
+	<script type="text/recon">
+		@div(class: pageRowColumn) {
+			host: '{{fullSwimUrl}}'
 			@div(class: numberContainer) {
-				host: '{{fullSwimUrl}}'
 				node: 'sensor/rightDistance'
 				currValue:  @link(lane: 'latest', type: value)
 
@@ -297,10 +119,7 @@
 					@text($round($eager($currValue#0)/74/2))
 				}
 			}
-		</script>
-		<script type="text/recon">
 			@div(class: numberContainer) {
-				host: '{{fullSwimUrl}}'
 				node: 'sensor/leftDistance'
 				currValue:  @link(lane: 'latest', type: value)
 
@@ -311,10 +130,11 @@
 					@text($round($eager($currValue#0)/74/2))
 				}
 			}
-		</script>		
-	</div>	
+		}
+	</script>		
 	<form>
-	<div class="numberContainer tiltPanCard">
+	<div class="pageRowColumn">
+		<div class="numberContainer tiltPanCard">
 			<div id="valueLabel">Tilt/Pan</div>
 			<div class="tiltPanValueLabel ">
 				Tilt&nbsp;&nbsp;<span id="tiltValueLabel">0</span>
@@ -328,15 +148,14 @@
 			<div class="panSliderDiv">
 				<input type="range" id="pan" name="volume" value="180" min="0" max="360" oninput="page.sendIntCommand('/sensor/panRadio', 'addLatest', this.value)"  />
 			</div>
+		</div>
 	</div>
 	</form>			
 </div>
 
-<script>
-	let page = null;
-	function start() {
-		page = new GroundStationPage();
-		page.start('{{fullSwimUrl}}')
+<script type="text/recon">
+	@script {
+		[page = new GroundStationPage();]
+		[page.start('{{fullSwimUrl}}')]
 	}
-	start();
 </script>

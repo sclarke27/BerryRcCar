@@ -29,7 +29,6 @@ const BotIntents = {
       },
       end: (sensorData, botActions) => {
         Log.info('End idle state');
-        Log.info(`Leave idle state`);
       }
     }
   },

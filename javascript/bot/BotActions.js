@@ -91,6 +91,7 @@ class BotActions {
         // this._startupTime = new Date();
         // this._botState.saveDataSetToDB();
         // this._botState.setStateValue('main', 'startupTime', this._startupTime);
+        this._servoController.reset();
         this._servoController.restartScriptAtSubroutine(1);
 
         return true;

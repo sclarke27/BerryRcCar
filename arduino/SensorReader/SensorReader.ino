@@ -8,6 +8,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP085_U.h>
 
+
 // Hadrware values
 int rcChannel1Pin = 2;
 int rcChannel2Pin = 3;
@@ -67,6 +68,13 @@ double xMagValueNew = 0.0;
 double yMagValueNew = 0.0;
 double zMagValueNew = 0.0;
 
+
+int ping1Buffer[3];
+int ping2Buffer[3];
+int ping3Buffer[3];
+int ping4Buffer[3];
+int ping5Buffer[3];
+
 #define ALTITUDE 105.0/3.28084 //elevation of cataldi park
 
 HM55B_Compass compass(compassClockPin, compassEnablePin, compassIOPin);
@@ -121,12 +129,11 @@ void readPingSensor(String channel, int pin) {
   digitalWrite(pin, LOW);
   delayMicroseconds(2);
   digitalWrite(pin, HIGH);
-  delayMicroseconds(5);
+  delayMicroseconds(12);
   digitalWrite(pin, LOW);
-  int pingTimeout = 15000;
 
   pinMode(pin, INPUT);
-  int duration = pulseIn(pin, HIGH, pingTimeout);
+  int duration = pulseIn(pin, HIGH);
 
   if(duration == 0) {
     duration = 40000;
@@ -362,6 +369,16 @@ void sendSerialMsg(String key, String value) {
   Serial.println(returnString);
 }
 
+int averageValueBuffer(int newValue, int valueBuffer[3]) {
+    if(newValue > 0) {
+      int newPingBuffer[3] = {newValue, valueBuffer[0], valueBuffer[1]};
+      for (int i = 0; i < 3; i = i + 1) {
+        valueBuffer[i] = newPingBuffer[i];
+      }
+    }
+    return int((valueBuffer[0] + valueBuffer[1] + valueBuffer[2]) / 3);  
+}
+
 void loop()
 {
   ping1Read.check();
@@ -375,7 +392,7 @@ void loop()
   compass1Read.check();
   temperatureRead.check();
   gyroRead.check();
-  
+
   if(temperatureValue != temperatureValueNew) {
     temperatureValue = temperatureValueNew;
     sendSerialMsg("temperature", temperatureValue);
@@ -402,23 +419,24 @@ void loop()
   }
   if(ping1Value != ping1ValueNew) {
     ping1Value = ping1ValueNew;
-    sendSerialMsg("rearDistance", ping1Value);
+    sendSerialMsg("rearDistance", averageValueBuffer(ping1Value, ping1Buffer));
   }
   if(ping2Value != ping2ValueNew) {
     ping2Value = ping2ValueNew;
-    sendSerialMsg("centerDistance", ping2Value);
+    sendSerialMsg("centerDistance", averageValueBuffer(ping2Value, ping2Buffer));
   }
   if(ping3Value != ping3ValueNew) {
     ping3Value = ping3ValueNew;
-    sendSerialMsg("rightDistance", ping3Value);
+    sendSerialMsg("rightDistance", averageValueBuffer(ping3Value, ping3Buffer));
+//    sendSerialMsg("rightDistance", ping3Value);
   }
   if(ping4Value != ping4ValueNew) {
     ping4Value = ping4ValueNew;
-    sendSerialMsg("leftDistance", ping4Value);
+    sendSerialMsg("leftDistance", averageValueBuffer(ping4Value, ping4Buffer));
   }
   if(ping5Value != ping5ValueNew) {
     ping5Value = ping5ValueNew;
-    sendSerialMsg("headDistance", ping5Value);
+    sendSerialMsg("headDistance", averageValueBuffer(ping5Value, ping5Buffer));
   }
   if(compass1Value != compass1ValueNew) {
     compass1Value = compass1ValueNew;
