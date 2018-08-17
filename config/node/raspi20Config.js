@@ -1,11 +1,11 @@
 const HttpConfig = {
 	httpEnabled: true,
-	showDebug: true,
-	hostUrl: '192.168.0.125',
-	aggregateHost: '192.168.0.125',
+	showDebug: false,
+	botName: 'RaspiRover20',
+	hostUrl: '192.168.0.220',
+	aggregateHost: '192.168.0.220',
 	hostPort: 8080,
 	swimPort: 5620,
-	botName: 'RaspiRover0',
 	senseHatConfig: {
 		bot: {
 			enabled: false,
@@ -15,16 +15,20 @@ const HttpConfig = {
 			polling: {
 				enabled: true,
 				interval: 100
-			}
+			}			
 		}
 	},
 	plantConfig: {
 		bot: {
 			enabled: false,
-			consumer_key: '',
+			consumer_key: '', 
 			consumer_secret: '',
 			access_token: '',
 			access_token_secret: '',
+			updateInterval: {
+				enabled: true,
+				intervalTimeout: 1000, // in milliseconds
+			},
 			randomTweet: {
 				enabled: false,
 				intervalTimeout: 1000 * 120, // in milliseconds
@@ -36,7 +40,7 @@ const HttpConfig = {
 		},
 		service: {
 			enabled: false,
-			arduinoAddress: '/dev/ttyS3',
+			arduinoAddress: '/dev/ttyACM2',
 			baud: 115200,
 			polling: {
 				enabled: true,
