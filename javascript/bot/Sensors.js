@@ -17,44 +17,47 @@ class Sensors {
   constructor(swimUrl) {
     this.fullSwimUrl = swimUrl;
     this.swimClient = swim;
+    this.minDistanceValue = 2000;
+    this.obstDistValue = 3500;
+    this.maxDistanceValue = 12000;
 
     // define all sensor channels that will be tracked
     // along with their min/max, default, and threshold values
     this._sensorData = {
       leftDistance: {
         min: 0,
-        max: 5000,
+        max: this.maxDistanceValue,
         default: 0,
         current: 0,
-        threshold: 2000
+        threshold: this.obstDistValue
       },
       rightDistance: {
         min: 0,
-        max: 5000,
+        max: this.maxDistanceValue,
         default: 0,
         current: 0,
-        threshold: 2000
+        threshold: this.obstDistValue
       },
       centerDistance: {
         min: 0,
-        max: 5000,
+        max: this.maxDistanceValue,
         default: 0,
         current: 0,
-        threshold: 2000
+        threshold: this.minDistanceValue
       },
       headDistance: {
         min: 0,
-        max: 5000,
+        max: this.maxDistanceValue,
         default: 0,
         current: 0,
-        threshold: 2000
+        threshold: this.minDistanceValue
       },
       rearDistance: {
         min: 0,
-        max: 5000,
+        max: this.maxDistanceValue,
         default: 0,
         current: 0,
-        threshold: 2000
+        threshold: this.minDistanceValue
       },
 
       throttleRadio: {
@@ -339,6 +342,10 @@ class Sensors {
       const sensor = this._sensorData[key];
       if (value > sensor.max) value = sensor.max;
       if (value < sensor.min) value = sensor.min;
+
+      if(key.indexOf("Dist") >= 0 && value == 0) {
+        value = sensor.current;
+      }
       sensor.current = value;
 
       // if(value < 0) {

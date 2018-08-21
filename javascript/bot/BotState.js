@@ -9,7 +9,8 @@ class BotState {
             canDriveForward: null,
             canDriveBackward: null,
             isDrivingForward: null,
-            isDrivingBackward: null
+            isDrivingBackward: null,
+            headScan: {},
         }
 
         this._swimClient.downlinkValue()
@@ -56,6 +57,15 @@ class BotState {
             })
             .open();              
 
+        this._swimClient.downlinkValue()
+            .host(`ws://127.0.0.1:5620`)
+            .node('/botState')
+            .lane('headScan')
+            .didSet((newValue) => {
+                this._botState.headScan = newValue
+            })
+            .open();              
+
     }
     
     getFullState() {
@@ -63,7 +73,7 @@ class BotState {
     }
 
     setStateValue(key, value) {
-        Log.info(`set state ${key} ${value}`);
+        // Log.info(`set state ${key} ${value}`);
         this._botState[key] = value;
         swim.command(this._fullSwimUrl, `/botState`, key, value);
 

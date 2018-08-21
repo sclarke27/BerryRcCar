@@ -270,19 +270,7 @@ class GroundStationPage {
   }
 
   setIntent(newIntent) {
-    switch(newIntent) {
-      case 'drive':
-        this.sendStrCommand('/botState', 'setCurrentIntent', 'driveByRC');
-        break;
-      case 'arOnly':
-        this.sendStrCommand('/botState', 'setCurrentIntent', 'arOnly');
-        break;
-      default:
-      case 'idle':
-        this.sendStrCommand('/botState', 'setCurrentIntent', 'idle');
-        break;
-      
-    }
+    this.sendStrCommand('/botState', 'setCurrentIntent', newIntent);
   }
 
   map(x, in_min, in_max, out_min, out_max) {

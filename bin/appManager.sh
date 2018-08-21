@@ -73,12 +73,20 @@ package_swim () {
     ${path}/bin/packageSwim.sh
 }
 
+package_arduino () {
+    ${path}/bin/packageArduino.sh
+}
+
 package_all () {
     ${path}/bin/packageAll.sh
 }
 
 publish_node () {
     ${path}/bin/publishNode.sh ${@}
+}
+
+publish_arduino () {
+    ${path}/bin/publishArduino.sh ${@}
 }
 
 publish_swim () {
@@ -235,6 +243,12 @@ case $action in
             publish_vision ${botIndex} ${usr} ${pwd}
         done
         ;;
+    publishArduino)
+        package_arduino
+        for botIndex in ${botList[@]}; do
+            publish_arduino ${botIndex} ${usr} ${pwd}
+        done        
+        ;;        
 
     # quick update and restart remote sources
     updateRemote) 

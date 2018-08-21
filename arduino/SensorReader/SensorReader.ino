@@ -129,7 +129,7 @@ void readPingSensor(String channel, int pin) {
   digitalWrite(pin, LOW);
   delayMicroseconds(2);
   digitalWrite(pin, HIGH);
-  delayMicroseconds(12);
+  delayMicroseconds(20);
   digitalWrite(pin, LOW);
 
   pinMode(pin, INPUT);

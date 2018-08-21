@@ -63,6 +63,8 @@
 <input type="button" value="Drive" onclick="drive()" />
 <input type="button" value="Idle" onclick="idle()" />
 <input type="button" value="AR Only" onclick="arOnly()" />
+<input type="button" value="Head Scan" onclick="headScan()" />
+<input type="button" value="Auto Drive" onclick="autoDrive()" />
 <script type="text/javascript">
 	const fullSwimUrl = '{{fullSwimUrl}}';
 	function drive() {
@@ -73,6 +75,12 @@
 	}
 	function arOnly() {
 		swim.command(fullSwimUrl, `/botState`, 'setCurrentIntent', 'arOnly');
+	}
+	function autoDrive() {
+		swim.command(fullSwimUrl, `/botState`, 'setCurrentIntent', 'autoDrive');
+	}
+	function headScan() {
+		swim.command(fullSwimUrl, `/botState`, 'setCurrentIntent', 'headScan');
 	}
 
 </script>
@@ -100,5 +108,18 @@
 		}
 		data2: @link(host: '{{fullSwimUrl}}', node: 'botState', lane: 'rightEyeFaces', type: value)
 		@pre { @text($eager($data2#0)) }
+	}
+</script>
+<p>Scan</p>
+<script type="text/recon">
+
+	@div(){
+		style: {
+			max-height: '300px'
+			overflow: auto
+			margin-bottom: '25px'
+		}
+		data3: @link(host: '{{fullSwimUrl}}', node: 'botState', lane: 'headScan', type: value)
+		@pre { @text($eager($data3#0)) }
 	}
 </script>

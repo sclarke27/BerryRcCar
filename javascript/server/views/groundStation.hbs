@@ -58,9 +58,11 @@
 					style: {
 						text-align: 'left'
 					}
-					@input(type: button, value: 'Drive', onclick: 'page.setIntent(\'drive\')')
+					@input(type: button, value: 'RC Drive', onclick: 'page.setIntent(\'driveByRC\')')
+					@input(type: button, value: 'Auto Drive', onclick: 'page.setIntent(\'autoDrive\')')
 					@input(type: button, value: 'Go Idle', onclick: 'page.setIntent(\'idle\')')
 					@input(type: button, value: 'AR Only', onclick: 'page.setIntent(\'arOnly\')')
+					@input(type: button, value: 'Head Scan', onclick: 'page.setIntent(\'headScan\')')
 				}
 			}
 		}
