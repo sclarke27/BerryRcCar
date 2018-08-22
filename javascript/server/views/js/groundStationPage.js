@@ -15,6 +15,10 @@ class GroundStationPage {
     this.canvasWidth = this.defaultCanvasWidth;
     this.canvasHeight = this.defaultCanvasHeight;
     this.canvasScaling = 1;
+
+    this.radarCanvasElem = null;
+    this.radarData = [];
+
   }
 
   start(swimUrl) {
@@ -29,6 +33,9 @@ class GroundStationPage {
     this.canvasWidth = right.offsetWidth;
     this.canvasHeight = right.offsetHeight;
     this.canvasScaling = this.canvasWidth / this.defaultCanvasWidth;
+
+    const radarElem = document.getElementById('radarCanvas');
+    this.radarCanvasElem = radarElem.getContext("2d");
 
     swim.downlinkValue()
       .host(this.swimUrl)
@@ -123,6 +130,18 @@ class GroundStationPage {
       })
       .open();       
 
+    swim.downlinkValue()
+      .host(this.swimUrl)
+      .node('botState')
+      .lane('headScan')
+      .didSet((newValue) => {
+        if(newValue) {
+          this.radarData = JSON.parse(newValue);
+        }
+      })
+      .open();       
+
+
     setInterval(() => {
       this.clearCanvas(this.leftCanvas);
       this.clearCanvas(this.rightCanvas);
@@ -140,6 +159,8 @@ class GroundStationPage {
       this.drawSteering(this.leftCanvas, this.currSteering, 0);
       this.drawSteering(this.rightCanvas, this.currSteering, 0);
 
+      this.drawRadar();
+
   
     }, 1/30);
 
@@ -153,13 +174,13 @@ class GroundStationPage {
     let tickWidth = gutterWidth;
     let tickLeft = this.canvasWidth - tickWidth;
     const bgGrad = canvas.createLinearGradient(0, 0, gutterWidth, containerHeight);
-    bgGrad.addColorStop(0.05, "rgba(255, 0, 0, 0.75)");
-    bgGrad.addColorStop(0.25, "rgba(255, 255, 0, 0.75)");
-    bgGrad.addColorStop(0.35, "rgba(0, 255, 0, 0.75)");
-    bgGrad.addColorStop(0.5, "rgba(0, 0, 0, 0.500)");
-    bgGrad.addColorStop(0.85, "rgba(0, 255, 0, 0.75)");
-    bgGrad.addColorStop(0.90, "rgba(255, 255, 0, 0.75)");
-    bgGrad.addColorStop(1, "rgba(255, 0, 0, 0.75)");
+    bgGrad.addColorStop(0.05,   "rgba(255, 0, 0, 0.75)");
+    bgGrad.addColorStop(0.25,   "rgba(255, 255, 0, 0.75)");
+    bgGrad.addColorStop(0.35,   "rgba(0, 255, 0, 0.75)");
+    bgGrad.addColorStop(0.5,    "rgba(0, 0, 0, 0.500)");
+    bgGrad.addColorStop(0.85,   "rgba(0, 255, 0, 0.75)");
+    bgGrad.addColorStop(0.90,   "rgba(255, 255, 0, 0.75)");
+    bgGrad.addColorStop(1,      "rgba(255, 0, 0, 0.75)");
     canvas.fillStyle=bgGrad;
     canvas.fillRect(this.canvasWidth-gutterWidth, 0, 25, containerHeight);
     this.drawLine(canvas, this.canvasWidth-gutterWidth+eyeOffset, 0, this.canvasWidth-gutterWidth+eyeOffset, this.canvasHeight, 2, "rgba(0, 0, 0, 0.25)");            
@@ -184,9 +205,9 @@ class GroundStationPage {
     let tickHeight = gutterHeight;
     let tickLeft = this.canvasWidth - 1;
     const bgGrad = canvas.createLinearGradient(0, 0, containerWidth, gutterHeight);
-    bgGrad.addColorStop(0, "rgba(0, 255, 0, 0.75)");
-    bgGrad.addColorStop(0.5, "rgba(0, 255, 0, 0.0)");
-    bgGrad.addColorStop(1, "rgba(0, 255, 0, 0.75)");
+    bgGrad.addColorStop(0,    "rgba(0, 255, 0, 0.75)");
+    bgGrad.addColorStop(0.5,  "rgba(0, 255, 0, 0.0)");
+    bgGrad.addColorStop(1,    "rgba(0, 255, 0, 0.75)");
     canvas.fillStyle=bgGrad;
     canvas.fillRect(0, this.canvasHeight-gutterHeight, containerWidth, gutterHeight);
     this.drawLine(canvas, 0, this.canvasHeight-gutterHeight, containerWidth-gutterHeight+eyeOffset, this.canvasHeight-gutterHeight, 2, "rgba(0, 0, 0, 0.25)");            
@@ -201,6 +222,14 @@ class GroundStationPage {
     this.drawLine(canvas, steeringValue-2+eyeOffset, this.canvasHeight-tickHeight, steeringValue-2+eyeOffset, this.canvasHeight, 2, "rgba(100, 255, 100, 0.5)");            
     this.drawLine(canvas, steeringValue+eyeOffset, this.canvasHeight-tickHeight-1, steeringValue+eyeOffset, this.canvasHeight, 2, "rgba(0, 255, 0, 0.8");            
     this.drawLine(canvas, steeringValue+2+eyeOffset, this.canvasHeight-tickHeight, steeringValue+2+eyeOffset, this.canvasHeight, 2, "rgba(100, 255, 100, 0.5)");            
+  }
+
+  drawRadar() {
+      for(const angle in this.radarData) {
+        // console.info(angle + ' ' + this.radarData[angle]);
+        const hue = this.map(this.radarData[angle], 0, 12000, 0, 360);
+        this.drawLine(this.radarCanvasElem, angle, 0, angle, 200, 2, `hsla(${hue},100%,50%,1)`);            
+      }
   }
 
   clearCanvas(canvas) {

@@ -98,17 +98,17 @@ class Main {
         this.hostUrl = this._serviceConfig.hostUrl;
         this.swimPort = this._serviceConfig.swimPort;
         this.fullHostUrl = 'http://' + this.hostUrl + ((this.port !== 80) ? (':' + this.port) : '');
-        this.fullSwimUrl = 'ws://' + this.hostUrl + ':' + this.swimPort;
+        this.fullSwimUrl = 'ws://' + this._serviceConfig.swimUrl + ':' + this.swimPort;
 
         this._botState = new BotState(this.fullSwimUrl);
         this._sensors = new Sensors(this.fullSwimUrl);
         this._sensors.start();
 
         this._servoController = new MaestroController(this._softwareDebug);
-        this._servoController.startPort('/dev/ttyACM1', 115200);
+        this._servoController.startPort(this._serviceConfig.servoController.address, this._serviceConfig.servoController.baud);
 
         this._arduino = new ArduinoController(this._softwareDebug);
-        this._arduino.startPort('/dev/ttyACM0', this._arduinoBaud);
+        this._arduino.startPort(this._serviceConfig.arduino.address, this._serviceConfig.arduino.baud);
         this._arduino.setDataHandler(this._sensors.setSensorDataSet.bind(this._sensors));
 
         this._botActions = new BotActions(this._sensors, this._botState, this._servoController, this._arduino);

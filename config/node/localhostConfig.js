@@ -1,50 +1,24 @@
 const HttpConfig = {
 	httpEnabled: true,
 	showDebug: true,
-	hostUrl: '192.168.1.106',
-	aggregateHost: '192.168.1.106',
-	hostPort: 8080,
-	swimPort: 5620,
 	botName: 'RaspiRover0',
-	senseHatConfig: {
-		bot: {
-			enabled: false,
-		},
-		service: {
-			enabled: false,
-			polling: {
-				enabled: true,
-				interval: 100
-			}
-		}
+	hostUrl: '192.168.1.106',
+	hostPort: 8080,
+	swimUrl: '192.168.1.106',
+	swimPort: 5620,
+	cameras: {
+		address: '192.168.1.106',
+		leftEyePort: 8081,
+		rightEyePort: 8082,
 	},
-	plantConfig: {
-		bot: {
-			enabled: false,
-			consumer_key: '',
-			consumer_secret: '',
-			access_token: '',
-			access_token_secret: '',
-			randomTweet: {
-				enabled: false,
-				intervalTimeout: 1000 * 120, // in milliseconds
-			},
-			trackFollowers: {
-				enabled: false,
-				intervalTimeout: 1000 * 60 * 120, // in milliseconds
-			}
-		},
-		service: {
-			enabled: false,
-			arduinoAddress: '/dev/ttyS3',
-			baud: 115200,
-			polling: {
-				enabled: true,
-				interval: 100
-			}
-		}
+	arduino: {
+		address: '/dev/ttyACM0',
+		baud: 115200,
+	},
+	servoController: {
+		address: '/dev/ttyACM1',
+		baud: 115200,
 	}
 }
-
 
 module.exports = HttpConfig;

@@ -3,38 +3,21 @@ const HttpConfig = {
 	showDebug: false,
 	botName: 'RaspiAgg9',
 	hostUrl: '192.168.1.82',
-	aggregateHost: 'plantMon.swim.ai',
 	hostPort: 8080,
+	swimUrl: '192.168.1.106',
 	swimPort: 5620,
-	senseHatConfig: {
-		bot: {
-			enabled: false,
-		},
-		service: {
-			enabled: false,
-			polling: {
-				enabled: true,
-				interval: 100
-			}			
-		}
+	cameras: {
+		address: '192.168.1.106',
+		leftEyePort: 8081,
+		rightEyePort: 8082,
 	},
-	plantConfig: {
-		bot: {
-			enabled: false,
-			updateInterval: {
-				enabled: false,
-				intervalTimeout: 1000, // in milliseconds
-			},
-		},
-		service: {
-			enabled: false,
-			arduinoAddress: '/dev/ttyACM0',
-			baud: 115200,
-			polling: {
-				enabled: true,
-				interval: 100
-			}
-		}
+	arduino: {
+		address: '/dev/ttyACM0',
+		baud: 115200,
+	},
+	servoController: {
+		address: '/dev/ttyACM1',
+		baud: 115200,
 	}
 }
 

@@ -29,6 +29,56 @@ setup_pi () {
     '")  
 }
 
+start_remote_video() {
+    botNumber=${1}
+    botName="raspi${botNumber}"
+    botIp=${ipList[${botNumber}]}
+    sshAddress=${usr}@${botIp}
+
+    printf "${GREY}Start Motion on ${LTGREEN}${botName}${NC}@${GREEN}${botIp}${NC}:${GREY}${pwd}${NC}\n"
+    
+    (export SSHPASS=${pwd}
+    sshpass -e ssh ${sshAddress} "sh -c 'cd ${INSTALL_FOLDER}; sudo nohup motion > ~/${INSTALL_FOLDER}/motion.log 2> ~/${INSTALL_FOLDER}/motion.err < /dev/null &'")
+
+    printf "${GREEN}Done.${NC}\n"
+}
+
+stop_remote_video() {
+    botNumber=${1}
+    botName="raspi${botNumber}"
+    botIp=${ipList[${botNumber}]}
+    sshAddress=${usr}@${botIp}
+
+    printf "${GREY}Stop Motion on ${LTGREEN}${botName}${NC}@${GREEN}${botIp}${NC}:${GREY}${pwd}${NC}\n"
+    
+    (export SSHPASS=${pwd}
+    sshpass -e ssh ${sshAddress} "sh -c 'cd ${INSTALL_FOLDER}; sudo killall motion'")
+
+    printf "${GREEN}Done.${NC}\n"
+}
+
+start_face_detect() {
+    botNumber=${1}
+    botName="raspi${botNumber}"
+    botIp=${ipList[${botNumber}]}
+    sshAddress=${usr}@${botIp}
+
+    printf "${GREY}Start Face Detect process on ${LTGREEN}${botName}${NC}@${GREEN}${botIp}${NC}:${GREY}${pwd}${NC}\n"
+    
+    python VisionService/faceDetect.py ${botIp} > ./faceDetect.log 2> ./faceDetect.err < /dev/null &
+
+    printf "${GREEN}Done.${NC}\n"
+}
+
+stop_all_python() {
+    printf "${GREY}stop all python processes on ${LTGREEN}${botName}${NC}@${GREEN}${botIp}${NC}:${GREY}${pwd}${NC}\n"
+    
+    sudo killall python
+
+    printf "${GREEN}Done.${NC}\n"
+
+}
+
 publish_vision () {
     ${path}/VisionService/bin/publish.sh ${@}
 }
@@ -159,6 +209,11 @@ case $action in
     startSwim)
         start_swim   
         ;;
+    startFaceDetect)
+        for botIndex in ${botList[@]}; do
+            start_face_detect ${botIndex}
+        done
+        ;;
 
     # local stop commands
     stop)
@@ -170,6 +225,9 @@ case $action in
         ;;
     stopSwim)
         stop_swim   
+        ;;
+    stopPython)
+        stop_all_python
         ;;
 
     # local build commands
@@ -210,6 +268,19 @@ case $action in
             setup_pi ${botIndex} ${usr} ${pwd}
         done
         ;;    
+
+    startRemoteVideo)
+        for botIndex in ${botList[@]}; do
+            start_remote_video ${botIndex} ${usr} ${pwd}
+        done            
+        ;;
+
+    stopRemoteVideo)
+        for botIndex in ${botList[@]}; do
+            stop_remote_video ${botIndex} ${usr} ${pwd}
+        done            
+        ;;
+
     
     # publish to device commands
     publish)
@@ -293,9 +364,11 @@ case $action in
     startRemote)
         for botIndex in ${botList[@]}; do
             stop_remote ${botIndex} ${usr} ${pwd}
+            stop_remote_video ${botIndex} ${usr} ${pwd}
         done
         for botIndex in ${botList[@]}; do
             start_remote ${botIndex} ${usr} ${pwd}
+            start_remote_video ${botIndex} ${usr} ${pwd}
         done
         ;;
 
@@ -303,6 +376,7 @@ case $action in
     stopRemote)
         for botIndex in ${botList[@]}; do
             stop_remote ${botIndex} ${usr} ${pwd}
+            stop_remote_video ${botIndex} ${usr} ${pwd}
         done
         ;;        
     snorlax) 

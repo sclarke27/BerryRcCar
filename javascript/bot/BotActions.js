@@ -269,9 +269,9 @@ class BotActions {
     }
 
     handleHeadScan() {
-        if (this._tickCount % 10 === 0) {
+        if (this._tickCount % 5 === 0) {
             const sensorData = this._sensors.getSensorDataSet();
-            const angleStep = 5;
+            const angleStep = 1;
             let panValue = this._headScan.currentAngle;
             this._headScan.scanValues[panValue] = sensorData.headDistance.current; //load current value before movment to get a better signal
             this._botState.setStateValue('headScan', JSON.stringify(this._headScan.scanValues));

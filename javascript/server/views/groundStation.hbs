@@ -32,6 +32,8 @@
 					@div(class: south) { S }
 					@div(class: east) { E }
 					@div(class: west) { W }
+					@div(class: innerCircle)
+					@div(class: innerCircle2)
 				}
 
 				@div(class: numberContainer, id:compassLabel) {
@@ -135,6 +137,7 @@
 		}
 	</script>		
 	<form>
+
 	<div class="pageRowColumn">
 		<div class="numberContainer tiltPanCard">
 			<div id="valueLabel">Tilt/Pan</div>
@@ -152,7 +155,26 @@
 			</div>
 		</div>
 	</div>
-	</form>			
+	</form>	
+	<style>
+		.radarCard {
+			width: 370px;
+			height: 250px;
+		}
+		#radarCanvas {
+			background-color: darkcyan;
+			width: 360px;
+			height: 200px;
+		}
+	</style>		
+	<div class="pageRowColumn">
+		<div class="numberContainer radarCard">
+			<div id="valueLabel">Radar</div>
+			<div class="radarCanvasBox ">
+				<canvas id="radarCanvas" width="360" height="200"></canvas>
+			</div>
+		</div>
+	</div>			
 </div>
 
 <script type="text/recon">

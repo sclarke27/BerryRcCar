@@ -81,7 +81,7 @@ class Sensors {
       },
       panRadio: {
         min: 0,
-        max: 180,
+        max: 360,
         default: 90,
         current: 90
       },
