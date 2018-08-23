@@ -327,7 +327,7 @@
 									}
 									@chart {
 										id: chart
-										@plot(type: area) {
+										@plotArea {
 											historyLink: @link(lane: 'history', type: map)
 											areaFill: $currentBlock.sensorDialColor
 											@each(t: $historyLink.*:) {
