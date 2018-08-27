@@ -37,7 +37,7 @@ class Main {
         this._args = {};
         this._servoController = null;
         this._swimClient = new swim.Client();
-        this._mainLoopInterval = 10;
+        this._mainLoopInterval = 1;
 
         this.processCommandLineArgs();
         this.loadConfig(this._args.config || 'localhost')
@@ -116,6 +116,11 @@ class Main {
         
         // initialize bot state swim service
         swim.command(this.fullSwimUrl, `/botState`, `setName`, this._serviceConfig.botName);
+
+        // swim.command(this.fullSwimUrl, `/servo/tilt`, `setName`, 'tilt');
+        // swim.command(this.fullSwimUrl, `/servo/pan`, `setName`, 'pan');
+        // swim.command(this.fullSwimUrl, `/servo/steering`, `setName`, 'steering');
+        // swim.command(this.fullSwimUrl, `/servo/throttle`, `setName`, 'throttle');
 
         setInterval(() => {
             otherBarry.main();

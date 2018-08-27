@@ -27,6 +27,7 @@ const BotIntents = {
         Log.info('Bot entered idle state');
       },
       update: (sensors, botActions) => {
+        botActions.handlePingSensors();
         botActions.handleManualHeadMovement();
       },
       end: (sensorData, botActions) => {
@@ -92,6 +93,7 @@ const BotIntents = {
     rules: {
       start: (sensors, botActions) => {
         botActions.resetAllToDefaultState();
+        botActions.handlePingSensors();
         Log.info('Begin autonomous driving state');
       },
       update: (sensors, botActions) => {
@@ -99,6 +101,7 @@ const BotIntents = {
         botActions.handleAutoDrive();
       },
       end: (sensors, botActions) => {
+        botActions.resetAllToDefaultState();
         Log.info('Drive complete');
       }
     }

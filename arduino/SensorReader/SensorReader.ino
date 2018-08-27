@@ -7,6 +7,7 @@
 #include "MPU9250.h"
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP085_U.h>
+#include <NewPing.h>
 
 
 // Hadrware values
@@ -20,6 +21,13 @@ int pingPin5 = 5;
 int compassClockPin = 10;
 int compassEnablePin = 11;
 int compassIOPin = 12;
+int maxDistance = 500;
+
+NewPing sonar1(pingPin1, pingPin1, maxDistance);
+NewPing sonar2(pingPin2, pingPin2, maxDistance);
+NewPing sonar3(pingPin3, pingPin3, maxDistance);
+NewPing sonar4(pingPin4, pingPin4, maxDistance);
+NewPing sonar5(pingPin5, pingPin5, maxDistance);
 
 //Data Values
 int rcChannel1Value = 0;
@@ -122,6 +130,51 @@ void readTempAndPressure() {
 
 }
 
+void readNewPing(int pin) {
+  int duration = 0;
+  if(pin == pingPin1) {
+    duration = sonar1.ping();
+  }
+  if(pin == pingPin2) {
+    duration = sonar2.ping();
+  }
+  if(pin == pingPin3) {
+    duration = sonar3.ping();
+  }
+  if(pin == pingPin4) {
+    duration = sonar4.ping();
+  }
+  if(pin == pingPin5) {
+    duration = sonar5.ping();
+  }
+
+  if(duration == 0) {
+    duration = 40000;
+  }
+
+  if(duration < 0) {
+    duration = duration * -1;
+  }
+
+  if(pin == pingPin1) {
+    ping1ValueNew = duration;
+  }
+  if(pin == pingPin2) {
+    ping2ValueNew = duration;
+  }
+  if(pin == pingPin3) {
+    ping3ValueNew = duration;
+  }
+
+  if(pin == pingPin4) {
+    ping4ValueNew = duration;
+  }
+
+  if(pin == pingPin5) {
+    ping5ValueNew = duration;
+  }  
+}
+
 void readPingSensor(String channel, int pin) {
   // The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse
@@ -137,6 +190,10 @@ void readPingSensor(String channel, int pin) {
 
   if(duration == 0) {
     duration = 40000;
+  }
+
+  if(duration < 0) {
+    duration = duration * -1;
   }
 
   if(pin == pingPin1) {
@@ -169,23 +226,23 @@ void readCompass1() {
 
 
 void readPing1() {
-  readPingSensor("1", pingPin1);
+  readNewPing(pingPin1);
 }
 
 void readPing2() {
-  readPingSensor("2", pingPin2);
+  readNewPing(pingPin2);
 }
 
 void readPing3() {
-  readPingSensor("3", pingPin3);
+  readNewPing(pingPin3);
 }
 
 void readPing4() {
-  readPingSensor("4", pingPin4);
+  readNewPing(pingPin4);
 }
 
 void readPing5() {
-  readPingSensor("5", pingPin5);
+  readNewPing(pingPin5);
 }
 
 void readRadio1() {

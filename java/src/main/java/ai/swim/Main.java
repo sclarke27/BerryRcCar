@@ -32,6 +32,9 @@ public class Main extends AbstractPlane {
   @SwimRoute("/image/:imgChannel")
   final ServiceType<?> imageService = serviceClass(ImageService.class);
 
+  @SwimRoute("/servo/:servoName")
+  final ServiceType<?> servoStateService = serviceClass(ServoStateService.class);
+
   public static void main(String[] args) throws InterruptedException, IOException {
     // Load any system properties from a file
     loadConfig();

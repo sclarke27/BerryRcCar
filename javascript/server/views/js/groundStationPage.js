@@ -1,3 +1,5 @@
+
+
 class GroundStationPage {
   constructor() {
     this.swimUrl = null;
@@ -18,6 +20,7 @@ class GroundStationPage {
 
     this.radarCanvasElem = null;
     this.radarData = [];
+    this.swimClient = new swim.Client();
 
   }
 
@@ -38,9 +41,9 @@ class GroundStationPage {
     this.radarCanvasElem = radarElem.getContext("2d");
 
     swim.downlinkValue()
-      .host(this.swimUrl)
-      .node('/botState')
-      .lane('leftEyeFaces')
+      .hostUri(this.swimUrl)
+      .nodeUri('/botState')
+      .laneUri('leftEyeFaces')
       .didSet((newValue) => {
         const data = eval(newValue)
         this.leftFaceList = data;
@@ -48,9 +51,9 @@ class GroundStationPage {
       .open();  
 
     swim.downlinkValue()
-    .host(this.swimUrl)
-    .node('/botState')
-    .lane('rightEyeFaces')
+    .hostUri(this.swimUrl)
+    .nodeUri('/botState')
+    .laneUri('rightEyeFaces')
     .didSet((newValue) => {
       const data = eval(newValue);
       this.rightFaceList = data;
@@ -58,9 +61,9 @@ class GroundStationPage {
     .open();        
 
     swim.downlinkValue()
-      .host(this.swimUrl)
-      .node('/sensor/throttleRadio')
-      .lane('latest')
+      .hostUri(this.swimUrl)
+      .nodeUri('/sensor/throttleRadio')
+      .laneUri('latest')
       .didSet((newValue) => {
         const data = eval(newValue)
         this.currThrottle = data;
@@ -68,9 +71,9 @@ class GroundStationPage {
       .open();  
 
     swim.downlinkValue()
-      .host(this.swimUrl)
-      .node('/sensor/steeringRadio')
-      .lane('latest')
+      .hostUri(this.swimUrl)
+      .nodeUri('/sensor/steeringRadio')
+      .laneUri('latest')
       .didSet((newValue) => {
         const data = eval(newValue)
         this.currSteering = data;
@@ -80,9 +83,9 @@ class GroundStationPage {
     this.tileValueElem = null;
     this.panValueElem = null;
     swim.downlinkValue()
-      .host(this.swimUrl)
-      .node('/sensor/tiltRadio')
-      .lane('latest')
+      .hostUri(this.swimUrl)
+      .nodeUri('/sensor/tiltRadio')
+      .laneUri('latest')
       .didSet((newValue) => {
         if(!this.tileValueElem) {
           this.tileValueElem = document.getElementById('tiltValueLabel');
@@ -95,9 +98,9 @@ class GroundStationPage {
       .open();
 
     swim.downlinkValue()
-      .host(this.swimUrl)
-      .node('/sensor/panRadio')
-      .lane('latest')
+      .hostUri(this.swimUrl)
+      .nodeUri('/sensor/panRadio')
+      .laneUri('latest')
       .didSet((newValue) => {
         if(!this.panValueElem) {
           this.panValueElem = document.getElementById('panValueLabel');
@@ -111,9 +114,9 @@ class GroundStationPage {
     this.compassValueElem = null;
     this.compassCircleElem = null;
     swim.downlinkValue()
-      .host(this.swimUrl)
-      .node('/sensor/compass1')
-      .lane('latest')
+      .hostUri(this.swimUrl)
+      .nodeUri('/sensor/compass1')
+      .laneUri('latest')
       .didSet((newValue) => {
         if(!this.compassValueElem) {
           this.compassValueElem = document.getElementById('compassValue');
@@ -131,9 +134,9 @@ class GroundStationPage {
       .open();       
 
     swim.downlinkValue()
-      .host(this.swimUrl)
-      .node('botState')
-      .lane('headScan')
+      .hostUri(this.swimUrl)
+      .nodeUri('botState')
+      .laneUri('headScan')
       .didSet((newValue) => {
         if(newValue) {
           this.radarData = JSON.parse(newValue);
@@ -227,7 +230,8 @@ class GroundStationPage {
   drawRadar() {
       for(const angle in this.radarData) {
         // console.info(angle + ' ' + this.radarData[angle]);
-        const hue = this.map(this.radarData[angle], 0, 12000, 0, 360);
+        let hue = this.map(this.radarData[angle], 0, 12000, 0, 120);
+        // hue=((1-hue)*120).toString(10);
         this.drawLine(this.radarCanvasElem, angle, 0, angle, 200, 2, `hsla(${hue},100%,50%,1)`);            
       }
   }
@@ -245,7 +249,7 @@ class GroundStationPage {
   }
 
   updateFaceBoundingBoxes(canvas, data) {
-    
+    if (data.length === 0) return;
     for(const face of data) {
       // console.info(face);
       const scale = this.canvasScaling;

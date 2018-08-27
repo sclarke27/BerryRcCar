@@ -18,7 +18,7 @@ class Sensors {
     this.fullSwimUrl = swimUrl;
     this.swimClient = swim;
     this.minDistanceValue = 2000;
-    this.obstDistValue = 3500;
+    this.obstDistValue = 2500;
     this.maxDistanceValue = 12000;
 
     // define all sensor channels that will be tracked

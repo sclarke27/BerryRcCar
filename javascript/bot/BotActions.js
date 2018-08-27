@@ -18,7 +18,7 @@ class BotActions {
         this._throttle = {
             maxFoward: 80,
             allStop: 90,
-            maxReverse: 100,
+            maxReverse: 104,
             current : 90
         }
         this._steering = {
@@ -131,7 +131,7 @@ class BotActions {
             //     this._servoController.restartScriptAtSubroutine(2);
             // }
 
-            this._tickCount = 0;
+            // this._tickCount = 0;
         }
         if (this._currentIntent && this._currentIntent.rules && this._currentIntent.rules.update) {
             this._currentIntent.rules.update(this._sensors, this);
@@ -199,11 +199,12 @@ class BotActions {
     handleAutoDrive() {
         const sensorData = this._sensors.getSensorDataSet();
         const currState = this._botState.getFullState();
+        let newSpeed = this._throttle.allStop;// - (Math.round(this._throttle.maxFoward * centerAvg));
+        let newSteering = this._steering.center;
+
+        // Log.info('autodrive update tick:' +  this._tickCount);
 
         if(currState.canDriveForward) {
-            const centerAvg = (sensorData.centerDistance.current - sensorData.centerDistance.threshold) / (sensorData.centerDistance.max - sensorData.centerDistance.threshold)
-            let newSpeed = this._throttle.allStop;// - (Math.round(this._throttle.maxFoward * centerAvg));
-            let newSteering = this._steering.center;
             
             // if(this._throttle.current !== newSpeed) {
             //     this._throttle.current = newSpeed;
@@ -212,22 +213,14 @@ class BotActions {
             // }
 
             if(sensorData.centerDistance.current > sensorData.centerDistance.threshold) {
-                if(sensorData.centerDistance.current > 10000) {
-                    newSpeed = this._throttle.maxFoward;
-                } else if(sensorData.centerDistance.current <= 10000 && sensorData.centerDistance.current > 7000) {
-                    newSpeed = Math.abs(82);
+                if(sensorData.centerDistance.current > 7000) {
+                    newSpeed = 84;
                 } else if(sensorData.centerDistance.current <= 7000 && sensorData.centerDistance.current > sensorData.centerDistance.threshold) {
-                    newSpeed = Math.abs(84);
+                    newSpeed = 82;
                 }
             } else {
                 newSpeed = this._throttle.allStop;
             }
-
-            if(sensorData.leftDistance.current < sensorData.leftDistance.threshold && sensorData.rightDistance.current < sensorData.rightDistance.threshold) {
-                newSpeed = this._throttle.allStop;
-                // reverse?
-                return;
-            } 
 
             if(sensorData.leftDistance.current < sensorData.leftDistance.threshold && sensorData.rightDistance.current > sensorData.rightDistance.threshold) {
                 newSteering = this._steering.maxRight;
@@ -237,27 +230,44 @@ class BotActions {
                 newSteering = this._steering.maxLeft;
             }
 
-            if(sensorData.leftDistance.current > sensorData.leftDistance.threshold && sensorData.rightDistance.current > sensorData.rightDistance.threshold) {
-                newSteering = this._steering.center;
-            }
-            if(newSteering !== this._steering.current) {
-                this._steering.current = newSteering;
-                this._sensors.setDataValue('steeringRadio', this._steering.current);
-                this._servoController.setTarget(2, parseInt(this._steering.current).map(0, 180, 640, 2304));
-            }
-    
-            if(newSpeed !== this._throttle.current) {
-                this._throttle.current = newSpeed;
-                this._sensors.setDataValue('throttleRadio', this._throttle.current);
-                Log.info(`new forward speed ${this._throttle.current}`);
-                this._servoController.setTarget(3, parseInt(this._throttle.current).map(0, 180, 640, 2304));
-            }
+            // if(sensorData.leftDistance.current > sensorData.leftDistance.threshold && sensorData.rightDistance.current > sensorData.rightDistance.threshold) {
+            //     newSteering = this._steering.center;
+            // }
+        } else if(!currState.canDriveForward && currState.canDriveBackward) {
 
-            return;
+            if(sensorData.rearDistance.current > sensorData.rearDistance.threshold) {
+                newSpeed = 130;
+            } else {
+                newSpeed = this._throttle.allStop;
+            }     
+
+            if(sensorData.leftDistance.current < sensorData.rightDistance.current) {
+                newSteering = this._steering.maxLeft;
+            } else {
+                newSteering = this._steering.maxRight;
+            }
+          
         }
+        // } else if(!currState.canDriveForward && !currState.canDriveBackward) {
+        //     Log.info('Bot can not move');
+        //     // this._servoController.restartScriptAtSubroutine(3);
+        //     // this.changeIntent(BotIntents.idle);
+        //     return;
+        // }
         
+        // if(newSteering !== this._steering.current) {
+            this._steering.current = newSteering;
+            this._sensors.setDataValue('steeringRadio', this._steering.current);
+            this._servoController.setTarget(2, parseInt(this._steering.current).map(0, 180, 640, 2304));
+        // }
 
-        return;
+        // if(newSpeed !== this._throttle.current) {
+            this._throttle.current = newSpeed;
+            this._sensors.setDataValue('throttleRadio', this._throttle.current);
+            // Log.info(`new forward speed ${this._throttle.current}`);
+            this._servoController.setTarget(3, parseInt(this._throttle.current).map(0, 180, 640, 2304));
+        // }
+        // return;
         
     }
 

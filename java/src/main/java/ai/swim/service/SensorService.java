@@ -6,7 +6,7 @@ import swim.concurrent.TimerRef;
 
 public class SensorService extends AbstractService {
 
-  private static final int SHORT_HISTORY_SIZE = 100;
+  private static final int SHORT_HISTORY_SIZE = 20;
 
 
   /**
