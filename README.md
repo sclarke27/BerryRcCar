@@ -66,6 +66,7 @@ All publish commands remove and recreate the remote target directory on each pub
 
 #### *Partial Updates*
 Update commands do not clean or remove any existing folders or code on the remote device.
+
 | Command | Info | 
 |---|---|
 | **all** | Does a full package, publish and build to each device. Removes target install and build folders before publish and restarts the device once complete |
