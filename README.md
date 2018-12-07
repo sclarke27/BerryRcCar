@@ -51,6 +51,7 @@ Building and starting the bot is all managed thru ./bin/appManager.sh. A listing
 ### Remote App Management Commands
 
 #### *Misc.*
+
 | Command | Info | 
 |---|---|
 | **testssh** | used to verify that you are able to use sshpass to ssh into the remote device |
@@ -58,6 +59,7 @@ Building and starting the bot is all managed thru ./bin/appManager.sh. A listing
 
 #### *Full Publish*
 All publish commands remove and recreate the remote target directory on each publish to ensure a clean build.
+
 | Command | Info | 
 |---|---|
 | **publish** | Pushes the package file to each device and unpacks it into the runtime folder |
