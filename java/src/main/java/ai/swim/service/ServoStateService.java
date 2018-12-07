@@ -8,10 +8,9 @@ public class ServoStateService extends AbstractService {
 
   @SwimLane("name")
   ValueLane<String> name = valueLane().valueClass(String.class)
-  .didSet((n, o) -> {
-      System.out.println("Startup servo: " + n);
-    }
-  });
+    .didSet((n, o) -> {
+        System.out.println("Startup servo: " + n);
+    });
 
   @SwimLane("setName")
   CommandLane<String> setName = commandLane().valueClass(String.class)

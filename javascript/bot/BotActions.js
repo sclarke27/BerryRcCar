@@ -34,6 +34,9 @@ class BotActions {
             scanValues: {},
             panClockwise: true
         }
+        this._servos = {
+             
+        }
         this._tickCount = 0;
         this._swimClient = new swim.Client();
         const intentValueLane = this._swimClient.downlinkValue()
