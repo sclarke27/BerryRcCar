@@ -45,8 +45,10 @@ Building and starting the bot is all managed thru ./bin/appManager.sh. A listing
 | Command | Info | 
 |---|---|
 | **package** | creates a gzip package file to the /dist directory of both node and swim codebase which is then used for remote deployment |
+| **packageArduino** | creates a package of just the code for Arduino |
 | **packageNode** | creates a package of just the node side of the app |
 | **packageSwim** | creates a package of just the SWIM side of the app |
+| **packageWebUI** | creates a package of just web based UI |
 
 ### Remote App Management Commands
 
@@ -55,6 +57,10 @@ Building and starting the bot is all managed thru ./bin/appManager.sh. A listing
 | Command | Info | 
 |---|---|
 | **testssh** | used to verify that you are able to use sshpass to ssh into the remote device |
+| **setupPi** | install and setup remote device to support app |
+| **startRemoteVideo** | start streaming cameras |
+| **stopRemoteVideo** | stop streaming cameras |
+| **showKioskScreem** | launch chromium in kisok mode |
 
 
 #### *Full Publish*
@@ -63,6 +69,7 @@ All publish commands remove and recreate the remote target directory on each pub
 | Command | Info | 
 |---|---|
 | **publish** | Pushes the package file to each device and unpacks it into the runtime folder |
+| **publishArduino** | Pushes the package file for Ardunio to each device and unpacks it into the runtime folder |
 | **publishNode** | Pushes just the node the package file to each device and unpacks it into the runtime folder |
 | **publishSwim** | Pushes just the swim the package file to each device and unpacks it into the runtime folder |
 
@@ -75,7 +82,7 @@ Update commands do not clean or remove any existing folders or code on the remot
 | **startRemote** | Stops and restarts target device. Cleans out temp files and swim db before start up. |
 | **stopRemote** | Stops target device. |
 | **updateRemote** | Pushes the full package file to each remote device, unpacks over the existing runtime, builds swim again and restarts the device |
-
+| **quickRestart** | Stop and restart swim and web |
 
 ### Examples 
 

@@ -19,7 +19,7 @@ package() {
     git config user.name ${user}
     git config user.email ${email})
 
-  project=sensor-monitor-demo
+  project=swim-greenhouse
   path=${prefix}/${project}/${majmin}/${release:+${release}/}${version}
   mkdir -p ${path}
 

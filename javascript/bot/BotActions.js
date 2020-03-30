@@ -306,6 +306,35 @@ class BotActions {
         }
     }
 
+    handleBotHeadSync() {
+        this._swimClient.downlinkValue()
+            .host(`ws://192.168.1.74:9001`)
+            .node('/gamePad/0/leftStickX')
+            .lane('latest')
+            .didSet((newValue) => {
+                if(newValue) {
+                    this._sensors.setDataValue('steeringRadio', parseInt(newValue).map(-90, 90, 0, 180));
+                    // this._servoController.setTarget(1, parseInt(newValue).map(-90, 90, 640, 2304));
+                }
+                // this._sensorData.phoneMagX.current = newValue.value;
+            })
+            .open();      
+
+            this._swimClient.downlinkValue()
+            .host(`ws://192.168.1.74:9001`)
+            .node('/gamePad/0/leftStickY')
+            .lane('latest')
+            .didSet((newValue) => {
+                if(newValue) {
+                    this._sensors.setDataValue('panRadio', parseInt(newValue).map(-90, 90, 0, 180));
+                    // this._servoController.setTarget(1, parseInt(newValue).map(0, 180, 640, 2304));
+                }
+                // this._sensorData.phoneMagX.current = newValue.value;
+            })
+            .open();                
+         
+    }
+
 }
 
 module.exports = BotActions;

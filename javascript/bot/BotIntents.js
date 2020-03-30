@@ -105,7 +105,25 @@ const BotIntents = {
         Log.info('Drive complete');
       }
     }
-  }
+  },
+  botHeadSync: {
+    name: "Bot Head Sync Mode",
+    rules: {
+      start: (sensors, botActions) => {
+        botActions.resetAllToDefaultState();
+        // botActions.handlePingSensors();
+        Log.info('Begin head sync state state');
+      },
+      update: (sensors, botActions) => {
+        botActions.handlePingSensors();
+        botActions.handleBotHeadSync();
+      },
+      end: (sensors, botActions) => {
+        botActions.resetAllToDefaultState();
+        Log.info('sync complete');
+      }
+    }
+  }  
 };
 
 module.exports = BotIntents;

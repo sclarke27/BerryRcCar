@@ -174,7 +174,7 @@ test_ssh () {
     '")
 
     (export SSHPASS=${pwd}
-    sshpass -e scp ${path}/dist/sensor-monitor-demo-java-1.0.tar.gz ${sshAddress}:)
+    sshpass -e scp ${path}/dist/swim-greenhouse-java-1.0.tar.gz ${sshAddress}:)
 
 }
 

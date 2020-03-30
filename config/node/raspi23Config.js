@@ -1,13 +1,13 @@
 const HttpConfig = {
 	httpEnabled: true,
 	showDebug: false,
-	botName: 'RaspiRover20',
-	hostUrl: '192.168.0.220',
+	botName: 'Twitch2',
+	hostUrl: '192.168.1.66',
 	hostPort: 8080,
-	swimUrl: '192.168.0.220',
+	swimUrl: '192.168.1.74',
 	swimPort: 5620,
 	cameras: {
-		address: '192.168.0.220',
+		address: '192.168.1.74',
 		leftEyePort: 8081,
 		rightEyePort: 8082,
 	},
